@@ -1,0 +1,1466 @@
+{
+  "01. Jan": {
+    "letter": "A",
+    "saint": "NEUJAHR"
+  },
+  "02. Jan": {
+    "letter": "B",
+    "saint": "ABEL-SETH"
+  },
+  "03. Jan": {
+    "letter": "C",
+    "saint": "ENOCH"
+  },
+  "04. Jan": {
+    "letter": "D",
+    "saint": "METHUSALEM"
+  },
+  "05. Jan": {
+    "letter": "E",
+    "saint": "SIMEON"
+  },
+  "06. Jan": {
+    "letter": "F",
+    "saint": "HEIL. 3 KÖNIGE"
+  },
+  "07. Jan": {
+    "letter": "G",
+    "saint": "JULIAN"
+  },
+  "08. Jan": {
+    "letter": "A",
+    "saint": "ERHARD"
+  },
+  "09. Jan": {
+    "letter": "B",
+    "saint": "BEATUS"
+  },
+  "10. Jan": {
+    "letter": "C",
+    "saint": "PAUL. EINSIEDL."
+  },
+  "11. Jan": {
+    "letter": "D",
+    "saint": "HYGINUS"
+  },
+  "12. Jan": {
+    "letter": "E",
+    "saint": "REINHOLD"
+  },
+  "13. Jan": {
+    "letter": "F",
+    "saint": "HILARIUS"
+  },
+  "14. Jan": {
+    "letter": "G",
+    "saint": "FELIX"
+  },
+  "15. Jan": {
+    "letter": "A",
+    "saint": "MAURUS"
+  },
+  "16. Jan": {
+    "letter": "B",
+    "saint": "MARCELLUS"
+  },
+  "17. Jan": {
+    "letter": "C",
+    "saint": "ANTON"
+  },
+  "18. Jan": {
+    "letter": "D",
+    "saint": "PRISCA"
+  },
+  "19. Jan": {
+    "letter": "E",
+    "saint": "SARAH"
+  },
+  "20. Jan": {
+    "letter": "F",
+    "saint": "FAB. SEBASTIAN"
+  },
+  "21. Jan": {
+    "letter": "G",
+    "saint": "AGNES"
+  },
+  "22. Jan": {
+    "letter": "A",
+    "saint": "VINCENT"
+  },
+  "23. Jan": {
+    "letter": "B",
+    "saint": "EMERENTIA"
+  },
+  "24. Jan": {
+    "letter": "C",
+    "saint": "TIMOTHEUS"
+  },
+  "25. Jan": {
+    "letter": "D",
+    "saint": "PAUL. BEKEHR."
+  },
+  "26. Jan": {
+    "letter": "E",
+    "saint": "POLYKARP"
+  },
+  "27. Jan": {
+    "letter": "F",
+    "saint": "CHRYSOSTOM."
+  },
+  "28. Jan": {
+    "letter": "G",
+    "saint": "CARL"
+  },
+  "29. Jan": {
+    "letter": "A",
+    "saint": "VALERIUS"
+  },
+  "30. Jan": {
+    "letter": "B",
+    "saint": "ADELGUNDE"
+  },
+  "31. Jan": {
+    "letter": "C",
+    "saint": "VIRGILIUS"
+  },
+  "01. Feb": {
+    "letter": "D",
+    "saint": "BRIGITTA"
+  },
+  "02. Feb": {
+    "letter": "E",
+    "saint": "MAR. REINIG."
+  },
+  "03. Feb": {
+    "letter": "F",
+    "saint": "BLASIUS"
+  },
+  "04. Feb": {
+    "letter": "G",
+    "saint": "VERONICA"
+  },
+  "05. Feb": {
+    "letter": "A",
+    "saint": "AGATHA"
+  },
+  "06. Feb": {
+    "letter": "B",
+    "saint": "DOROTHEA"
+  },
+  "07. Feb": {
+    "letter": "C",
+    "saint": "RICHARD"
+  },
+  "08. Feb": {
+    "letter": "D",
+    "saint": "SALOMON"
+  },
+  "09. Feb": {
+    "letter": "E",
+    "saint": "APOLLINIA"
+  },
+  "10. Feb": {
+    "letter": "F",
+    "saint": "SCHOLASTICA"
+  },
+  "11. Feb": {
+    "letter": "G",
+    "saint": "EUPHROSINE"
+  },
+  "12. Feb": {
+    "letter": "A",
+    "saint": "EULALIA"
+  },
+  "13. Feb": {
+    "letter": "B",
+    "saint": "BENIGNUS"
+  },
+  "14. Feb": {
+    "letter": "C",
+    "saint": "VALENTIN"
+  },
+  "15. Feb": {
+    "letter": "D",
+    "saint": "FAUSTIN"
+  },
+  "16. Feb": {
+    "letter": "E",
+    "saint": "JULIANA"
+  },
+  "17. Feb": {
+    "letter": "F",
+    "saint": "ALEXANDER"
+  },
+  "18. Feb": {
+    "letter": "G",
+    "saint": "CONCORDIA"
+  },
+  "19. Feb": {
+    "letter": "A",
+    "saint": "SUSANNA"
+  },
+  "20. Feb": {
+    "letter": "B",
+    "saint": "EUCHARIUS"
+  },
+  "21. Feb": {
+    "letter": "C",
+    "saint": "JESAIAS"
+  },
+  "22. Feb": {
+    "letter": "D",
+    "saint": "PETRI STUHLF."
+  },
+  "23. Feb": {
+    "letter": "E",
+    "saint": "SERENUS"
+  },
+  "24. Feb": {
+    "letter": "F",
+    "saint": "MATH. AP."
+  },
+  "25. Feb": {
+    "letter": "G",
+    "saint": "VICTORINUS"
+  },
+  "26. Feb": {
+    "letter": "A",
+    "saint": "NESTOR"
+  },
+  "27. Feb": {
+    "letter": "B",
+    "saint": "LEANDER"
+  },
+  "28. Feb": {
+    "letter": "C",
+    "saint": "JUSTUS"
+  },
+  "29. Feb": {
+    "letter": "D",
+    "saint": "GABRIEL"
+  },
+  "01. Mär": {
+    "letter": "E",
+    "saint": "ALBINUS"
+  },
+  "02. Mär": {
+    "letter": "F",
+    "saint": "SIMPLICIUS"
+  },
+  "03. Mär": {
+    "letter": "G",
+    "saint": "KUNIGUNDE"
+  },
+  "04. Mär": {
+    "letter": "A",
+    "saint": "ADRIAN"
+  },
+  "05. Mär": {
+    "letter": "B",
+    "saint": "FRIEDRICH"
+  },
+  "06. Mär": {
+    "letter": "C",
+    "saint": "GOTTFRIED"
+  },
+  "07. Mär": {
+    "letter": "D",
+    "saint": "PERPETUA"
+  },
+  "08. Mär": {
+    "letter": "E",
+    "saint": "PHILEMON"
+  },
+  "09. Mär": {
+    "letter": "F",
+    "saint": "NATHAN"
+  },
+  "10. Mär": {
+    "letter": "G",
+    "saint": "MICHA"
+  },
+  "11. Mär": {
+    "letter": "A",
+    "saint": "CONSTANT."
+  },
+  "12. Mär": {
+    "letter": "B",
+    "saint": "GREGORIUS"
+  },
+  "13. Mär": {
+    "letter": "C",
+    "saint": "ERNST"
+  },
+  "14. Mär": {
+    "letter": "D",
+    "saint": "ZACHARIAS"
+  },
+  "15. Mär": {
+    "letter": "E",
+    "saint": "LONGINUS"
+  },
+  "16. Mär": {
+    "letter": "F",
+    "saint": "GABRIEL"
+  },
+  "17. Mär": {
+    "letter": "G",
+    "saint": "GERTRUD"
+  },
+  "18. Mär": {
+    "letter": "A",
+    "saint": "ANSELM"
+  },
+  "19. Mär": {
+    "letter": "B",
+    "saint": "JOSEPH"
+  },
+  "20. Mär": {
+    "letter": "C",
+    "saint": "HUBERT"
+  },
+  "21. Mär": {
+    "letter": "D",
+    "saint": "BENEDICTUS"
+  },
+  "22. Mär": {
+    "letter": "E",
+    "saint": "RAPHAEL"
+  },
+  "23. Mär": {
+    "letter": "F",
+    "saint": "THEODERICH"
+  },
+  "24. Mär": {
+    "letter": "G",
+    "saint": "CASIMIR"
+  },
+  "25. Mär": {
+    "letter": "A",
+    "saint": "MAR. VERK."
+  },
+  "26. Mär": {
+    "letter": "B",
+    "saint": "EMANUEL"
+  },
+  "27. Mär": {
+    "letter": "C",
+    "saint": "RUPERTUS"
+  },
+  "28. Mär": {
+    "letter": "D",
+    "saint": "GIDEON"
+  },
+  "29. Mär": {
+    "letter": "E",
+    "saint": "EUSTACHIUS"
+  },
+  "30. Mär": {
+    "letter": "F",
+    "saint": "ADONIAS"
+  },
+  "31. Mär": {
+    "letter": "G",
+    "saint": "DETLEV"
+  },
+  "01. Apr": {
+    "letter": "A",
+    "saint": "THEODORA"
+  },
+  "02. Apr": {
+    "letter": "B",
+    "saint": "MARIA EGYPT."
+  },
+  "03. Apr": {
+    "letter": "C",
+    "saint": "FERDINAND"
+  },
+  "04. Apr": {
+    "letter": "D",
+    "saint": "AMBROSIUS"
+  },
+  "05. Apr": {
+    "letter": "E",
+    "saint": "MAXIMUS"
+  },
+  "06. Apr": {
+    "letter": "F",
+    "saint": "COELESTIN"
+  },
+  "07. Apr": {
+    "letter": "G",
+    "saint": "ARON"
+  },
+  "08. Apr": {
+    "letter": "A",
+    "saint": "LIBORIUS"
+  },
+  "09. Apr": {
+    "letter": "B",
+    "saint": "BOGISLAUS"
+  },
+  "10. Apr": {
+    "letter": "C",
+    "saint": "DANIEL"
+  },
+  "11. Apr": {
+    "letter": "D",
+    "saint": "EZECHIEL"
+  },
+  "12. Apr": {
+    "letter": "E",
+    "saint": "JULIUS"
+  },
+  "13. Apr": {
+    "letter": "F",
+    "saint": "JUSTIN"
+  },
+  "14. Apr": {
+    "letter": "G",
+    "saint": "TIBURTIUS"
+  },
+  "15. Apr": {
+    "letter": "A",
+    "saint": "OLYMPIA"
+  },
+  "16. Apr": {
+    "letter": "B",
+    "saint": "CARISIUS"
+  },
+  "17. Apr": {
+    "letter": "C",
+    "saint": "RUDOLPH"
+  },
+  "18. Apr": {
+    "letter": "D",
+    "saint": "VALERIAN"
+  },
+  "19. Apr": {
+    "letter": "E",
+    "saint": "TIMEON"
+  },
+  "20. Apr": {
+    "letter": "F",
+    "saint": "SULPITIUS"
+  },
+  "21. Apr": {
+    "letter": "G",
+    "saint": "ADOLARIUS"
+  },
+  "22. Apr": {
+    "letter": "A",
+    "saint": "CAIUS"
+  },
+  "23. Apr": {
+    "letter": "B",
+    "saint": "GEORGIUS"
+  },
+  "24. Apr": {
+    "letter": "C",
+    "saint": "ALBRECHT"
+  },
+  "25. Apr": {
+    "letter": "D",
+    "saint": "EV. MARCUS"
+  },
+  "26. Apr": {
+    "letter": "E",
+    "saint": "EZECHIAS"
+  },
+  "27. Apr": {
+    "letter": "F",
+    "saint": "ANASTASIUS"
+  },
+  "28. Apr": {
+    "letter": "G",
+    "saint": "VITALIS"
+  },
+  "29. Apr": {
+    "letter": "A",
+    "saint": "RAIMUND"
+  },
+  "30. Apr": {
+    "letter": "B",
+    "saint": "ERASTUS"
+  },
+  "01. Mai": {
+    "letter": "C",
+    "saint": "PHIL.-JACOB"
+  },
+  "02. Mai": {
+    "letter": "D",
+    "saint": "SIGISMUND"
+  },
+  "03. Mai": {
+    "letter": "E",
+    "saint": "ERFINDUNG"
+  },
+  "04. Mai": {
+    "letter": "F",
+    "saint": "FLORIAN"
+  },
+  "05. Mai": {
+    "letter": "G",
+    "saint": "GOTTHARD"
+  },
+  "06. Mai": {
+    "letter": "A",
+    "saint": "AGGAEUS"
+  },
+  "07. Mai": {
+    "letter": "B",
+    "saint": "DOMICILLA"
+  },
+  "08. Mai": {
+    "letter": "C",
+    "saint": "STANISLAUS"
+  },
+  "09. Mai": {
+    "letter": "D",
+    "saint": "HERMES"
+  },
+  "10. Mai": {
+    "letter": "E",
+    "saint": "GORDIAN"
+  },
+  "11. Mai": {
+    "letter": "F",
+    "saint": "PANCRATIUS"
+  },
+  "12. Mai": {
+    "letter": "G",
+    "saint": "LIBERATUS"
+  },
+  "13. Mai": {
+    "letter": "A",
+    "saint": "SERVATIUS"
+  },
+  "14. Mai": {
+    "letter": "B",
+    "saint": "CHRISTIAN"
+  },
+  "15. Mai": {
+    "letter": "C",
+    "saint": "SOPHIA"
+  },
+  "16. Mai": {
+    "letter": "D",
+    "saint": "PEREGRIN"
+  },
+  "17. Mai": {
+    "letter": "E",
+    "saint": "JODOCUS"
+  },
+  "18. Mai": {
+    "letter": "F",
+    "saint": "ERICH"
+  },
+  "19. Mai": {
+    "letter": "G",
+    "saint": "POTENTIA"
+  },
+  "20. Mai": {
+    "letter": "A",
+    "saint": "ATHANASIUS"
+  },
+  "21. Mai": {
+    "letter": "B",
+    "saint": "PRUDENTIA"
+  },
+  "22. Mai": {
+    "letter": "C",
+    "saint": "HELENA"
+  },
+  "23. Mai": {
+    "letter": "D",
+    "saint": "DESIDERIUS"
+  },
+  "24. Mai": {
+    "letter": "E",
+    "saint": "ESTHER"
+  },
+  "25. Mai": {
+    "letter": "F",
+    "saint": "URBAN"
+  },
+  "26. Mai": {
+    "letter": "G",
+    "saint": "EDUARD"
+  },
+  "27. Mai": {
+    "letter": "A",
+    "saint": "LUDOLPH"
+  },
+  "28. Mai": {
+    "letter": "B",
+    "saint": "WILHELM"
+  },
+  "29. Mai": {
+    "letter": "C",
+    "saint": "MAURITIUS"
+  },
+  "30. Mai": {
+    "letter": "D",
+    "saint": "WIGAND"
+  },
+  "31. Mai": {
+    "letter": "E",
+    "saint": "PETRONELLA"
+  },
+  "01. Jun": {
+    "letter": "F",
+    "saint": "NICODEMUS"
+  },
+  "02. Jun": {
+    "letter": "G",
+    "saint": "GOTTSCHALK"
+  },
+  "03. Jun": {
+    "letter": "A",
+    "saint": "ERASMUS"
+  },
+  "04. Jun": {
+    "letter": "B",
+    "saint": "DARIUS"
+  },
+  "05. Jun": {
+    "letter": "C",
+    "saint": "BONIFACIUS"
+  },
+  "06. Jun": {
+    "letter": "D",
+    "saint": "ARTEMUS"
+  },
+  "07. Jun": {
+    "letter": "E",
+    "saint": "LUCRETIA"
+  },
+  "08. Jun": {
+    "letter": "F",
+    "saint": "MEDARDUS"
+  },
+  "09. Jun": {
+    "letter": "G",
+    "saint": "BARNIMUS"
+  },
+  "10. Jun": {
+    "letter": "A",
+    "saint": "FLAVIUS"
+  },
+  "11. Jun": {
+    "letter": "B",
+    "saint": "BARABAS"
+  },
+  "12. Jun": {
+    "letter": "C",
+    "saint": "BASILIDES"
+  },
+  "13. Jun": {
+    "letter": "D",
+    "saint": "TOBIAS"
+  },
+  "14. Jun": {
+    "letter": "E",
+    "saint": "ELISAEUS"
+  },
+  "15. Jun": {
+    "letter": "F",
+    "saint": "VITUS"
+  },
+  "16. Jun": {
+    "letter": "G",
+    "saint": "JUSTINIA"
+  },
+  "17. Jun": {
+    "letter": "A",
+    "saint": "NIGANDER"
+  },
+  "18. Jun": {
+    "letter": "B",
+    "saint": "HOMER"
+  },
+  "19. Jun": {
+    "letter": "C",
+    "saint": "GERVASIUS"
+  },
+  "20. Jun": {
+    "letter": "D",
+    "saint": "SILVERIUS"
+  },
+  "21. Jun": {
+    "letter": "E",
+    "saint": "RAHEL"
+  },
+  "22. Jun": {
+    "letter": "F",
+    "saint": "ACHATIUS"
+  },
+  "23. Jun": {
+    "letter": "G",
+    "saint": "BASILIUS"
+  },
+  "24. Jun": {
+    "letter": "A",
+    "saint": "JOH. D. TAEUFER"
+  },
+  "25. Jun": {
+    "letter": "B",
+    "saint": "FEBRONIA"
+  },
+  "26. Jun": {
+    "letter": "C",
+    "saint": "JEREMIAS"
+  },
+  "27. Jun": {
+    "letter": "D",
+    "saint": "LADISLAUS"
+  },
+  "28. Jun": {
+    "letter": "E",
+    "saint": "JOSIA"
+  },
+  "29. Jun": {
+    "letter": "F",
+    "saint": "PETRI PAUL"
+  },
+  "30. Jun": {
+    "letter": "G",
+    "saint": "LUCINA"
+  },
+  "01. Jul": {
+    "letter": "A",
+    "saint": "THEOBALD"
+  },
+  "02. Jul": {
+    "letter": "B",
+    "saint": "MARIAEHEIMS."
+  },
+  "03. Jul": {
+    "letter": "C",
+    "saint": "CORNELIUS"
+  },
+  "04. Jul": {
+    "letter": "D",
+    "saint": "ULRICH"
+  },
+  "05. Jul": {
+    "letter": "E",
+    "saint": "DEMETRIUS"
+  },
+  "06. Jul": {
+    "letter": "F",
+    "saint": "JOH. HUSS"
+  },
+  "07. Jul": {
+    "letter": "G",
+    "saint": "WILLIBALD"
+  },
+  "08. Jul": {
+    "letter": "A",
+    "saint": "KILIAN"
+  },
+  "09. Jul": {
+    "letter": "B",
+    "saint": "CYRILLUS"
+  },
+  "10. Jul": {
+    "letter": "C",
+    "saint": "ISRAEL"
+  },
+  "11. Jul": {
+    "letter": "D",
+    "saint": "ELEONORA"
+  },
+  "12. Jul": {
+    "letter": "E",
+    "saint": "HEINRICH"
+  },
+  "13. Jul": {
+    "letter": "F",
+    "saint": "MARGARETJA"
+  },
+  "14. Jul": {
+    "letter": "G",
+    "saint": "BONAVENTURA"
+  },
+  "15. Jul": {
+    "letter": "A",
+    "saint": "AP. TEILUNG"
+  },
+  "16. Jul": {
+    "letter": "B",
+    "saint": "RUTH"
+  },
+  "17. Jul": {
+    "letter": "C",
+    "saint": "ALEXIUS"
+  },
+  "18. Jul": {
+    "letter": "D",
+    "saint": "ROSINA"
+  },
+  "19. Jul": {
+    "letter": "E",
+    "saint": "RUFFINA"
+  },
+  "20. Jul": {
+    "letter": "F",
+    "saint": "ELIAS"
+  },
+  "21. Jul": {
+    "letter": "G",
+    "saint": "PRAXEDES"
+  },
+  "22. Jul": {
+    "letter": "A",
+    "saint": "MARIE MAGD."
+  },
+  "23. Jul": {
+    "letter": "B",
+    "saint": "APPOLLONIUS"
+  },
+  "24. Jul": {
+    "letter": "C",
+    "saint": "CHRISTINA"
+  },
+  "25. Jul": {
+    "letter": "D",
+    "saint": "JACOBUS"
+  },
+  "26. Jul": {
+    "letter": "E",
+    "saint": "ANNA"
+  },
+  "27. Jul": {
+    "letter": "F",
+    "saint": "MARTHA"
+  },
+  "28. Jul": {
+    "letter": "G",
+    "saint": "PANTALEON"
+  },
+  "29. Jul": {
+    "letter": "A",
+    "saint": "BEATRIX"
+  },
+  "30. Jul": {
+    "letter": "B",
+    "saint": "ABDON"
+  },
+  "31. Jul": {
+    "letter": "C",
+    "saint": "GERMANUS"
+  },
+  "01. Aug": {
+    "letter": "D",
+    "saint": "PETRIKETTENF."
+  },
+  "02. Aug": {
+    "letter": "E",
+    "saint": "GUSTAV"
+  },
+  "03. Aug": {
+    "letter": "F",
+    "saint": "ELEASAR"
+  },
+  "04. Aug": {
+    "letter": "G",
+    "saint": "DOMINICUS"
+  },
+  "05. Aug": {
+    "letter": "A",
+    "saint": "OSWALD"
+  },
+  "06. Aug": {
+    "letter": "B",
+    "saint": "SIXTUS"
+  },
+  "07. Aug": {
+    "letter": "C",
+    "saint": "DONATUS"
+  },
+  "08. Aug": {
+    "letter": "D",
+    "saint": "CYRIACUS"
+  },
+  "09. Aug": {
+    "letter": "E",
+    "saint": "ROMANUS"
+  },
+  "10. Aug": {
+    "letter": "F",
+    "saint": "LAURENTIUS"
+  },
+  "11. Aug": {
+    "letter": "G",
+    "saint": "HERMANN"
+  },
+  "12. Aug": {
+    "letter": "A",
+    "saint": "CLARA"
+  },
+  "13. Aug": {
+    "letter": "B",
+    "saint": "HILDEBRAND"
+  },
+  "14. Aug": {
+    "letter": "C",
+    "saint": "EUSEBIUS"
+  },
+  "15. Aug": {
+    "letter": "D",
+    "saint": "MAR. HIMMELF."
+  },
+  "16. Aug": {
+    "letter": "E",
+    "saint": "ISAAC"
+  },
+  "17. Aug": {
+    "letter": "F",
+    "saint": "BILLIBALD"
+  },
+  "18. Aug": {
+    "letter": "G",
+    "saint": "AGAPETUS"
+  },
+  "19. Aug": {
+    "letter": "A",
+    "saint": "SEBALDUS"
+  },
+  "20. Aug": {
+    "letter": "B",
+    "saint": "BERNHARD"
+  },
+  "21. Aug": {
+    "letter": "C",
+    "saint": "REBECCA"
+  },
+  "22. Aug": {
+    "letter": "D",
+    "saint": "PHILIBERT"
+  },
+  "23. Aug": {
+    "letter": "E",
+    "saint": "ZACHAEUS"
+  },
+  "24. Aug": {
+    "letter": "F",
+    "saint": "BARTHOLOM."
+  },
+  "25. Aug": {
+    "letter": "G",
+    "saint": "LUDWIG"
+  },
+  "26. Aug": {
+    "letter": "A",
+    "saint": "SAMUEL"
+  },
+  "27. Aug": {
+    "letter": "B",
+    "saint": "GEBHARD"
+  },
+  "28. Aug": {
+    "letter": "C",
+    "saint": "AUGUSTIN"
+  },
+  "29. Aug": {
+    "letter": "D",
+    "saint": "JOH. ENTHAUPT."
+  },
+  "30. Aug": {
+    "letter": "E",
+    "saint": "BENJAMIN"
+  },
+  "31. Aug": {
+    "letter": "F",
+    "saint": "PAULINUS"
+  },
+  "01. Sep": {
+    "letter": "G",
+    "saint": "AEGIDIUS"
+  },
+  "02. Sep": {
+    "letter": "A",
+    "saint": "ELISAEUS"
+  },
+  "03. Sep": {
+    "letter": "B",
+    "saint": "MANSUETUS"
+  },
+  "04. Sep": {
+    "letter": "C",
+    "saint": "THEODOSIA"
+  },
+  "05. Sep": {
+    "letter": "D",
+    "saint": "MOSES"
+  },
+  "06. Sep": {
+    "letter": "E",
+    "saint": "MAGNUS"
+  },
+  "07. Sep": {
+    "letter": "F",
+    "saint": "REGINA"
+  },
+  "08. Sep": {
+    "letter": "G",
+    "saint": "MAR. GEBURT"
+  },
+  "09. Sep": {
+    "letter": "A",
+    "saint": "BRUNO"
+  },
+  "10. Sep": {
+    "letter": "B",
+    "saint": "SOSTHENES"
+  },
+  "11. Sep": {
+    "letter": "C",
+    "saint": "PROBUS"
+  },
+  "12. Sep": {
+    "letter": "D",
+    "saint": "SYRUS"
+  },
+  "13. Sep": {
+    "letter": "E",
+    "saint": "AMATUS"
+  },
+  "14. Sep": {
+    "letter": "F",
+    "saint": "ERHOEHUNG"
+  },
+  "15. Sep": {
+    "letter": "G",
+    "saint": "NIKODEMUS"
+  },
+  "16. Sep": {
+    "letter": "A",
+    "saint": "EUPHEMIA"
+  },
+  "17. Sep": {
+    "letter": "B",
+    "saint": "LAMBERT"
+  },
+  "18. Sep": {
+    "letter": "C",
+    "saint": "TITUS"
+  },
+  "19. Sep": {
+    "letter": "D",
+    "saint": "WERNER"
+  },
+  "20. Sep": {
+    "letter": "E",
+    "saint": "FAUSTA"
+  },
+  "21. Sep": {
+    "letter": "F",
+    "saint": "MATHAEUS EV."
+  },
+  "22. Sep": {
+    "letter": "G",
+    "saint": "MORITZ"
+  },
+  "23. Sep": {
+    "letter": "A",
+    "saint": "HOSEAS"
+  },
+  "24. Sep": {
+    "letter": "B",
+    "saint": "JOH. EMPF."
+  },
+  "25. Sep": {
+    "letter": "C",
+    "saint": "CLEOPHAS"
+  },
+  "26. Sep": {
+    "letter": "D",
+    "saint": "CYRIAN"
+  },
+  "27. Sep": {
+    "letter": "E",
+    "saint": "ADOLPH"
+  },
+  "28. Sep": {
+    "letter": "F",
+    "saint": "WENZEL"
+  },
+  "29. Sep": {
+    "letter": "G",
+    "saint": "MICHAELIS"
+  },
+  "30. Sep": {
+    "letter": "A",
+    "saint": "HIERONYMUS"
+  },
+  "01. Okt": {
+    "letter": "B",
+    "saint": "REMIGUS"
+  },
+  "02. Okt": {
+    "letter": "C",
+    "saint": "VOLLRAD"
+  },
+  "03. Okt": {
+    "letter": "D",
+    "saint": "JAIRUS"
+  },
+  "04. Okt": {
+    "letter": "E",
+    "saint": "FRANZ"
+  },
+  "05. Okt": {
+    "letter": "F",
+    "saint": "AURELIA"
+  },
+  "06. Okt": {
+    "letter": "G",
+    "saint": "FIDES"
+  },
+  "07. Okt": {
+    "letter": "A",
+    "saint": "AMALIA"
+  },
+  "08. Okt": {
+    "letter": "B",
+    "saint": "CHARITAS"
+  },
+  "09. Okt": {
+    "letter": "C",
+    "saint": "DIONYSIUS"
+  },
+  "10. Okt": {
+    "letter": "D",
+    "saint": "GEREON"
+  },
+  "11. Okt": {
+    "letter": "E",
+    "saint": "BURCHARD"
+  },
+  "12. Okt": {
+    "letter": "F",
+    "saint": "MAXIMILIAN"
+  },
+  "13. Okt": {
+    "letter": "G",
+    "saint": "ANGELUS"
+  },
+  "14. Okt": {
+    "letter": "A",
+    "saint": "CALIXTUS"
+  },
+  "15. Okt": {
+    "letter": "B",
+    "saint": "HEDWIG"
+  },
+  "16. Okt": {
+    "letter": "C",
+    "saint": "GALLUS"
+  },
+  "17. Okt": {
+    "letter": "D",
+    "saint": "FLORENTIN"
+  },
+  "18. Okt": {
+    "letter": "E",
+    "saint": "EV. LUCAS"
+  },
+  "19. Okt": {
+    "letter": "F",
+    "saint": "LUCIUS"
+  },
+  "20. Okt": {
+    "letter": "G",
+    "saint": "FELICIAN"
+  },
+  "21. Okt": {
+    "letter": "A",
+    "saint": "URSULA"
+  },
+  "22. Okt": {
+    "letter": "B",
+    "saint": "CORDULA"
+  },
+  "23. Okt": {
+    "letter": "C",
+    "saint": "SEVERIN"
+  },
+  "24. Okt": {
+    "letter": "D",
+    "saint": "SALOME"
+  },
+  "25. Okt": {
+    "letter": "E",
+    "saint": "CRSIPINUS"
+  },
+  "26. Okt": {
+    "letter": "F",
+    "saint": "AMANDUS"
+  },
+  "27. Okt": {
+    "letter": "G",
+    "saint": "SABINA"
+  },
+  "28. Okt": {
+    "letter": "A",
+    "saint": "SIM. JUDA"
+  },
+  "29. Okt": {
+    "letter": "B",
+    "saint": "ENGELHARD"
+  },
+  "30. Okt": {
+    "letter": "C",
+    "saint": "ABSALON"
+  },
+  "31. Okt": {
+    "letter": "D",
+    "saint": "WOLFGANG"
+  },
+  "01. Nov": {
+    "letter": "E",
+    "saint": "ALLER HEILIG."
+  },
+  "02. Nov": {
+    "letter": "F",
+    "saint": "ALLER SEELEN"
+  },
+  "03. Nov": {
+    "letter": "G",
+    "saint": "MALEACHIAS"
+  },
+  "04. Nov": {
+    "letter": "A",
+    "saint": "CHARLOTTE"
+  },
+  "05. Nov": {
+    "letter": "B",
+    "saint": "BLANDINA"
+  },
+  "06. Nov": {
+    "letter": "C",
+    "saint": "LEONHARD"
+  },
+  "07. Nov": {
+    "letter": "D",
+    "saint": "ENGELBERT"
+  },
+  "08. Nov": {
+    "letter": "E",
+    "saint": "CAECILIA"
+  },
+  "09. Nov": {
+    "letter": "F",
+    "saint": "THEODOR"
+  },
+  "10. Nov": {
+    "letter": "G",
+    "saint": "MART. LUTHER"
+  },
+  "11. Nov": {
+    "letter": "A",
+    "saint": "MART. BISCHOF"
+  },
+  "12. Nov": {
+    "letter": "B",
+    "saint": "JONAS"
+  },
+  "13. Nov": {
+    "letter": "C",
+    "saint": "BRICCIUS"
+  },
+  "14. Nov": {
+    "letter": "D",
+    "saint": "LEVIN"
+  },
+  "15. Nov": {
+    "letter": "E",
+    "saint": "LEOPOLD"
+  },
+  "16. Nov": {
+    "letter": "F",
+    "saint": "OTTOMAR"
+  },
+  "17. Nov": {
+    "letter": "G",
+    "saint": "ALPHAEUS"
+  },
+  "18. Nov": {
+    "letter": "A",
+    "saint": "GELASIUS"
+  },
+  "19. Nov": {
+    "letter": "B",
+    "saint": "ELISABETH"
+  },
+  "20. Nov": {
+    "letter": "C",
+    "saint": "AMOS"
+  },
+  "21. Nov": {
+    "letter": "D",
+    "saint": "MARIA OPFER"
+  },
+  "22. Nov": {
+    "letter": "E",
+    "saint": "ALPHONSUS"
+  },
+  "23. Nov": {
+    "letter": "F",
+    "saint": "CLEMENS"
+  },
+  "24. Nov": {
+    "letter": "G",
+    "saint": "CHRYSOGEN"
+  },
+  "25. Nov": {
+    "letter": "A",
+    "saint": "KATHARINA"
+  },
+  "26. Nov": {
+    "letter": "B",
+    "saint": "KONRAD"
+  },
+  "27. Nov": {
+    "letter": "C",
+    "saint": "OTTO"
+  },
+  "28. Nov": {
+    "letter": "D",
+    "saint": "GUENTHER"
+  },
+  "29. Nov": {
+    "letter": "E",
+    "saint": "EBERHARD"
+  },
+  "30. Nov": {
+    "letter": "F",
+    "saint": "AP. ANREAS"
+  },
+  "01. Dez": {
+    "letter": "G",
+    "saint": "ARNOLD"
+  },
+  "02. Dez": {
+    "letter": "A",
+    "saint": "CANDIDUS"
+  },
+  "03. Dez": {
+    "letter": "B",
+    "saint": "AGRICOLA"
+  },
+  "04. Dez": {
+    "letter": "C",
+    "saint": "BARBARA"
+  },
+  "05. Dez": {
+    "letter": "D",
+    "saint": "ABIGAIL"
+  },
+  "06. Dez": {
+    "letter": "E",
+    "saint": "NICOLAUS"
+  },
+  "07. Dez": {
+    "letter": "F",
+    "saint": "AGATHON"
+  },
+  "08. Dez": {
+    "letter": "G",
+    "saint": "MAR. EMPF."
+  },
+  "09. Dez": {
+    "letter": "A",
+    "saint": "JOACHIM"
+  },
+  "10. Dez": {
+    "letter": "B",
+    "saint": "JUDITH"
+  },
+  "11. Dez": {
+    "letter": "C",
+    "saint": "DAMASIUS"
+  },
+  "12. Dez": {
+    "letter": "D",
+    "saint": "EPIMACHUS"
+  },
+  "13. Dez": {
+    "letter": "E",
+    "saint": "LUCIA"
+  },
+  "14. Dez": {
+    "letter": "F",
+    "saint": "NIKASIUS"
+  },
+  "15. Dez": {
+    "letter": "G",
+    "saint": "JOHANNA"
+  },
+  "16. Dez": {
+    "letter": "A",
+    "saint": "ALBINA"
+  },
+  "17. Dez": {
+    "letter": "B",
+    "saint": "IGNATIUS"
+  },
+  "18. Dez": {
+    "letter": "C",
+    "saint": "CHRISTOPH"
+  },
+  "19. Dez": {
+    "letter": "D",
+    "saint": "LOTH"
+  },
+  "20. Dez": {
+    "letter": "E",
+    "saint": "ABRAHAM"
+  },
+  "21. Dez": {
+    "letter": "F",
+    "saint": "AP. THOMAS"
+  },
+  "22. Dez": {
+    "letter": "G",
+    "saint": "BEATA"
+  },
+  "23. Dez": {
+    "letter": "A",
+    "saint": "VIKTORIA"
+  },
+  "24. Dez": {
+    "letter": "B",
+    "saint": "ADAM-EVA"
+  },
+  "25. Dez": {
+    "letter": "C",
+    "saint": "CHRISTTAG"
+  },
+  "26. Dez": {
+    "letter": "D",
+    "saint": "CHRISTTAG"
+  },
+  "27. Dez": {
+    "letter": "E",
+    "saint": "EV. JOHANNES"
+  },
+  "28. Dez": {
+    "letter": "F",
+    "saint": "KINDERTAG"
+  },
+  "29. Dez": {
+    "letter": "G",
+    "saint": "NOAH"
+  },
+  "30. Dez": {
+    "letter": "A",
+    "saint": "DAVID"
+  },
+  "31. Dez": {
+    "letter": "B",
+    "saint": "SYLVESTER"
+  }
+}

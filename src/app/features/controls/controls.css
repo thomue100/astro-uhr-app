@@ -1,0 +1,56 @@
+.controls {
+  background: linear-gradient(#0a1b29, #0d2c44);
+  padding: 10px;
+  border-radius: 12px;
+  color: #ffd24d;
+}
+
+/* HEADER-BUTTONS (Panels) */
+.controls-header {
+  background: #184a6b;
+  padding: 12px;
+  margin: 5px 0;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+/* TOP: Einführung */
+.controls-header.top-rounded {
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+}
+
+/* MITTEL: Simulation / Kalender */
+.controls-header.middle {
+  border-radius: 0;
+}
+
+/* BOTTOM: Kunst & Geschichte */
+.controls-header.bottom-rounded {
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+}
+
+/* Panel Content */
+.controls-content {
+  background: #1a4261;
+  padding: 10px;
+  border-radius: 8px;
+  margin-top: 5px;
+  color: #fff;
+}
+
+/* Kleiner Button (Erläuterungen) */
+.controls-button {
+  width: 100%;
+  margin-top: 10px;
+  padding: 10px;
+
+  background: #1f5d88;
+  color: #ffd24d;
+  border: 1px solid #2c8bc1;
+
+  border-radius: 10px; /* 👈 komplett rund */
+  cursor: pointer;
+  font-size: 14px;
+}

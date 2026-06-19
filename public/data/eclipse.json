@@ -1,0 +1,236 @@
+{
+  "2000": [
+    {
+      "date": "21.01.00 Uhr 05:45",
+      "type": "Totale Mondfinsternis"
+    }
+  ],
+  "2001": [
+    {
+      "date": "09.01.01 Uhr 21:19",
+      "type": "Totale Mondfinsternis"
+    }
+  ],
+  "2003": [
+    {
+      "date": "16.05.03 Uhr 05:41",
+      "type": "Totale Mondfinsternis"
+    },
+    {
+      "date": "31.05.03 Uhr 05:30",
+      "type": "Partielle Sonnenfinsternis"
+    },
+    {
+      "date": "09.11.03 Uhr 02:18",
+      "type": "Totale Mondfinsternis"
+    }
+  ],
+  "2004": [
+    {
+      "date": "04.05.04 Uhr 22:28",
+      "type": "Totale Mondfinsternis"
+    },
+    {
+      "date": "28.10.04 Uhr 04:02",
+      "type": "Totale Mondfinsternis"
+    }
+  ],
+  "2005": [
+    {
+      "date": "03.10.05 Uhr 11:07",
+      "type": "Partielle Sonnenfinsternis"
+    }
+  ],
+  "2006": [
+    {
+      "date": "29.03.06 Uhr 12:46",
+      "type": "Partielle Sonnenfinsternis"
+    },
+    {
+      "date": "07.09.06 Uhr 20:52",
+      "type": "Partielle Mondfinsternis"
+    }
+  ],
+  "2007": [
+    {
+      "date": "04.03.07 Uhr 00:21",
+      "type": "Totale Mondfinsternis"
+    }
+  ],
+  "2008": [
+    {
+      "date": "21.02.08 Uhr: 04:26",
+      "type": "Totale Mondfinsternis"
+    },
+    {
+      "date": "01.08.08 Uhr: 11:34",
+      "type": "Partielle Sonnenfinsternis"
+    },
+    {
+      "date": "16.08.08 Uhr: 23:12",
+      "type": "Partielle Mondfinsternis"
+    }
+  ],
+  "2009": [
+    {
+      "date": "31.12.09 Uhr: 20:23",
+      "type": "Partielle Mondfinsternis"
+    }
+  ],
+  "2011": [
+    {
+      "date": "04.01.11 Uhr: 09:24",
+      "type": "Partielle Sonnenfinsternis"
+    },
+    {
+      "date": "15.06.11 Uhr: 22:12",
+      "type": "Totale Mondfinsternis"
+    }
+  ],
+  "2013": [
+    {
+      "date": "25.04.13 Uhr: 22:09",
+      "type": "Partielle Sonnenfinsternis"
+    }
+  ],
+  "2015": [
+    {
+      "date": "20.03.15 Uhr: 10:44",
+      "type": "Partielle Sonnenfinsternis"
+    },
+    {
+      "date": "28.09.15 Uhr: 04:45",
+      "type": "Totale Mondfinsternis"
+    }
+  ],
+  "2018": [
+    {
+      "date": "27.07.18 Uhr: 22:21",
+      "type": "Totale Mondfinsternis"
+    }
+  ],
+  "2019": [
+    {
+      "date": "21.01.19 Uhr: 06:09",
+      "type": "Totale Mondfinsternis"
+    },
+    {
+      "date": "16.07.19 Uhr: 23:41",
+      "type": "Partielle Mondfinsternis"
+    }
+  ],
+  "2021": [
+    {
+      "date": "10.06.21 Uhr: 12:34",
+      "type": "Partielle Sonnenfinsternis"
+    }
+  ],
+  "2022": [
+    {
+      "date": "25.10.22 Uhr: 12:08",
+      "type": "Partielle Mondfinsternis"
+    }
+  ],
+  "2023": [
+    {
+      "date": "28.10.23 Uhr: 21:10",
+      "type": "Partielle Mondfinsternis"
+    }
+  ],
+  "2024": [
+    {
+      "date": "18.09.24 Uhr: 04:45",
+      "type": "Partielle Mondfinsternis"
+    }
+  ],
+  "2025": [
+    {
+      "date": "29.03.25 Uhr: 13:16",
+      "type": "Partielle Sonnenfinsternis"
+    },
+    {
+      "date": "07.09.25 Uhr: 20:08",
+      "type": "Totale Mondfinsternis"
+    }
+  ],
+  "2026": [
+    {
+      "date": "12.08.26 Uhr: 20:06",
+      "type": "Partielle Sonnenfinsternis"
+    },
+    {
+      "date": "28.08.26 Uhr: 06:09",
+      "type": "Partielle Mondfinsternis"
+    }
+  ],
+  "2027": [
+    {
+      "date": "02.08.27 Uhr: 11:07",
+      "type": "Partielle Sonnenfinsternis"
+    }
+  ],
+  "2028": [
+    {
+      "date": "12.01.28 Uhr: 05:13",
+      "type": "Partielle Mondfinsternis"
+    },
+    {
+      "date": "31.12.28 Uhr: 17:49",
+      "type": "Totale Mondfinsternis"
+    }
+  ],
+  "2029": [
+    {
+      "date": "12.06.29 Uhr: 04:57",
+      "type": "Partielle Sonnenfinsternis"
+    },
+    {
+      "date": "26.06.29 Uhr: 05:22",
+      "type": "Totale Mondfinsternis"
+    },
+    {
+      "date": "20.12.29 Uhr: 23:38",
+      "type": "Totale Mondfinsternis"
+    }
+  ],
+  "2030": [
+    {
+      "date": "01.06.30 Uhr: 07:20",
+      "type": "Partielle Sonnenfinsternis"
+    }
+  ],
+  "2032": [
+    {
+      "date": "01.06.30 Uhr: 07:20",
+      "type": "Totale Mondfinsternis"
+    }
+  ],
+  "2033": [
+    {
+      "date": "14.04.33 Uhr: 21:11",
+      "type": "Totale Mondfinsternis"
+    }
+  ],
+  "2034": [
+    {
+      "date": "20.03.34 Uhr: 11:34",
+      "type": "Partielle Sonnenfinsternis"
+    },
+    {
+      "date": "28.09.34 Uhr: 03:41",
+      "type": "Partielle Mondfinsternis"
+    }
+  ],
+  "2035": [
+    {
+      "date": "19.08.35 Uhr: 03:07",
+      "type": "Partielle Mondfinsternis"
+    }
+  ],
+  "2036": [
+    {
+      "date": "11.02.36 Uhr:23:13",
+      "type": "Totale Mondfinsternis"
+    }
+  ]
+}

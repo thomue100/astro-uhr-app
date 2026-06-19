@@ -1,0 +1,174 @@
+<div class="controls">
+
+  <h2 class="app-title">
+    Astronomische Uhr - St. Marien zu Lübeck
+  </h2>
+
+  <!-- Einführung -->
+  <div class="controls-header top-rounded"
+       (click)="openModal('info')">
+    ℹ️ Einführung
+  </div>
+
+  <!-- Simulation -->
+  <div class="controls-header middle">
+    ▶ Simulation
+  </div>
+
+  <div class="controls-content">
+    ...
+  </div>
+
+  <!-- Kalender -->
+  <div class="controls-header middle">
+    ▼ Kalender
+  </div>
+
+  <div class="controls-content">
+    ...
+
+    <button class="controls-button"
+            (click)="openModal('calendar')">
+      ℹ️ Erläuterungen
+    </button>
+
+  </div>
+
+  <!-- Kunst & Geschichte -->
+  <div class="controls-header bottom-rounded"
+       (click)="openModal('history')">
+    ℹ️ Kunst & Geschichte
+  </div>
+
+</div>
+
+<!-- ✅ Overlays -->
+<app-modal
+  *ngIf="activeModal === 'info'"
+  title="Die Astronomische Uhr 🧭"
+  (close)="closeModal()">
+
+  <app-info-modal-content></app-info-modal-content>
+  <div modal-footer>
+    <button (click)="closeModal()">Schließen</button>
+  </div>
+
+</app-modal>
+
+
+<app-modal
+  *ngIf="activeModal === 'calendar'"
+  [title]="'Wochentags-Rechengang für den ' + (selectedDate | date:'dd.MM.yyyy') + ' 🗓️'"
+  (close)="closeModal()">
+
+  <app-calendar-modal
+    [date]="selectedDate">
+  </app-calendar-modal>
+
+  <div modal-footer>
+    <button (click)="closeModal()">Schließen</button>
+  </div>
+
+</app-modal>
+
+
+<app-modal
+  *ngIf="activeModal === 'history'"
+  title="Kunst & Geschichte der Astronomischen Uhr 📜"
+  (close)="closeModal()">
+
+  <app-history-modal-content/>
+
+  <div modal-footer>
+    <button (click)="closeModal()">Schließen</button>
+  </div>
+</app-modal>
+
+
+<!--
+<div class="controls" id="controls">
+  <h2 class="app-title">Astronomische Uhr - St. Marien zu Lübeck</h2>
+
+  <div class="controls-header" style="cursor: pointer;" (click)="openInfo()">
+    ▶️ Einführung
+  </div>
+
+  <div class="overlay" *ngIf="showInfo" (click)="closeInfo()">
+    <div class="modal" (click)="$event.stopPropagation()">
+      <button (click)="closeInfo()">×</button>
+      <h2>Die Astronomische Uhr 🧭</h2>
+      <p>
+        Hier dein kompletter Einführungstext...
+      </p>
+    </div>
+
+
+    <div id="simulationPanel">
+      <div class="controls-header" id="controlsHeader">
+        🔽 Simulation
+      </div>
+      <div class="controls-content" id="controlsContent">
+        <label for="dateTimeInput">Wähle Datum und Uhrzeit und starte die Animation:</label>
+        <input type="datetime-local"
+               id="dateTimeInput"
+               min="1911-01-01T00:00"
+               max="2080-12-31T23:59"/>
+        <div id="liveDateTime">--:----</div>
+        <button id="btnReset">Aktuelle Zeit</button>
+        <label>
+          Geschwindigkeit:
+          <input type="range" id="speedSlider" min="0.1" max="5" step="0.1" value="0.5"/>
+        </label>
+        <button id="toggleButton">▶️ Animation starten</button>
+      </div>
+    </div>
+    <div id="calendarPanel">
+      <div class="controls-header" id="calendarHeader">
+        ▶️ Kalender
+      </div>
+      <div class="controls-content controls-content--hidden" id="calendarContent">
+        <div id="calendarInfoDisplay">
+          **Osterdatum 2025:** --
+          <br>
+          **Goldene Zahl:** --
+          <br>
+          **Tagesbuchstabe:** --
+          <br>
+          **Tagesheilige(r):** --
+        </div>
+        <div id="calendarControlsRow"
+             style="margin-top: 15px; display: flex; align-items: center; justify-content: space-between; border-top: 1px solid #444; padding-top: 10px; gap: 5px;">
+          <div style="display: flex; gap: 2px;">
+            <button id="btnZoomOut" title="Zoom Out" style="width: 30px;">–</button>
+            <button id="btnZoomIn" title="Zoom In" style="width: 30px;">+</button>
+          </div>
+
+          <button id="btnCalendarReset" title="Reset Zoom & Rotation" style="width: 40px; font-size: 16px;">⟲</button>
+
+          <div style="display: flex; gap: 2px;">
+            <button id="btnRotateLeft" title="Drehen Links" style="width: 35px;">↺</button>
+            <button id="btnRotateRight" title="Drehen Rechts" style="width: 35px;">↻</button>
+          </div>
+        </div>
+        <button id="btnShowDayOfWeekLogic">Erläuterungen</button>
+        <div id="eclipseInfo">
+          <h3>Finsternisse</h3>
+          <ul style="list-style-type: none; padding-left: 0; margin-top: 5px; font-size: 13px;">
+            <li>Daten werden geladen...</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div id="historyPanel">
+      <div class="controls-header" id="historyHeader" style="cursor: pointer;">
+        ▶️ Kunst & Geschichte
+      </div>
+      <div class="controls-content controls-content--hidden" id="historyContent">
+        <p style="color: #aaa;">
+          Hier werden in Zukunft Informationen zur Geschichte der Uhr und ihrer kunsthistorischen Bedeutung angezeigt.
+        </p>
+        <button id="btnShowHistoryDetails">Mehr erfahren</button>
+      </div>
+    </div>
+  </div>
+-->

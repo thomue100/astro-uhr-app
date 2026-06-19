@@ -1,0 +1,852 @@
+{
+  "1911": {
+    "dayLetter": "A,B",
+    "goldenNumber": "12",
+    "easterDate": "16. April"
+  },
+  "1912": {
+    "dayLetter": "G",
+    "goldenNumber": "13",
+    "easterDate": "7. April"
+  },
+  "1913": {
+    "dayLetter": "E,F",
+    "goldenNumber": "14",
+    "easterDate": "23. März"
+  },
+  "1914": {
+    "dayLetter": "D,E",
+    "goldenNumber": "15",
+    "easterDate": "12. April"
+  },
+  "1915": {
+    "dayLetter": "C,D",
+    "goldenNumber": "16",
+    "easterDate": "4. April"
+  },
+  "1916": {
+    "dayLetter": "B",
+    "goldenNumber": "17",
+    "easterDate": "23. April"
+  },
+  "1917": {
+    "dayLetter": "G,A",
+    "goldenNumber": "18",
+    "easterDate": "8. April"
+  },
+  "1918": {
+    "dayLetter": "F,G",
+    "goldenNumber": "19",
+    "easterDate": "31. März"
+  },
+  "1919": {
+    "dayLetter": "E,F",
+    "goldenNumber": "1",
+    "easterDate": "20. April"
+  },
+  "1920": {
+    "dayLetter": "D",
+    "goldenNumber": "2",
+    "easterDate": "4. April"
+  },
+  "1921": {
+    "dayLetter": "B,C",
+    "goldenNumber": "3",
+    "easterDate": "27. März"
+  },
+  "1922": {
+    "dayLetter": "A,B",
+    "goldenNumber": "4",
+    "easterDate": "16. April"
+  },
+  "1923": {
+    "dayLetter": "G,A",
+    "goldenNumber": "5",
+    "easterDate": "1. April"
+  },
+  "1924": {
+    "dayLetter": "F",
+    "goldenNumber": "6",
+    "easterDate": "20. April"
+  },
+  "1925": {
+    "dayLetter": "D,E",
+    "goldenNumber": "7",
+    "easterDate": "12. April"
+  },
+  "1926": {
+    "dayLetter": "C,D",
+    "goldenNumber": "8",
+    "easterDate": "4. April"
+  },
+  "1927": {
+    "dayLetter": "B,C",
+    "goldenNumber": "9",
+    "easterDate": "17. April"
+  },
+  "1928": {
+    "dayLetter": "A",
+    "goldenNumber": "10",
+    "easterDate": "8. April"
+  },
+  "1929": {
+    "dayLetter": "F,G",
+    "goldenNumber": "11",
+    "easterDate": "31. März"
+  },
+  "1930": {
+    "dayLetter": "E,F",
+    "goldenNumber": "12",
+    "easterDate": "20. April"
+  },
+  "1931": {
+    "dayLetter": "D,E",
+    "goldenNumber": "13",
+    "easterDate": "5. April"
+  },
+  "1932": {
+    "dayLetter": "C",
+    "goldenNumber": "14",
+    "easterDate": "27. März"
+  },
+  "1933": {
+    "dayLetter": "A,B",
+    "goldenNumber": "15",
+    "easterDate": "16. April"
+  },
+  "1934": {
+    "dayLetter": "G,A",
+    "goldenNumber": "16",
+    "easterDate": "1. April"
+  },
+  "1935": {
+    "dayLetter": "F,G",
+    "goldenNumber": "17",
+    "easterDate": "21. April"
+  },
+  "1936": {
+    "dayLetter": "E",
+    "goldenNumber": "18",
+    "easterDate": "12. April"
+  },
+  "1937": {
+    "dayLetter": "C,D",
+    "goldenNumber": "19",
+    "easterDate": "28. März"
+  },
+  "1938": {
+    "dayLetter": "B,C",
+    "goldenNumber": "1",
+    "easterDate": "17. April"
+  },
+  "1939": {
+    "dayLetter": "A,B",
+    "goldenNumber": "2",
+    "easterDate": "9. April"
+  },
+  "1940": {
+    "dayLetter": "G",
+    "goldenNumber": "3",
+    "easterDate": "24. März"
+  },
+  "1941": {
+    "dayLetter": "E,F",
+    "goldenNumber": "4",
+    "easterDate": "13. April"
+  },
+  "1942": {
+    "dayLetter": "D,E",
+    "goldenNumber": "5",
+    "easterDate": "5. April"
+  },
+  "1943": {
+    "dayLetter": "C,D",
+    "goldenNumber": "6",
+    "easterDate": "25. April"
+  },
+  "1944": {
+    "dayLetter": "B",
+    "goldenNumber": "7",
+    "easterDate": "9. April"
+  },
+  "1945": {
+    "dayLetter": "G,A",
+    "goldenNumber": "8",
+    "easterDate": "1. April"
+  },
+  "1946": {
+    "dayLetter": "F,G",
+    "goldenNumber": "9",
+    "easterDate": "21. April"
+  },
+  "1947": {
+    "dayLetter": "E,F",
+    "goldenNumber": "10",
+    "easterDate": "6. April"
+  },
+  "1948": {
+    "dayLetter": "D",
+    "goldenNumber": "11",
+    "easterDate": "28. März"
+  },
+  "1949": {
+    "dayLetter": "B,C",
+    "goldenNumber": "12",
+    "easterDate": "17. April"
+  },
+  "1950": {
+    "dayLetter": "A,B",
+    "goldenNumber": "13",
+    "easterDate": "9. April"
+  },
+  "1951": {
+    "dayLetter": "G,A",
+    "goldenNumber": "14",
+    "easterDate": "25. März"
+  },
+  "1952": {
+    "dayLetter": "F",
+    "goldenNumber": "15",
+    "easterDate": "13. April"
+  },
+  "1953": {
+    "dayLetter": "D,E",
+    "goldenNumber": "16",
+    "easterDate": "5. April"
+  },
+  "1954": {
+    "dayLetter": "C,D",
+    "goldenNumber": "17",
+    "easterDate": "18. April"
+  },
+  "1955": {
+    "dayLetter": "B,C",
+    "goldenNumber": "18",
+    "easterDate": "10. April"
+  },
+  "1956": {
+    "dayLetter": "A",
+    "goldenNumber": "19",
+    "easterDate": "1. April"
+  },
+  "1957": {
+    "dayLetter": "F,G",
+    "goldenNumber": "1",
+    "easterDate": "21. April"
+  },
+  "1958": {
+    "dayLetter": "E,F",
+    "goldenNumber": "2",
+    "easterDate": "6. April"
+  },
+  "1959": {
+    "dayLetter": "D,E",
+    "goldenNumber": "3",
+    "easterDate": "29. März"
+  },
+  "1960": {
+    "dayLetter": "C",
+    "goldenNumber": "4",
+    "easterDate": "17. April"
+  },
+  "1961": {
+    "dayLetter": "A,B",
+    "goldenNumber": "5",
+    "easterDate": "2. April"
+  },
+  "1962": {
+    "dayLetter": "G,A",
+    "goldenNumber": "6",
+    "easterDate": "22. April"
+  },
+  "1963": {
+    "dayLetter": "F,G",
+    "goldenNumber": "7",
+    "easterDate": "14. April"
+  },
+  "1964": {
+    "dayLetter": "E",
+    "goldenNumber": "8",
+    "easterDate": "29. März"
+  },
+  "1965": {
+    "dayLetter": "C,D",
+    "goldenNumber": "9",
+    "easterDate": "18. April"
+  },
+  "1966": {
+    "dayLetter": "B,C",
+    "goldenNumber": "10",
+    "easterDate": "10. April"
+  },
+  "1967": {
+    "dayLetter": "A,B",
+    "goldenNumber": "11",
+    "easterDate": "26. März"
+  },
+  "1968": {
+    "dayLetter": "G",
+    "goldenNumber": "12",
+    "easterDate": "14. April"
+  },
+  "1969": {
+    "dayLetter": "E,F",
+    "goldenNumber": "13",
+    "easterDate": "6. April"
+  },
+  "1970": {
+    "dayLetter": "D,E",
+    "goldenNumber": "14",
+    "easterDate": "29. März"
+  },
+  "1971": {
+    "dayLetter": "C,D",
+    "goldenNumber": "15",
+    "easterDate": "11. April"
+  },
+  "1972": {
+    "dayLetter": "B",
+    "goldenNumber": "16",
+    "easterDate": "2. April"
+  },
+  "1973": {
+    "dayLetter": "G,A",
+    "goldenNumber": "17",
+    "easterDate": "22. April"
+  },
+  "1974": {
+    "dayLetter": "F,G",
+    "goldenNumber": "18",
+    "easterDate": "14. April"
+  },
+  "1975": {
+    "dayLetter": "E,F",
+    "goldenNumber": "19",
+    "easterDate": "30. März"
+  },
+  "1976": {
+    "dayLetter": "D",
+    "goldenNumber": "1",
+    "easterDate": "18. April"
+  },
+  "1977": {
+    "dayLetter": "B,C",
+    "goldenNumber": "2",
+    "easterDate": "10. April"
+  },
+  "1978": {
+    "dayLetter": "A,B",
+    "goldenNumber": "3",
+    "easterDate": "26. März"
+  },
+  "1979": {
+    "dayLetter": "G,A",
+    "goldenNumber": "4",
+    "easterDate": "15. April"
+  },
+  "1980": {
+    "dayLetter": "F",
+    "goldenNumber": "5",
+    "easterDate": "6. April"
+  },
+  "1981": {
+    "dayLetter": "D,E",
+    "goldenNumber": "6",
+    "easterDate": "19. April"
+  },
+  "1982": {
+    "dayLetter": "C,D",
+    "goldenNumber": "7",
+    "easterDate": "11. April"
+  },
+  "1983": {
+    "dayLetter": "B,C",
+    "goldenNumber": "8",
+    "easterDate": "3. April"
+  },
+  "1984": {
+    "dayLetter": "A",
+    "goldenNumber": "9",
+    "easterDate": "22. April"
+  },
+  "1985": {
+    "dayLetter": "F,G",
+    "goldenNumber": "10",
+    "easterDate": "7. April"
+  },
+  "1986": {
+    "dayLetter": "E,F",
+    "goldenNumber": "11",
+    "easterDate": "30. März"
+  },
+  "1987": {
+    "dayLetter": "D,E",
+    "goldenNumber": "12",
+    "easterDate": "19. April"
+  },
+  "1988": {
+    "dayLetter": "C",
+    "goldenNumber": "13",
+    "easterDate": "3. April"
+  },
+  "1989": {
+    "dayLetter": "A,B",
+    "goldenNumber": "14",
+    "easterDate": "26. März"
+  },
+  "1990": {
+    "dayLetter": "G,A",
+    "goldenNumber": "15",
+    "easterDate": "15. April"
+  },
+  "1991": {
+    "dayLetter": "F,G",
+    "goldenNumber": "16",
+    "easterDate": "31. März"
+  },
+  "1992": {
+    "dayLetter": "E",
+    "goldenNumber": "17",
+    "easterDate": "19. April"
+  },
+  "1993": {
+    "dayLetter": "C,D",
+    "goldenNumber": "18",
+    "easterDate": "11. April"
+  },
+  "1994": {
+    "dayLetter": "B,C",
+    "goldenNumber": "19",
+    "easterDate": "3. April"
+  },
+  "1995": {
+    "dayLetter": "A,B",
+    "goldenNumber": "1",
+    "easterDate": "16. April"
+  },
+  "1996": {
+    "dayLetter": "G",
+    "goldenNumber": "2",
+    "easterDate": "7. April"
+  },
+  "1997": {
+    "dayLetter": "E,F",
+    "goldenNumber": "3",
+    "easterDate": "30. März"
+  },
+  "1998": {
+    "dayLetter": "D,E",
+    "goldenNumber": "4",
+    "easterDate": "12. April"
+  },
+  "1999": {
+    "dayLetter": "C,D",
+    "goldenNumber": "5",
+    "easterDate": "4. April"
+  },
+  "2000": {
+    "dayLetter": "B",
+    "goldenNumber": "6",
+    "easterDate": "23. April"
+  },
+  "2001": {
+    "dayLetter": "G,A",
+    "goldenNumber": "7",
+    "easterDate": "15. April"
+  },
+  "2002": {
+    "dayLetter": "F,G",
+    "goldenNumber": "8",
+    "easterDate": "31. März"
+  },
+  "2003": {
+    "dayLetter": "E,F",
+    "goldenNumber": "9",
+    "easterDate": "20. April"
+  },
+  "2004": {
+    "dayLetter": "D",
+    "goldenNumber": "10",
+    "easterDate": "11. April"
+  },
+  "2005": {
+    "dayLetter": "B,C",
+    "goldenNumber": "11",
+    "easterDate": "27. März"
+  },
+  "2006": {
+    "dayLetter": "A,B",
+    "goldenNumber": "12",
+    "easterDate": "16. April"
+  },
+  "2007": {
+    "dayLetter": "G,A",
+    "goldenNumber": "13",
+    "easterDate": "8. April"
+  },
+  "2008": {
+    "dayLetter": "F",
+    "goldenNumber": "14",
+    "easterDate": "23. März"
+  },
+  "2009": {
+    "dayLetter": "D,E",
+    "goldenNumber": "15",
+    "easterDate": "12. April"
+  },
+  "2010": {
+    "dayLetter": "C,D",
+    "goldenNumber": "16",
+    "easterDate": "4. April"
+  },
+  "2011": {
+    "dayLetter": "B,C",
+    "goldenNumber": "17",
+    "easterDate": "24. April"
+  },
+  "2012": {
+    "dayLetter": "A",
+    "goldenNumber": "18",
+    "easterDate": "8. April"
+  },
+  "2013": {
+    "dayLetter": "F,G",
+    "goldenNumber": "19",
+    "easterDate": "31. März"
+  },
+  "2014": {
+    "dayLetter": "E,F",
+    "goldenNumber": "1",
+    "easterDate": "20. April"
+  },
+  "2015": {
+    "dayLetter": "D,E",
+    "goldenNumber": "2",
+    "easterDate": "5. April"
+  },
+  "2016": {
+    "dayLetter": "C",
+    "goldenNumber": "3",
+    "easterDate": "27. März"
+  },
+  "2017": {
+    "dayLetter": "A,B",
+    "goldenNumber": "4",
+    "easterDate": "16. April"
+  },
+  "2018": {
+    "dayLetter": "G,A",
+    "goldenNumber": "5",
+    "easterDate": "1. April"
+  },
+  "2019": {
+    "dayLetter": "F,G",
+    "goldenNumber": "6",
+    "easterDate": "21. April"
+  },
+  "2020": {
+    "dayLetter": "E",
+    "goldenNumber": "7",
+    "easterDate": "12. April"
+  },
+  "2021": {
+    "dayLetter": "C,D",
+    "goldenNumber": "8",
+    "easterDate": "4. April"
+  },
+  "2022": {
+    "dayLetter": "B,C",
+    "goldenNumber": "9",
+    "easterDate": "17. April"
+  },
+  "2023": {
+    "dayLetter": "A,B",
+    "goldenNumber": "10",
+    "easterDate": "9. April"
+  },
+  "2024": {
+    "dayLetter": "G",
+    "goldenNumber": "11",
+    "easterDate": "31. März"
+  },
+  "2025": {
+    "dayLetter": "E,F",
+    "goldenNumber": "12",
+    "easterDate": "20. April"
+  },
+  "2026": {
+    "dayLetter": "D,E",
+    "goldenNumber": "13",
+    "easterDate": "5. April"
+  },
+  "2027": {
+    "dayLetter": "C,D",
+    "goldenNumber": "14",
+    "easterDate": "28. März"
+  },
+  "2028": {
+    "dayLetter": "B",
+    "goldenNumber": "15",
+    "easterDate": "16. April"
+  },
+  "2029": {
+    "dayLetter": "G,A",
+    "goldenNumber": "16",
+    "easterDate": "1. April"
+  },
+  "2030": {
+    "dayLetter": "F,G",
+    "goldenNumber": "17",
+    "easterDate": "21. April"
+  },
+  "2031": {
+    "dayLetter": "E,F",
+    "goldenNumber": "18",
+    "easterDate": "13. April"
+  },
+  "2032": {
+    "dayLetter": "D",
+    "goldenNumber": "19",
+    "easterDate": "28. März"
+  },
+  "2033": {
+    "dayLetter": "B,C",
+    "goldenNumber": "1",
+    "easterDate": "17. April"
+  },
+  "2034": {
+    "dayLetter": "A,B",
+    "goldenNumber": "2",
+    "easterDate": "9. April"
+  },
+  "2035": {
+    "dayLetter": "G,A",
+    "goldenNumber": "3",
+    "easterDate": "25. März"
+  },
+  "2036": {
+    "dayLetter": "F",
+    "goldenNumber": "4",
+    "easterDate": "13. April"
+  },
+  "2037": {
+    "dayLetter": "D,E",
+    "goldenNumber": "5",
+    "easterDate": "5. April"
+  },
+  "2038": {
+    "dayLetter": "C,D",
+    "goldenNumber": "6",
+    "easterDate": "25. April"
+  },
+  "2039": {
+    "dayLetter": "B,C",
+    "goldenNumber": "7",
+    "easterDate": "10. April"
+  },
+  "2040": {
+    "dayLetter": "A",
+    "goldenNumber": "8",
+    "easterDate": "1. April"
+  },
+  "2041": {
+    "dayLetter": "F,G",
+    "goldenNumber": "9",
+    "easterDate": "21. April"
+  },
+  "2042": {
+    "dayLetter": "E,F",
+    "goldenNumber": "10",
+    "easterDate": "6. April"
+  },
+  "2043": {
+    "dayLetter": "D,E",
+    "goldenNumber": "11",
+    "easterDate": "29. März"
+  },
+  "2044": {
+    "dayLetter": "C",
+    "goldenNumber": "12",
+    "easterDate": "17. April"
+  },
+  "2045": {
+    "dayLetter": "A,B",
+    "goldenNumber": "13",
+    "easterDate": "9. April"
+  },
+  "2046": {
+    "dayLetter": "G,A",
+    "goldenNumber": "14",
+    "easterDate": "25. März"
+  },
+  "2047": {
+    "dayLetter": "F,G",
+    "goldenNumber": "15",
+    "easterDate": "14. April"
+  },
+  "2048": {
+    "dayLetter": "E",
+    "goldenNumber": "16",
+    "easterDate": "5. April"
+  },
+  "2049": {
+    "dayLetter": "C,D",
+    "goldenNumber": "17",
+    "easterDate": "18. April"
+  },
+  "2050": {
+    "dayLetter": "B,C",
+    "goldenNumber": "18",
+    "easterDate": "10. April"
+  },
+  "2051": {
+    "dayLetter": "A,B",
+    "goldenNumber": "19",
+    "easterDate": "2. April"
+  },
+  "2052": {
+    "dayLetter": "G",
+    "goldenNumber": "1",
+    "easterDate": "21. April"
+  },
+  "2053": {
+    "dayLetter": "E,F",
+    "goldenNumber": "2",
+    "easterDate": "6. April"
+  },
+  "2054": {
+    "dayLetter": "D,E",
+    "goldenNumber": "3",
+    "easterDate": "29. März"
+  },
+  "2055": {
+    "dayLetter": "C,D",
+    "goldenNumber": "4",
+    "easterDate": "18. April"
+  },
+  "2056": {
+    "dayLetter": "B",
+    "goldenNumber": "5",
+    "easterDate": "2. April"
+  },
+  "2057": {
+    "dayLetter": "G,A",
+    "goldenNumber": "6",
+    "easterDate": "22. April"
+  },
+  "2058": {
+    "dayLetter": "F,G",
+    "goldenNumber": "7",
+    "easterDate": "14. April"
+  },
+  "2059": {
+    "dayLetter": "E,F",
+    "goldenNumber": "8",
+    "easterDate": "30. März"
+  },
+  "2060": {
+    "dayLetter": "D",
+    "goldenNumber": "9",
+    "easterDate": "18. April"
+  },
+  "2061": {
+    "dayLetter": "B,C",
+    "goldenNumber": "10",
+    "easterDate": "10. April"
+  },
+  "2062": {
+    "dayLetter": "A,B",
+    "goldenNumber": "11",
+    "easterDate": "26. März"
+  },
+  "2063": {
+    "dayLetter": "G,A",
+    "goldenNumber": "12",
+    "easterDate": "15. April"
+  },
+  "2064": {
+    "dayLetter": "F",
+    "goldenNumber": "13",
+    "easterDate": "6. April"
+  },
+  "2065": {
+    "dayLetter": "D,E",
+    "goldenNumber": "14",
+    "easterDate": "29. März"
+  },
+  "2066": {
+    "dayLetter": "C,D",
+    "goldenNumber": "15",
+    "easterDate": "11. April"
+  },
+  "2067": {
+    "dayLetter": "B,C",
+    "goldenNumber": "16",
+    "easterDate": "3. April"
+  },
+  "2068": {
+    "dayLetter": "A",
+    "goldenNumber": "17",
+    "easterDate": "22. April"
+  },
+  "2069": {
+    "dayLetter": "F,G",
+    "goldenNumber": "18",
+    "easterDate": "14. April"
+  },
+  "2070": {
+    "dayLetter": "E,F",
+    "goldenNumber": "19",
+    "easterDate": "30. März"
+  },
+  "2071": {
+    "dayLetter": "D,E",
+    "goldenNumber": "1",
+    "easterDate": "19. April"
+  },
+  "2072": {
+    "dayLetter": "C",
+    "goldenNumber": "2",
+    "easterDate": "10. April"
+  },
+  "2073": {
+    "dayLetter": "A,B",
+    "goldenNumber": "3",
+    "easterDate": "26. März"
+  },
+  "2074": {
+    "dayLetter": "G,A",
+    "goldenNumber": "4",
+    "easterDate": "15. April"
+  },
+  "2075": {
+    "dayLetter": "F,G",
+    "goldenNumber": "5",
+    "easterDate": "7. April"
+  },
+  "2076": {
+    "dayLetter": "E",
+    "goldenNumber": "6",
+    "easterDate": "19. April"
+  },
+  "2077": {
+    "dayLetter": "C,D",
+    "goldenNumber": "7",
+    "easterDate": "11. April"
+  },
+  "2078": {
+    "dayLetter": "B,C",
+    "goldenNumber": "8",
+    "easterDate": "3. April"
+  },
+  "2079": {
+    "dayLetter": "A,B",
+    "goldenNumber": "9",
+    "easterDate": "7. April"
+  },
+  "2080": {
+    "dayLetter": "G",
+    "goldenNumber": "10",
+    "easterDate": "23. April"
+  }
+}
