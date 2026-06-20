@@ -1,518 +1,80 @@
-/* ==================================== */
-/* === 1. Grundstruktur (HTML/Body) === */
-/* ==================================== */
+/* ======================================================== */
+/* === BASIS & CONTAINER (Migration aus stylesAlt.css) ==== */
+/* ======================================================== */
 html, body {
-    margin: 0;
-    padding: 0;
-    /* FIX: Setzt die Höhe auf 100% des Viewports */
-    height: 100%;
-    /* FIX: Versteckt jeden Overflow, um den ungewollten vertikalen
-       Scrollbalken auf dem Desktop zu beseitigen.
-       (Mobile Scrollbarkeit wird im .container behandelt) */
-    overflow: hidden;
-    /* Stellt sicher, dass kein horizontaler Scrollbalken entsteht */
-    overflow-x: hidden;
+    margin: 0; padding: 0; height: 100%; width: 100%;
+    overflow: hidden; background-color: #071522;
     font-family: 'Segoe UI', Roboto, sans-serif;
     color: #f4f4f4;
-    font-size: 14px;
-    background-color: #071522;
 }
 
 body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    /* Nutzt 100vh für die korrekte Zentrierung */
+    display: flex; justify-content: center; align-items: center;
     height: 100vh;
 }
 
-/* ================= */
-/* === 2. Container === */
-/* ================= */
 .container {
-    display: flex;
-    align-items: flex-start;
-    gap: 30px;
-    padding: 20px;
-    background: rgba(10, 28, 40, 0.85); /* Halbdurchsichtiger, dunkler Hintergrund */
-    border-radius: 16px;
-    backdrop-filter: blur(4px);
+    display: flex; align-items: flex-start; gap: 30px;
+    padding: 20px; background: rgba(10, 28, 40, 0.85);
+    border-radius: 16px; backdrop-filter: blur(4px);
     box-shadow: 0 0 30px rgba(0, 0, 0, 0.4);
 }
 
-/* ==================================== */
-/* === 3. Controls (Sidebar/Einstellungen) === */
-/* ==================================== */
+/* ======================================================== */
+/* === SIDEBAR / CONTROLS                               === */
+/* ======================================================== */
 .controls {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    width: 250px;
-    padding: 0;
-    background-color: #0e2030;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-    color: #ffcc33;
-    /* FIX für untere Rundungen */
+    display: flex; flex-direction: column; gap: 6px;
+    width: 250px; background-color: #0e2030;
+    border-radius: 8px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
     overflow: hidden;
 }
 
-/* App-Titel */
 .app-title {
-    margin: 8px 14px 0 14px;
-    color: #ffcc33;
-    font-size: 1.3rem;
-    font-weight: bold;
-    line-height: 1.2;
+    margin: 8px 14px; color: #ffcc33;
+    font-size: 1.3rem; font-weight: bold;
 }
 
 .controls-header {
-    padding: 10px 14px;
-    background-color: #123b57;
-    color: #ffcc33;
-    font-weight: bold;
-    cursor: pointer;
+    padding: 10px 14px; background-color: #123b57;
+    color: #ffcc33; font-weight: bold; cursor: pointer;
     text-align: center;
-    /* FIX: Keine vertikalen Ränder, um Sprünge zu vermeiden */
-    margin: 0;
-    border-radius: 0;
-    border-bottom: none !important;
-}
-
-/* Rundung oben */
-.controls > #infoButtonHeader {
-    border-radius: 8px 8px 0 0;
-}
-
-/* Mittlere Header eckig */
-.controls > #simulationPanel .controls-header,
-.controls > #calendarPanel .controls-header {
-    border-radius: 0;
-}
-
-/* Letzter Header bleibt oben eckig */
-.controls > #historyPanel .controls-header {
-    border-radius: 0;
 }
 
 .controls-content {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    padding: 14px;
-    /* FIX: Explizite Übergänge für vertikales Padding und Border-Color */
-    transition: max-height 0.4s ease-out, opacity 0.4s ease-out, padding-top 0.4s ease-out, padding-bottom 0.4s ease-out, border-top-color 0.4s ease-out;
-    overflow: hidden;
-    max-height: 1000px;
-    /* **FIX:** Platz für die Border reservieren, aber transparent machen (verhindert Layout Shift) */
-    border-top: 1px solid transparent;
-    border-radius: 0;
-    position: relative;
-    border-bottom: none;
+    display: flex; flex-direction: column; gap: 8px;
+    padding: 14px; overflow: hidden;
+    background: #0e2030; border-top: 1px solid #1a4261;
 }
 
-    /* **FIX:** Border-Top nur bei sichtbarem Inhalt färben. Der Platz ist durch "transparent" bereits reserviert,
-        wodurch das Hüpfen verhindert wird, da sich die Elementgröße nicht ändert. */
-    .controls-content:not(.controls-content--hidden) {
-        /* Nur die Farbe ändern, der Platz ist bereits reserviert */
-        border-top-color: #1a4261;
-    }
+.controls-content--hidden { display: none; }
 
-/* Untere Rundung des gesamten Controls */
-.controls > #historyPanel .controls-content {
-    border-radius: 0 0 8px 8px;
-}
-
-.controls-content--hidden {
-    max-height: 0;
-    /* FIX: Explizites Padding auf 0 setzen, um Sprünge zu verhindern */
-    padding-top: 0;
-    padding-bottom: 0;
-    padding-left: 14px;
-    padding-right: 14px;
-    opacity: 0;
-}
-
-.secondary-controls {
-    border-top: 1px solid #1a4261;
-    padding-top: 12px;
-    margin-top: 8px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-/* === Datumsanzeige === */
-.date-display {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    margin-bottom: 10px;
-}
-
-    .date-display input[type="date"],
-    .date-display #liveDateTime {
-        font-size: 16px;
-        font-weight: bold;
-        text-align: center;
-    }
-
-/* ANPASSUNG: Vereinheitlichung der "kleineren" Ausgabetexte */
-#liveDateTime,
-.counter,
-#eclipseInfo {
-    font-size: 13px; /* Kleinste Größe gewählt */
-    color: #f4f4f4; /* Einheitliche, helle Farbe */
-}
-
-/* NEUE ANPASSUNG: Labels auf 13px setzen, um sie schmaler zu machen */
-.controls-content label {
-    font-size: 13px;
-    display: block;
-    width: 100%;
-    margin-bottom: 4px;
-}
-
-/* NEUE ANPASSUNG: Kalender-Info-Anzeige auf das Style von #liveDateTime anpassen */
-#calendarInfoDisplay {
-    background: rgba(255, 255, 255, 0.05);
-    padding: 6px 10px;
-    border-radius: 6px;
-    font-size: 13px; /* Explizit gesetzt, um sicherzugehen */
-    color: #f4f4f4;
-}
-/* ENDE ANPASSUNG */
-
-#liveDateTime {
-    background: rgba(255, 255, 255, 0.05);
-    padding: 6px 10px;
-    border-radius: 6px;
-    font-size: 13px; /* Explizit gesetzt, um sicherzugehen */
-    color: #f4f4f4;
-}
-
-.counter {
-    background: rgba(255, 255, 255, 0.05);
-    padding: 6px 10px;
-    border-radius: 6px;
-    /*font-size: 13px; <--- ENTFERNT, da jetzt oben definiert */
-}
-
-#eclipseInfo {
-    max-height: 150px;
-    overflow-y: auto;
-    padding-right: 8px;
-    /*color: #aaa; <--- ENTFERNT, da jetzt oben definiert */
-}
-
-    #eclipseInfo h3 {
-        color: #ffcc33;
-    }
-
-/* ======================== */
-/* === 4. Inputs und Buttons === */
-/* ======================== */
+/* ======================================================== */
+/* === ELEMENTE (Buttons, Inputs, Anzeigen)             === */
+/* ======================================================== */
 button {
-    background-color: #184a6b;
-    color: #ffcc33;
-    border: 1px solid #00aaff;
-    border-radius: 6px;
-    padding: 8px 12px;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 600;
-    transition: background-color 0.3s;
-    width: 100%;
+    background-color: #184a6b; color: #ffcc33;
+    border: 1px solid #00aaff; border-radius: 6px;
+    padding: 8px 12px; cursor: pointer;
+    width: 100%; transition: background-color 0.3s;
 }
 
-    button:hover {
-        background-color: #0066aa;
-    }
+button:hover { background-color: #0066aa; }
 
-input, select {
-    background-color: #12283b;
-    color: #f0f0f0;
-    border: 1px solid #00aaff;
-    border-radius: 4px;
-    padding: 4px 8px;
-    font-size: 14px;
-    transition: border-color 0.3s;
-    width: 100%;
-    box-sizing: border-box;
+input {
+    background-color: #12283b; color: #f0f0f0;
+    border: 1px solid #00aaff; border-radius: 4px;
+    padding: 4px 8px; width: 100%; box-sizing: border-box;
 }
 
-    input:focus, select:focus {
-        border-color: #ffcc33;
-        outline: none;
-    }
+#liveDateTime, #calendarInfoDisplay {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 6px 10px; border-radius: 6px;
+    font-size: 13px; color: #f4f4f4;
+}
 
-    /* === Range Slider === */
-    input[type="range"] {
-        -webkit-appearance: none;
-        width: 100%;
-        height: 8px;
-        background: #123b57;
-        border-radius: 4px;
-        margin-top: 5px;
-    }
-
-        input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 16px;
-            height: 16px;
-            background: #ffcc33;
-            border-radius: 50%;
-            cursor: pointer;
-            margin-top: -4px;
-        }
-
-        input[type="range"]::-webkit-slider-runnable-track {
-            width: 100%;
-            height: 8px;
-            background: #123b57;
-            border-radius: 4px;
-        }
-
-        input[type="range"]::-moz-range-track {
-            width: 100%;
-            height: 8px;
-            background: #123b57;
-            border-radius: 4px;
-        }
-
-    input[type="date-for-calc"] {
-        text-align: center;
-        font-size: 16px;
-        font-weight: bold;
-    }
-
-/* ================= */
-/* === 5. Canvas === */
-/* ================= */
 #canvas {
     border: 4px solid #00aaff;
-    border-radius: 12px;
-    background-color: #0a1c28;
-}
-
-/* ============================== */
-/* === 6. Mobile Optimierung === */
-/* ============================== */
-@media (max-width: 850px) {
-    .container {
-        flex-direction: column;
-        align-items: center;
-        padding: 10px;
-        width: 95%;
-        height: 95vh;
-        /* HIER IST DAS SCROLLEN FÜR MOBILE ERWÜNSCHT */
-        overflow-y: auto;
-        box-sizing: border-box;
-    }
-
-    .controls {
-        position: static;
-        max-height: none;
-        overflow: visible;
-    }
-
-    #canvas {
-        order: 1;
-        max-width: 100%;
-        margin-bottom: 20px;
-    }
-
-    body {
-        /* Oben ausrichten, wenn der Container scrollt */
-        align-items: flex-start;
-    }
-
-    .controls > div > .controls-header {
-        border-radius: 8px 8px 0 0 !important;
-        /* FIX: Auch hier Ränder entfernen */
-        margin: 0;
-    }
-
-    .controls > #infoButtonHeader {
-        border-radius: 8px 8px 0 0 !important;
-    }
-
-    .controls-content:not(.controls-content--hidden) {
-        border-top-color: #1a4261;
-    }
-
-    .controls-content {
-        border-bottom: none !important;
-        border-radius: 0 0 8px 8px !important;
-    }
-
-    /* ACHTUNG: Die Regeln für controls-content--hidden sind nun im globalen Scope definiert und verwenden keine !important mehr, um Modals nicht zu beeinträchtigen. */
-
-    .controls > #simulationPanel > .controls-header {
-        margin-top: 0;
-    }
-}
-
-/* ============================== */
-/* === 7. MODAL-STYLING       === */
-/* ============================== */
-.modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.7);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-    animation: fadeIn 0.3s ease-out;
-}
-
-.modal-content {
-    background-color: #0e2030;
-    padding: 25px;
-    border-radius: 10px;
-    width: 90%;
-    max-width: 600px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
-    animation: slideIn 0.3s ease-out;
-    max-height: 90vh;
-    overflow-y: auto;
-}
-
-    .modal-content h3 {
-        color: #ffcc33;
-        border-bottom: 2px solid #184a6b;
-        padding-bottom: 10px;
-        margin-top: 0;
-    }
-
-    .modal-content h4 {
-        color: #aaa;
-        margin-top: 15px;
-        margin-bottom: 10px;
-    }
-
-.modal-step {
-    margin-bottom: 15px;
-    padding: 10px;
-    border-left: 4px solid #00aaff;
-    background-color: #1a4261;
-}
-
-    .modal-step strong {
-        color: #fff;
-        display: block;
-        margin-bottom: 5px;
-    }
-
-    .modal-step .result {
-        font-size: 1.2em;
-        font-weight: bold;
-        color: #77dd77;
-        margin-top: 10px;
-    }
-
-.modal-close {
-    float: right;
-    font-size: 20px;
-    font-weight: bold;
-    cursor: pointer;
-    color: #aaa;
-    transition: color 0.2s;
-}
-
-    .modal-close:hover {
-        color: #fff;
-    }
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-
-    to {
-        opacity: 1;
-    }
-}
-
-@keyframes slideIn {
-    from {
-        transform: translateY(-50px);
-        opacity: 0;
-    }
-
-    to {
-        transform: translateY(0);
-        opacity: 1;
-    }
-}
-
-/* ========================================= */
-/* === GLOBAL KOMPAKTES SIDEBAR-LAYOUT    === */
-/* === (entspricht ehem. Kalender-Modus) === */
-/* ========================================= */
-
-/* Sidebar insgesamt etwas dichter */
-.controls {
-    gap: 6px;
-}
-
-/* Alle aufgeklappten Inhalte kompakter */
-.controls-content {
-    gap: 8px;
-    padding-top: 8px;
-    padding-bottom: 8px;
-}
-
-/* Kalender-Info dauerhaft kompakt */
-#calendarInfoDisplay {
-    padding: 5px 8px;
-    font-size: 12.5px;
-    line-height: 1.35;
-}
-
-/* Finsternisse: immer klar begrenzter Raum */
-#eclipseInfo {
-    max-height: 110px;
-    overflow-y: auto;
-    font-size: 12.5px;
-}
-
-/* Zoom-Leiste enger */
-#calendarZoomControls {
-    margin-top: 8px;
-    padding-top: 6px;
-}
-
-/* Buttons generell etwas flacher */
-.controls-content button {
-    padding: 6px 10px;
-    font-size: 13px;
-}
-
-/* Überschriften in dichten Bereichen */
-#eclipseInfo h3 {
-    margin: 4px 0 6px 0;
-    font-size: 14px;
-}
-
-/* ========================================= */
-/* === FIX: Versteckter Content darf keinen
-       vertikalen Platz beanspruchen       === */
-/* ========================================= */
-
-.controls-content--hidden {
-    display: none;
-}
-
-#calendarControlsRow button {
-    padding: 4px 0;
-    height: 32px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    border-radius: 12px; background-color: #0a1c28;
+    flex: 1; aspect-ratio: 1/1; max-height: 80vh;
 }
