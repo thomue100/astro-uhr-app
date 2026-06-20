@@ -1,7 +1,7 @@
 <div class="controls" id="controls">
   <h2 class="app-title">Astronomische Uhr - St. Marien zu Lübeck</h2>
 
-  <div class="controls-header" id="infoButtonHeader" (click)="openModal('info')">
+  <div class="controls-header" id="infoButtonHeader" style="cursor: pointer;" (click)="openModal('info')">
     ℹ️ Einführung
   </div>
 
@@ -9,19 +9,26 @@
     <div class="controls-header" id="controlsHeader" (click)="toggleSimulationCollapse()">
       {{ isSimulationCollapsed ? '▶️' : '🔽' }} Simulation
     </div>
-    <div class="controls-content" *ngIf="!isSimulationCollapsed" id="controlsContent">
-      <label for="dateTimeInput">Wähle Datum und Uhrzeit:</label>
-      <input type="datetime-local" id="dateTimeInput" [(ngModel)]="selectedDateTimeString" (change)="onDateTimeChange()"/>
+    <div class="controls-content" [class.controls-content--hidden]="isSimulationCollapsed" id="controlsContent">
+      <label for="dateTimeInput">Wähle Datum und Uhrzeit und starte die Animation:</label>
+      <input type="datetime-local"
+             id="dateTimeInput"
+             min="1911-01-01T00:00"
+             max="2080-12-31T23:59"
+             [(ngModel)]="selectedDateTimeString"
+             (change)="onDateTimeChange()"/>
 
       <div id="liveDateTime">{{ selectedDate | date:'dd.MM.yyyy HH:mm:ss' }}</div>
 
-      <button class="controls-button" (click)="setToCurrentTime()">Aktuelle Zeit</button>
+      <button id="btnReset" (click)="setToCurrentTime()">Aktuelle Zeit</button>
 
-      <label>Geschwindigkeit: {{ animationSpeed }}x</label>
-      <input type="range" id="speedSlider" min="0.1" max="5" step="0.1" [(ngModel)]="animationSpeed"/>
+      <label>
+        Geschwindigkeit:
+        <input type="range" id="speedSlider" min="0.1" max="5" step="0.1" [(ngModel)]="animationSpeed"/>
+      </label>
 
-      <button class="controls-button" (click)="toggleAnimation()">
-        {{ isAnimationRunning ? '⏸️ Stopp' : '▶️ Start' }}
+      <button id="toggleButton" (click)="toggleAnimation()">
+        {{ isAnimationRunning ? '⏸️ Animation stoppen' : '▶️ Animation starten' }}
       </button>
     </div>
   </div>
@@ -31,21 +38,23 @@
       {{ isCalendarCollapsed ? '▶️' : '🔽' }} Kalender
     </div>
     <div class="controls-content" [class.controls-content--hidden]="isCalendarCollapsed" id="calendarContent">
-      <div id="calendarInfoDisplay">Osterdatum: {{ easterDate | date:'dd.MM.yyyy' }}</div>
+      <div id="calendarInfoDisplay">
+        Osterdatum {{ selectedDate | date:'yyyy' }}: {{ easterDate | date:'dd.MM.yyyy' }}
+      </div>
 
       <div id="calendarControlsRow" style="margin-top: 15px; display: flex; align-items: center; justify-content: space-between; border-top: 1px solid #444; padding-top: 10px; gap: 5px;">
         <div style="display: flex; gap: 2px;">
-          <button (click)="zoomOut()" style="width: 30px;">–</button>
-          <button (click)="zoomIn()" style="width: 30px;">+</button>
+          <button id="btnZoomOut" title="Zoom Out" style="width: 30px;" (click)="zoomOut()">–</button>
+          <button id="btnZoomIn" title="Zoom In" style="width: 30px;" (click)="zoomIn()">+</button>
         </div>
-        <button (click)="resetCalendar()" style="width: 40px; font-size: 16px;">⟲</button>
+        <button id="btnCalendarReset" title="Reset Zoom & Rotation" style="width: 40px; font-size: 16px;" (click)="resetCalendar()">⟲</button>
         <div style="display: flex; gap: 2px;">
-          <button (click)="rotateLeft()" style="width: 35px;">↺</button>
-          <button (click)="rotateRight()" style="width: 35px;">↻</button>
+          <button id="btnRotateLeft" title="Drehen Links" style="width: 35px;" (click)="rotateLeft()">↺</button>
+          <button id="btnRotateRight" title="Drehen Rechts" style="width: 35px;" (click)="rotateRight()">↻</button>
         </div>
       </div>
 
-      <button class="controls-button" (click)="openModal('calendar')">Erläuterungen</button>
+      <button id="btnShowDayOfWeekLogic" (click)="openModal('calendar')">ℹ️ Erläuterungen</button>
 
       <div id="eclipseInfo">
         <h3>Finsternisse</h3>
@@ -57,8 +66,8 @@
   </div>
 
   <div id="historyPanel">
-    <div class="controls-header" id="historyHeader" (click)="openModal('history')">
-      ▶️ Kunst & Geschichte
+    <div class="controls-header" id="historyHeader" style="cursor: pointer;" (click)="openModal('history')">
+      ℹ️ Kunst & Geschichte
     </div>
   </div>
 </div>
