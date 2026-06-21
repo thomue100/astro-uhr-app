@@ -1,21 +1,19 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
-// Import der Konfiguration und Hilfsbibliotheken aus deiner Altanwendung
-// Passe die relativen Pfade hier genau an deine Ordnerstruktur an!
 import { AstroConfig } from '../../shared/utils/config';
 import { TimeUtility, configureTimeUtility } from '../../shared/utils/TimeUtility';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ClockSimulationService {
-  // Das reaktive Herzstück: Ein BehaviorSubject, das den aktuellen Daten-Stream verwaltet.
-  // Das Canvas und die Steuerung abonnieren dieses Subject.
+export class ClockSimulationService implements OnDestroy {
+
+  // Reaktiver Stream: Canvas und Controls abonnieren diesen
   private dateSource = new BehaviorSubject<Date>(new Date());
   selectedDate$ = this.dateSource.asObservable();
 
-  // AstroState — Eins-zu-eins Strukturreplik aus deiner AstroState.js
+  // AstroState — spiegelt AstroState.js wider
   astroState: any = {
     angleSun: 0,
     angleMoon: 0,
@@ -25,27 +23,30 @@ export class ClockSimulationService {
     bgInitialAngle: 0,
     useBackgroundImage: true,
     zodiacDayOffsetAngle: 0,
-    showCalendarDisk: true,  // 👈 Auf true gesetzt, damit die Scheibe sofort gezeichnet wird
-    showHeiland: true,       // 👈 Explizit hinzugefügt, da der Renderer dieses Flag erwartet
+    showCalendarDisk: false,
+    showHeiland: true,
     calendarZoom: 1.5,
     angleCalendarDisk: 0
   };
 
-  // Animations-Zustandswerte
+  // Animationszustand
   private animationFrameId: number | null = null;
   public isAnimationRunning = false;
-  public animationSpeed = 0.5; // Standardgeschwindigkeit aus AstroState.js
+  public animationSpeed = 0.5;
 
   constructor() {
-    // WICHTIG: Aus der index.html übernommen. Initialisiert die mathematischen
-    // Konstanten in TimeUtility und kaskadiert diese an AstroCalc weiter.
+    // Konfiguriert TimeUtility und kaskadiert an AstroCalc — entspricht dem
+    // Aufruf in der alten index.html vor dem Starten der ClockApp
     configureTimeUtility(AstroConfig, {});
 
-    // 1. Zwinge den Service, sofort die korrekten Winkel für das jetzige Datum zu berechnen:
+    // Initialen Zustand für das aktuelle Datum berechnen und einmalig publishen,
+    // damit der Canvas beim ersten Rendern korrekte Winkel vorfindet
     this.updateClockCalculations(this.dateSource.value);
-
-    // 2. Triggere danach einmalig den Stream, damit die Canvas-Komponente das statische Zeichnen anstößt:
     this.dateSource.next(this.dateSource.value);
+  }
+
+  ngOnDestroy(): void {
+    this.stopAnimation();
   }
 
   /**
@@ -56,21 +57,24 @@ export class ClockSimulationService {
   }
 
   /**
-   * Setzt ein neues Simulationsdatum (z.B. durch manuellen Input oder "Aktuelle Zeit"-Button)
+   * Setzt ein neues Simulationsdatum und triggert den Redraw-Stream.
+   * Wird sowohl vom manuellen Input als auch von der Animationsschleife gerufen.
    */
   setDate(date: Date): void {
-    // Erst berechnen, damit astroState aktuell ist, wenn das Subject feuert
+    // Erst Winkel berechnen, dann publishen — so hat der Canvas beim Subscribe
+    // bereits den aktuellen astroState und muss nicht ein Frame warten
     this.updateClockCalculations(date);
     this.dateSource.next(date);
   }
 
   /**
-   * Berechnet alle astronomischen Winkel neu basierend auf dem übergebenen Datum.
-   * Entspricht der mathematischen Logik aus ClockApp.js & InputController.js
+   * Berechnet alle astronomischen Winkel für das übergebene Datum und
+   * schreibt sie in astroState. Entspricht _updateAstroStateAngles()
+   * aus InputController.js sowie der Logik in ClockApp.animate().
    */
   public updateClockCalculations(date: Date): void {
     try {
-      // 1. Sonnenwinkel berechnen
+      // 1. Sonnenwinkel (bestimmt die angezeigte Uhrzeit)
       const angleSun = TimeUtility.calculateSunAngle(date);
       this.astroState.angleSun = typeof angleSun === 'number' ? angleSun : 0;
 
@@ -90,20 +94,22 @@ export class ClockSimulationService {
         typeof moonDiffRad === 'number' ? moonDiffRad : 0
       );
 
-      // 4. Tierkreiszeichen-Offset berechnen
+      // 4. Tierkreiszeichen-Offset: kombiniert Tagesposition im Jahr mit
+      // aktuellem Sonnenwinkel, damit die Scheibe zur richtigen Jahreszeit
+      // auf das richtige Sternbild zeigt
       this.astroState.angleZodiac = TimeUtility.calculateZodiacOffsetAngle(
         date,
         this.astroState.angleSun
       );
 
-      // 5. Kalenderscheiben-Winkel berechnen
+      // 5. Kalenderscheiben-Winkel (Bruchteil des Jahres → Winkel 0..2π)
       this.astroState.angleCalendarDisk = TimeUtility.calculateCalendarDiskAngle(date);
 
     } catch (error) {
       console.warn('ClockSimulationService: Berechnungen temporär verzögert/fehlgeschlagen:', error);
 
       // Fallbacks im Fehlerfall, damit im Testumfeld niemals 'undefined' auftritt
-      // und der Renderer nicht abstürzt:
+      // und der Renderer nicht abstürzt
       this.astroState.angleSun             = this.astroState.angleSun             || 0;
       this.astroState.mondAlter            = this.astroState.mondAlter            || 0;
       this.astroState.mondAlterFractional  = this.astroState.mondAlterFractional  || 0;
@@ -112,8 +118,10 @@ export class ClockSimulationService {
       this.astroState.angleCalendarDisk    = this.astroState.angleCalendarDisk    || 0;
     }
   }
+
   /**
-   * Schaltet die Animation an oder aus (Play / Pause)
+   * Startet oder stoppt die Animation (entspricht toggleAnimation()
+   * in InputController.js und der animate()-Schleife in ClockApp.js)
    */
   toggleAnimation(): void {
     if (this.isAnimationRunning) {
@@ -124,7 +132,9 @@ export class ClockSimulationService {
   }
 
   /**
-   * Startet die requestAnimationFrame-Schleife für performantes Rendern
+   * Animationsschleife mit requestAnimationFrame — entspricht ClockApp.animate().
+   * Der Zeitfortschritt pro Frame wird aus SPEED_FACTOR, animationSpeed und
+   * TWO_PI skaliert, damit die Verhältnisse zur alten App identisch bleiben.
    */
   private startAnimation(): void {
     this.isAnimationRunning = true;
@@ -132,23 +142,20 @@ export class ClockSimulationService {
     const animate = () => {
       if (!this.isAnimationRunning) return;
 
-      // Basis-Schrittberechnung bei ca. 60 FPS (16.67ms)
-      const fpsIntervalMs = 1000 / 60;
+      const baseSpeed = AstroConfig.SPEED_FACTOR * this.animationSpeed;
 
-      // Berechnung des Zeitfortschritts: Intervall * Reglergeschwindigkeit * Zeiteinheit
-      // Ein Speed-Wert von 0.5 fügt pro Frame entsprechend viele Millisekunden hinzu
-      const msToAdd = fpsIntervalMs * this.animationSpeed * 60;
+      // Simulierten Zeitfortschritt in Millisekunden pro Frame berechnen —
+      // exakt wie in ClockApp.animate(): ein voller Umlauf (2π) entspricht 24h
+      const simulatedMsPerFrame = baseSpeed * 24 * 60 * 60 * 1000 / AstroConfig.TWO_PI;
 
-      const newDate = new Date(this.getCurrentDate().getTime() + msToAdd);
+      const newDate = new Date(this.getCurrentDate().getTime() + simulatedMsPerFrame);
 
-      // Zustand im Service aktualisieren und Stream abfeuern
+      // setDate() berechnet die Winkel und feuert den Stream
       this.setDate(newDate);
 
-      // Schleife fortsetzen
       this.animationFrameId = requestAnimationFrame(animate);
     };
 
-    // Ersten Animationsframe anfordern
     this.animationFrameId = requestAnimationFrame(animate);
   }
 
@@ -157,7 +164,7 @@ export class ClockSimulationService {
    */
   stopAnimation(): void {
     this.isAnimationRunning = false;
-    if (this.animationFrameId) {
+    if (this.animationFrameId !== null) {
       cancelAnimationFrame(this.animationFrameId);
       this.animationFrameId = null;
     }

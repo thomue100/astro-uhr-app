@@ -1,20 +1,26 @@
-import { Component, ElementRef, OnInit, AfterViewInit, OnDestroy, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  OnInit,
+  AfterViewInit,
+  OnDestroy,
+  ViewChild,
+} from '@angular/core';
 import { Subscription } from 'rxjs';
+
 import { ClockSimulationService } from '../../core/services/clock-simulation.service';
 import { AstroConfig } from '../../shared/utils/config';
-
-// Importiere die TypeScript-sicheren Klassen
 import { ImageManager } from '../../shared/utils/ImageManager';
 import { ClockRenderer } from '../../shared/utils/ClockRenderer';
 
 @Component({
   selector: 'app-canvas',
-  templateUrl: './canvas.html', // Falls deine HTML-Datei auch nur canvas.html heißt
-  styleUrls: ['./canvas.css'],   // Falls deine CSS-Datei auch nur canvas.css heißt
-  standalone: true
+  templateUrl: './canvas.html',
+  styleUrls: ['./canvas.css'],
+  standalone: true,
 })
 export class Canvas implements OnInit, AfterViewInit, OnDestroy {
-  // Greift auf das #canvasElement aus dem HTML zu
+
   @ViewChild('canvasElement') canvasRef!: ElementRef<HTMLCanvasElement>;
 
   private clockSubscription!: Subscription;
@@ -24,9 +30,7 @@ export class Canvas implements OnInit, AfterViewInit, OnDestroy {
 
   constructor(private clockService: ClockSimulationService) {}
 
-  ngOnInit(): void {
-    // Vorbereitende Initialisierungen, falls benötigt
-  }
+  ngOnInit(): void {}
 
   ngAfterViewInit(): void {
     const canvas = this.canvasRef.nativeElement;
@@ -37,42 +41,45 @@ export class Canvas implements OnInit, AfterViewInit, OnDestroy {
       return;
     }
 
-    // 1. ImageManager mit Daten aus der AstroConfig initialisieren
-    const zodiacNames = AstroConfig.zodiacData?.names || ['widder', 'stier', 'zwillinge', 'krebs', 'loewe', 'jungfrau', 'waage', 'skorpion', 'schuetze', 'steinbock', 'wassermann', 'fische'];
-    const zodiacData = { names: zodiacNames };
-    const moonCycleDays = AstroConfig.MOON_CYCLE_DAYS || 30;
+    // ImageManager mit den Tierkreiszeichen-Namen aus der Config initialisieren
+    const zodiacData = { names: AstroConfig.zodiacData?.names ?? [] };
+    this.imageManager = new ImageManager(zodiacData, AstroConfig.MOON_CYCLE_DAYS);
 
-    this.imageManager = new ImageManager(zodiacData, moonCycleDays);
-    //this.renderer = new ClockRenderer(canvas, ctx, this.imageManager);
-    this.renderer = new ClockRenderer(canvas, ctx, this.imageManager, AstroConfig);
-
-    // 2. Bilder vorab laden (Preloading via Promise)
+    // Bilder vorab laden, dann Renderer aufbauen und Stream abonnieren —
+    // entspricht der Promise.all()-Logik in ClockApp.init()
     this.imageManager.preloadImages().then(() => {
-      console.log('Astro-Uhr: Alle Bilder erfolgreich geladen. Starte Rendering-Stream...');
+      console.log('Astro-Uhr: Alle Bilder geladen. Starte Rendering-Stream...');
 
-      // 3. Den RxJS-Stream aus dem Service abonnieren
-      this.clockSubscription = this.clockService.selectedDate$.subscribe(() => {
-        // Bei jedem "Tick" (Animation oder manuelle Änderung) zeichnen wir neu
-        const currentState = this.clockService.astroState;
-        this.renderer.drawClock(currentState);
-      });
+      // FIX: ClockRenderer bekommt das images-Objekt (nicht den imageManager selbst)
+      // plus AstroConfig, damit Zodiac-Winkel, Skalierungen und Konstanten stimmen
+      this.renderer = new ClockRenderer(
+        canvas,
+        ctx,
+        this.imageManager,   // ClockRenderer liest intern .images daraus
+        AstroConfig
+      );
 
-      // 4. Responsive Größenanpassung aktivieren
+      // Initiale Canvas-Größe setzen
       const container = canvas.parentElement;
       if (container) {
+        const { width, height } = container.getBoundingClientRect();
+        this.renderer.calculateResponsiveSize(width, height);
+      }
+
+      // Den reaktiven Stream abonnieren: jedes setDate() oder Animation-Tick
+      // löst einen Redraw aus — entspricht requestAnimationFrame in ClockApp.animate()
+      this.clockSubscription = this.clockService.selectedDate$.subscribe(() => {
+        this.renderer.drawClock(this.clockService.astroState);
+      });
+
+      // Responsive Größenanpassung: bei Container-Größenänderung Canvas neu skalieren
+      if (container) {
         this.resizeObserver = new ResizeObserver(entries => {
-          // Wir packen die Größenänderung in ein requestAnimationFrame,
-          // um die Resize-Schleife vom aktuellen Layout-Frame zu trennen.
           requestAnimationFrame(() => {
-            if (!entries || entries.length === 0) return;
-
-            const entry = entries[0];
-            const { width, height } = entry.contentRect;
-
-            // Nutze die im Renderer verbaute Methode für responsive Skalierung
+            if (!entries?.length) return;
+            const { width, height } = entries[0].contentRect;
             this.renderer.calculateResponsiveSize(width, height);
-
-            // Nach dem Resizen sofort einmal neu zeichnen
+            // Nach Resize sofort neu zeichnen mit aktuellem State
             this.renderer.drawClock(this.clockService.astroState);
           });
         });
@@ -82,7 +89,7 @@ export class Canvas implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    // WICHTIG: Streams abmelden und Observer stoppen, um Memory Leaks zu verhindern!
+    // Stream abmelden und Observer stoppen, damit keine Memory Leaks entstehen
     if (this.clockSubscription) {
       this.clockSubscription.unsubscribe();
     }
