@@ -5,6 +5,7 @@ import { ModalComponent } from '../../shared/modal/modal';
 import { HistoryModalComponent } from '../history-modal/history-modal';
 import { InfoModalComponent } from '../info-modal/info-modal';
 import { CalendarModalComponent } from '../calendar-modal/calendar-modal';
+import { ClockSimulationService } from '../../core/services/clock-simulation.service';
 
 type ModalType = 'info' | 'history' | 'calendar' | null;
 
@@ -25,25 +26,34 @@ type ModalType = 'info' | 'history' | 'calendar' | null;
 export class ControlsComponent implements OnInit, OnDestroy {
   activeModal: ModalType = null;
   selectedDate = new Date();
-  easterDate: Date = new Date(); // Platzhalter für Kalender-Logik
+  easterDate: Date = new Date();
 
   // Simulation
   isSimulationCollapsed = false;
   selectedDateTimeString: string = '';
   animationSpeed: number = 0.5;
   isAnimationRunning = false;
-  private animationIntervalId: any = null;
 
   // Kalender
   isCalendarCollapsed: boolean = false;
 
+  constructor(private clockService: ClockSimulationService) {}
+
   ngOnInit(): void {
+    // Abonniere Änderungen vom Service, damit Canvas und Controls synchron sind
+    this.clockService.selectedDate$.subscribe(date => {
+      this.selectedDate = date;
+      this.isAnimationRunning = this.clockService.isAnimationRunning;
+      this.updateDateTimeString();
+    });
+
     this.setToCurrentTime();
     this.calculateEaster();
   }
 
   ngOnDestroy(): void {
-    this.stopAnimation();
+    // Unsubscribe ist hier meist nicht nötig, da der Service als Singleton
+    // und die Komponente beim Destroy-Lifecycle aufräumt, aber halte es im Blick.
   }
 
   // --- MODAL-STEUERUNG ---
@@ -70,13 +80,12 @@ export class ControlsComponent implements OnInit, OnDestroy {
   }
 
   setToCurrentTime(): void {
-    this.selectedDate = new Date();
-    this.updateDateTimeString();
+    this.clockService.setDate(new Date());
   }
 
   onDateTimeChange(): void {
     if (this.selectedDateTimeString) {
-      this.selectedDate = new Date(this.selectedDateTimeString);
+      this.clockService.setDate(new Date(this.selectedDateTimeString));
     }
   }
 
@@ -89,28 +98,9 @@ export class ControlsComponent implements OnInit, OnDestroy {
   }
 
   toggleAnimation(): void {
-    if (this.isAnimationRunning) {
-      this.stopAnimation();
-    } else {
-      this.startAnimation();
-    }
-  }
-
-  private startAnimation(): void {
-    this.isAnimationRunning = true;
-    this.animationIntervalId = setInterval(() => {
-      const msToAdd = (50 * this.animationSpeed) * 60;
-      this.selectedDate = new Date(this.selectedDate.getTime() + msToAdd);
-      this.updateDateTimeString();
-    }, 50);
-  }
-
-  private stopAnimation(): void {
-    this.isAnimationRunning = false;
-    if (this.animationIntervalId) {
-      clearInterval(this.animationIntervalId);
-      this.animationIntervalId = null;
-    }
+    this.clockService.animationSpeed = this.animationSpeed;
+    this.clockService.toggleAnimation();
+    this.isAnimationRunning = this.clockService.isAnimationRunning;
   }
 
   // --- KALENDER-LOGIK ---
@@ -118,15 +108,14 @@ export class ControlsComponent implements OnInit, OnDestroy {
     this.isCalendarCollapsed = !this.isCalendarCollapsed;
   }
 
-  zoomIn(): void { /* Hier Renderer-Aufruf einfügen, z.B. this.renderer.zoom(1.1) */ }
-  zoomOut(): void { /* Hier Renderer-Aufruf einfügen */ }
-  rotateLeft(): void { /* Hier Renderer-Aufruf einfügen */ }
-  rotateRight(): void { /* Hier Renderer-Aufruf einfügen */ }
-  resetCalendar(): void { /* Hier Renderer-Aufruf einfügen */ }
+  zoomIn(): void { /* Service-Aufruf */ }
+  zoomOut(): void { /* Service-Aufruf */ }
+  rotateLeft(): void { /* Service-Aufruf */ }
+  rotateRight(): void { /* Service-Aufruf */ }
+  resetCalendar(): void { /* Service-Aufruf */ }
 
   private calculateEaster(): void {
     const year = this.selectedDate.getFullYear();
-    // Vereinfachte Osterformel als Platzhalter
     const f = Math.floor,
           c = year / 100,
           n = year - 19 * f(year / 19),

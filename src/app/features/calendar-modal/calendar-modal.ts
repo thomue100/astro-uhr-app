@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CalendarLogicService } from '../calendar-logic.service';
+import { CalendarLogicService } from '../../core/services/calendar-logic.service';
 
 @Component({
   selector: 'app-calendar-modal',
