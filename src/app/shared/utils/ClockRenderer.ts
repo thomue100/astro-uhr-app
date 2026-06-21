@@ -37,8 +37,6 @@ export class ClockRenderer {
         const angleMoon = parseAngle(state.angleMoon);
         const moonAge = parseAngle(state.mondAlter);
 
-        state.showCalendarDisk = false;
-
         if (state.showCalendarDisk) {
             this.drawCalendarDisk(center, rOuter, parseAngle(state.angleCalendarDisk), state);
         } else {

@@ -43,7 +43,8 @@ export class Canvas implements OnInit, AfterViewInit, OnDestroy {
     const moonCycleDays = AstroConfig.MOON_CYCLE_DAYS || 30;
 
     this.imageManager = new ImageManager(zodiacData, moonCycleDays);
-    this.renderer = new ClockRenderer(canvas, ctx, this.imageManager);
+    //this.renderer = new ClockRenderer(canvas, ctx, this.imageManager);
+    this.renderer = new ClockRenderer(canvas, ctx, this.imageManager, AstroConfig);
 
     // 2. Bilder vorab laden (Preloading via Promise)
     this.imageManager.preloadImages().then(() => {
