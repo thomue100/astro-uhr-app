@@ -74,38 +74,44 @@ export class ClockSimulationService {
       const angleSun = TimeUtility.calculateSunAngle(date);
       this.astroState.angleSun = typeof angleSun === 'number' ? angleSun : 0;
 
-      // 2. Mondalter und Bruchteil berechnen (wichtig für die Mondphasen-Bilder)
-      const moonAgeDetails = TimeUtility.calculateMoonAgeFromDate(date);
-      // Falls das Objekt oder Eigenschaften fehlen (z.B. im unkonfigurierten Test-Setup), sichern wir sie ab:
-      this.astroState.mondAlter = (moonAgeDetails && typeof moonAgeDetails.age === 'number') ? moonAgeDetails.age : 0;
-      this.astroState.mondAlterFractional = (moonAgeDetails && typeof moonAgeDetails.fractional === 'number') ? moonAgeDetails.fractional : 0;
+      // 2. Mondalter berechnen — WICHTIG: calculateMoonAgeFromDate gibt eine
+      // einfache number zurück (nicht {age, fractional} wie der alte Service
+      // fälschlicherweise annahm). Der ganzzahlige Anteil bestimmt das
+      // Mondphasenbild (Index 0..29), der Bruchteil wird für Animationen genutzt.
+      const moonAge = TimeUtility.calculateMoonAgeFromDate(date);
+      const moonAgeFractional = typeof moonAge === 'number' ? moonAge : 0;
+      this.astroState.mondAlterFractional = moonAgeFractional;
+      this.astroState.mondAlter = Math.floor(moonAgeFractional) + 1;
 
       // 3. Rotationsdifferenz des Mondes und finalen Mondwinkel berechnen
       const moonDiffRad = TimeUtility.calculateMoonRotationDifference(date);
-      const angleMoon = TimeUtility.calculateMoonAngle(this.astroState.angleSun, typeof moonDiffRad === 'number' ? moonDiffRad : 0);
-      this.astroState.angleMoon = typeof angleMoon === 'number' ? angleMoon : 0;
+      this.astroState.angleMoon = TimeUtility.calculateMoonAngle(
+        this.astroState.angleSun,
+        typeof moonDiffRad === 'number' ? moonDiffRad : 0
+      );
 
       // 4. Tierkreiszeichen-Offset berechnen
-      const angleZodiac = TimeUtility.calculateZodiacOffsetAngle(date, this.astroState.angleSun);
-      this.astroState.angleZodiac = typeof angleZodiac === 'number' ? angleZodiac : 0;
+      this.astroState.angleZodiac = TimeUtility.calculateZodiacOffsetAngle(
+        date,
+        this.astroState.angleSun
+      );
 
       // 5. Kalenderscheiben-Winkel berechnen
-      const angleCalendarDisk = TimeUtility.calculateCalendarDiskAngle(date);
-      this.astroState.angleCalendarDisk = typeof angleCalendarDisk === 'number' ? angleCalendarDisk : 0;
+      this.astroState.angleCalendarDisk = TimeUtility.calculateCalendarDiskAngle(date);
 
     } catch (error) {
       console.warn('ClockSimulationService: Berechnungen temporär verzögert/fehlgeschlagen:', error);
 
-      // Fallbacks im Fehlerfall, damit im Testumfeld niemals 'undefined' auftritt:
-      this.astroState.angleSun = this.astroState.angleSun || 0;
-      this.astroState.mondAlter = this.astroState.mondAlter || 0;
-      this.astroState.mondAlterFractional = this.astroState.mondAlterFractional || 0;
-      this.astroState.angleMoon = this.astroState.angleMoon || 0;
-      this.astroState.angleZodiac = this.astroState.angleZodiac || 0;
-      this.astroState.angleCalendarDisk = this.astroState.angleCalendarDisk || 0;
+      // Fallbacks im Fehlerfall, damit im Testumfeld niemals 'undefined' auftritt
+      // und der Renderer nicht abstürzt:
+      this.astroState.angleSun             = this.astroState.angleSun             || 0;
+      this.astroState.mondAlter            = this.astroState.mondAlter            || 0;
+      this.astroState.mondAlterFractional  = this.astroState.mondAlterFractional  || 0;
+      this.astroState.angleMoon            = this.astroState.angleMoon            || 0;
+      this.astroState.angleZodiac          = this.astroState.angleZodiac          || 0;
+      this.astroState.angleCalendarDisk    = this.astroState.angleCalendarDisk    || 0;
     }
   }
-
   /**
    * Schaltet die Animation an oder aus (Play / Pause)
    */
