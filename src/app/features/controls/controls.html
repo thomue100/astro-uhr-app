@@ -1,20 +1,21 @@
 <div class="controls" id="controls">
   <h2 class="app-title">Astronomische Uhr - St. Marien zu Lübeck</h2>
 
-  <div class="controls-header" id="infoButtonHeader" style="cursor: pointer;" (click)="openModal('info')">
+  <div class="controls-header" id="infoButtonHeader" style="cursor:pointer;" (click)="openModal('info')">
     ℹ️ Einführung
   </div>
 
   <!-- ================================================================== -->
   <!-- Simulations-Panel                                                   -->
+  <!-- Öffnen schließt automatisch den Kalender                           -->
   <!-- ================================================================== -->
   <div id="simulationPanel">
-    <div class="controls-header" id="controlsHeader" (click)="toggleSimulationCollapse()">
-      {{ isSimulationCollapsed ? '▶️' : '🔽' }} Simulation
+    <div class="controls-header" id="controlsHeader" (click)="openSimulation()">
+      {{ isSimulationOpen ? '🔽' : '▶️' }} Simulation
     </div>
 
     <div class="controls-content"
-         [class.controls-content--hidden]="isSimulationCollapsed"
+         [class.controls-content--hidden]="!isSimulationOpen"
          id="controlsContent">
 
       <label for="dateTimeInput">Datum und Uhrzeit:</label>
@@ -25,7 +26,7 @@
              [(ngModel)]="selectedDateTimeString"
              (change)="onDateTimeChange()" />
 
-      <!-- Livezeit-Anzeige, aktualisiert sich bei Animation automatisch -->
+      <!-- Livezeit — aktualisiert sich bei Animation automatisch via Stream -->
       <div id="liveDateTime">{{ selectedDate | date:'dd.MM.yyyy HH:mm:ss' }}</div>
 
       <button id="btnReset" (click)="setToCurrentTime()">⏱️ Aktuelle Zeit</button>
@@ -33,7 +34,7 @@
       <label for="speedSlider">
         Geschwindigkeit: {{ animationSpeed | number:'1.1-1' }}x
       </label>
-      <!-- (input) reagiert sofort beim Ziehen, nicht erst beim Loslassen -->
+      <!-- (input) reagiert sofort beim Ziehen des Sliders -->
       <input type="range"
              id="speedSlider"
              min="0.1"
@@ -42,7 +43,7 @@
              [(ngModel)]="animationSpeed"
              (input)="onSpeedChange()" />
 
-      <!-- Button-Text wechselt je nach Animationszustand im Service -->
+      <!-- Button-Text wechselt mit dem Animationszustand im Service -->
       <button id="toggleButton" (click)="toggleAnimation()">
         {{ isAnimationRunning ? '⏸️ Animation stoppen' : '▶️ Animation starten' }}
       </button>
@@ -50,22 +51,23 @@
   </div>
 
   <!-- ================================================================== -->
-  <!-- Kalender-Panel (startet eingeklappt)                               -->
+  <!-- Kalender-Panel                                                      -->
+  <!-- Öffnen schließt automatisch die Simulation und blendet die         -->
+  <!-- Kalenderscheibe im Canvas ein                                       -->
   <!-- ================================================================== -->
   <div id="calendarPanel">
-    <div class="controls-header" id="calendarHeader" (click)="toggleCalendarCollapse()">
-      {{ isCalendarCollapsed ? '▶️' : '🔽' }} Kalender
+    <div class="controls-header" id="calendarHeader" (click)="openCalendar()">
+      {{ isCalendarOpen ? '🔽' : '▶️' }} Kalender
     </div>
 
     <div class="controls-content"
-         [class.controls-content--hidden]="isCalendarCollapsed"
+         [class.controls-content--hidden]="!isCalendarOpen"
          id="calendarContent">
 
-      <!-- Kalenderinfos: Wochentag, Ostern, Goldene Zahl, Sonntagsbuchstabe -->
-      <div id="calendarInfoDisplay" [innerHTML]="calendarInfoHtml">
-      </div>
+      <!-- Wochentag, Ostern, Goldene Zahl, Sonntagsbuchstabe, Heilige -->
+      <div id="calendarInfoDisplay" [innerHTML]="calendarInfoHtml"></div>
 
-      <!-- Zoom- und Rotationssteuerung für die Kalenderscheibe -->
+      <!-- Zoom- und Rotationssteuerung für die Kalenderscheibe im Canvas -->
       <div id="calendarControlsRow"
            style="margin-top:15px; display:flex; align-items:center;
                   justify-content:space-between; border-top:1px solid #444;
@@ -74,11 +76,11 @@
           <button id="btnZoomOut" title="Zoom Out" style="width:30px;" (click)="zoomOut()">–</button>
           <button id="btnZoomIn"  title="Zoom In"  style="width:30px;" (click)="zoomIn()">+</button>
         </div>
-        <button id="btnCalendarReset" title="Reset Zoom & Rotation"
+        <button id="btnCalendarReset" title="Zoom und Rotation zurücksetzen"
                 style="width:40px; font-size:16px;" (click)="resetCalendar()">⟲</button>
         <div style="display:flex; gap:2px;">
-          <button id="btnRotateLeft"  title="Drehen Links"  style="width:35px;" (click)="rotateLeft()">↺</button>
-          <button id="btnRotateRight" title="Drehen Rechts" style="width:35px;" (click)="rotateRight()">↻</button>
+          <button id="btnRotateLeft"  title="Gegen den Uhrzeigersinn drehen" style="width:35px;" (click)="rotateLeft()">↺</button>
+          <button id="btnRotateRight" title="Im Uhrzeigersinn drehen"        style="width:35px;" (click)="rotateRight()">↻</button>
         </div>
       </div>
 
@@ -86,13 +88,13 @@
         ℹ️ Erläuterungen
       </button>
 
-      <!-- Finsternisse -->
+      <!-- Finsternisliste für das aktuelle Jahr -->
       <div id="eclipseInfo" [innerHTML]="eclipseInfoHtml"></div>
     </div>
   </div>
 
   <!-- ================================================================== -->
-  <!-- Kunst & Geschichte                                                  -->
+  <!-- Kunst & Geschichte (kein eigenes Panel, öffnet Modal direkt)       -->
   <!-- ================================================================== -->
   <div id="historyPanel">
     <div class="controls-header" id="historyHeader"

@@ -17,6 +17,9 @@ import { TimeUtility } from '../../shared/utils/TimeUtility';
 
 type ModalType = 'info' | 'history' | 'calendar' | null;
 
+// Die zwei umschaltbaren Panels — nie beide gleichzeitig offen
+type ActivePanel = 'simulation' | 'calendar';
+
 @Component({
   selector: 'app-controls',
   standalone: true,
@@ -35,18 +38,16 @@ export class ControlsComponent implements OnInit, OnDestroy {
 
   activeModal: ModalType = null;
 
-  // Spiegelt das aktuelle Datum aus dem Service wider — wird vom Template genutzt
+  // Aktuelles Datum aus dem Service — Template-Binding für Liveanzeige
   selectedDate: Date = new Date();
 
-  // Simulation
-  isSimulationCollapsed = false;
-  // Kalender startet eingeklappt, wie in InputController.js für Desktop
-  isCalendarCollapsed = true;
+  // Simulation startet geöffnet, Kalender geschlossen
+  activePanel: ActivePanel = 'simulation';
 
   selectedDateTimeString = '';
   animationSpeed = 0.5;
 
-  // Kalenderanzeige-Werte aus TimeUtility
+  // HTML-Strings für die Kalenderinfo-Anzeige
   calendarInfoHtml = '';
   eclipseInfoHtml  = '';
 
@@ -59,16 +60,15 @@ export class ControlsComponent implements OnInit, OnDestroy {
   // -----------------------------------------------------------------------
 
   ngOnInit(): void {
-    // Initialen Datetime-String aus dem Service-Datum befüllen
     this.selectedDate = this.clockService.getCurrentDate();
     this.updateDateTimeString();
 
     // Den reaktiven Stream des Service abonnieren: jedes setDate() oder
-    // Animation-Tick aktualisiert selectedDate und liveDateTime im Template
+    // Animation-Tick aktualisiert selectedDate und liveDateTime im Template.
+    // Den Input-String nur aktualisieren wenn keine Animation läuft,
+    // damit der Input nicht bei jedem Frame flackert.
     this.dateSubscription = this.clockService.selectedDate$.subscribe(date => {
       this.selectedDate = date;
-      // Wenn die Animation läuft, den Input nicht bei jedem Frame überschreiben
-      // (würde flackern); nur aktualisieren wenn Animation gestoppt ist
       if (!this.clockService.isAnimationRunning) {
         this.updateDateTimeString();
       }
@@ -83,11 +83,63 @@ export class ControlsComponent implements OnInit, OnDestroy {
   }
 
   // -----------------------------------------------------------------------
-  // Getter für das Template
+  // Getter für Template-Bindings
   // -----------------------------------------------------------------------
 
   get isAnimationRunning(): boolean {
     return this.clockService.isAnimationRunning;
+  }
+
+  get isSimulationOpen(): boolean {
+    return this.activePanel === 'simulation';
+  }
+
+  get isCalendarOpen(): boolean {
+    return this.activePanel === 'calendar';
+  }
+
+  // -----------------------------------------------------------------------
+  // Panel-Steuerung: Simulation ↔ Kalender (nie beide offen)
+  // -----------------------------------------------------------------------
+
+  /**
+   * Öffnet das Simulations-Panel und schließt den Kalender.
+   * Entspricht togglePanel('settings') in InputController.js.
+   */
+  openSimulation(): void {
+    if (this.activePanel === 'simulation') return; // bereits offen
+    this.activePanel = 'simulation';
+    // Kalender-Scheibe ausblenden wenn Simulation geöffnet wird
+    this.clockService.astroState.showCalendarDisk = false;
+    this.triggerRedraw();
+  }
+
+  /**
+   * Öffnet das Kalender-Panel und schließt die Simulation.
+   * Entspricht togglePanel('calendar') in InputController.js.
+   * Beim Öffnen: Animation stoppen, Kalenderinfos laden, Scheibe einblenden.
+   */
+  openCalendar(): void {
+    if (this.activePanel === 'calendar') return; // bereits offen
+
+    // Animation stoppen, da die Kalenderscheibe statisch ausgelesen wird
+    if (this.clockService.isAnimationRunning) {
+      this.clockService.stopAnimation();
+    }
+
+    this.activePanel = 'calendar';
+
+    // Zoom und Winkel zurücksetzen — entspricht dem Reset beim Panel-Öffnen
+    // in InputController.togglePanel('calendar')
+    this.clockService.astroState.calendarZoom = 1.5;
+    this.clockService.astroState.angleCalendarDisk =
+      TimeUtility.calculateCalendarDiskAngle(this.clockService.getCurrentDate());
+
+    // Kalenderscheibe einblenden
+    this.clockService.astroState.showCalendarDisk = true;
+
+    this.refreshCalendarInfo();
+    this.triggerRedraw();
   }
 
   // -----------------------------------------------------------------------
@@ -95,7 +147,7 @@ export class ControlsComponent implements OnInit, OnDestroy {
   // -----------------------------------------------------------------------
 
   openModal(type: Exclude<ModalType, null>): void {
-    // Animation pausieren beim Öffnen eines Modals, analog zu InputController.js
+    // Animation pausieren beim Öffnen eines Modals
     if (this.clockService.isAnimationRunning) {
       this.clockService.stopAnimation();
     }
@@ -116,30 +168,13 @@ export class ControlsComponent implements OnInit, OnDestroy {
   }
 
   // -----------------------------------------------------------------------
-  // Panel-Steuerung
-  // -----------------------------------------------------------------------
-
-  toggleSimulationCollapse(): void {
-    this.isSimulationCollapsed = !this.isSimulationCollapsed;
-  }
-
-  toggleCalendarCollapse(): void {
-    this.isCalendarCollapsed = !this.isCalendarCollapsed;
-    // Kalenderinfos aktualisieren, wenn das Panel geöffnet wird — entspricht
-    // dem Aufruf von updateCalendarInfo() in InputController.togglePanel()
-    if (!this.isCalendarCollapsed) {
-      this.refreshCalendarInfo();
-    }
-  }
-
-  // -----------------------------------------------------------------------
   // Simulation steuern
   // -----------------------------------------------------------------------
 
   /**
-   * Wird aufgerufen wenn der Nutzer den datetime-local Input ändert.
-   * Validiert das Datum und übergibt es an den Service (entspricht
-   * _updateSunAndRedraw() + updateSimDateFromInput() in InputController.js).
+   * Verarbeitet eine manuelle Datumseingabe. Validiert, stoppt die Animation
+   * und übergibt das neue Datum an den Service.
+   * Entspricht _updateSunAndRedraw() + updateSimDateFromInput() in InputController.js.
    */
   onDateTimeChange(): void {
     if (!this.selectedDateTimeString) return;
@@ -158,50 +193,37 @@ export class ControlsComponent implements OnInit, OnDestroy {
       return;
     }
 
-    // Animation stoppen wenn Nutzer manuell ein neues Datum eingibt
     if (this.clockService.isAnimationRunning) {
       this.clockService.stopAnimation();
     }
 
     this.clockService.setDate(d);
-
-    // Kalenderinfos aktualisieren, falls das Panel gerade offen ist
-    if (!this.isCalendarCollapsed) {
-      this.refreshCalendarInfo();
-    }
   }
 
   /**
-   * Setzt die Simulation auf die aktuelle Systemzeit zurück
-   * (entspricht resetToCurrentTime() in InputController.js)
+   * Setzt die Simulation auf die aktuelle Systemzeit zurück.
+   * Entspricht resetToCurrentTime() in InputController.js.
    */
   setToCurrentTime(): void {
     if (this.clockService.isAnimationRunning) {
       this.clockService.stopAnimation();
     }
-    const now = new Date();
-    this.clockService.setDate(now);
+    this.clockService.setDate(new Date());
     this.updateDateTimeString();
-
-    if (!this.isCalendarCollapsed) {
-      this.refreshCalendarInfo();
-    }
   }
 
   /**
-   * Startet oder stoppt die Animation und passt den Button-Text an.
+   * Startet oder stoppt die Animation.
    * Entspricht toggleAnimation() in InputController.js.
    */
   toggleAnimation(): void {
-    // Geschwindigkeit vor dem Start/Fortsetzen aus dem Slider übernehmen
     this.clockService.animationSpeed = this.animationSpeed;
     this.clockService.toggleAnimation();
   }
 
   /**
-   * Wird aufgerufen wenn der Geschwindigkeits-Slider bewegt wird.
-   * Die neue Geschwindigkeit wird sofort an den Service weitergegeben,
-   * damit laufende Animationen unmittelbar reagieren.
+   * Gibt die neue Geschwindigkeit sofort an den Service weiter,
+   * damit eine laufende Animation unmittelbar reagiert.
    */
   onSpeedChange(): void {
     this.clockService.animationSpeed = this.animationSpeed;
@@ -212,8 +234,8 @@ export class ControlsComponent implements OnInit, OnDestroy {
   // -----------------------------------------------------------------------
 
   /**
-   * Liest Kalender- und Finsternisdaten aus TimeUtility und
-   * baut den HTML-String, entspricht updateCalendarInfo() +
+   * Liest Kalender- und Finsternisdaten aus TimeUtility und baut die
+   * HTML-Strings für die Anzeige. Entspricht updateCalendarInfo() +
    * _generateCalendarHtml() + _generateEclipseHtml() in InputController.js.
    */
   refreshCalendarInfo(): void {
@@ -262,7 +284,7 @@ export class ControlsComponent implements OnInit, OnDestroy {
 
     this.calendarInfoHtml = html;
 
-    // Finsternisse
+    // Finsternisse — entspricht _generateEclipseHtml() in InputController.js
     const eclipses = TimeUtility.getEclipseInfo(year);
     let eclHtml = `<strong style="color:#ffcc33;font-weight:normal">Finsternisse ${year}:</strong><br>`;
     if (eclipses.length > 0) {
@@ -281,7 +303,9 @@ export class ControlsComponent implements OnInit, OnDestroy {
   }
 
   // -----------------------------------------------------------------------
-  // Kalender-Scheibe Steuerung
+  // Kalender-Scheibe Controls
+  // Entsprechen den Event-Handlern in InputController.setup() für
+  // btnZoomIn, btnZoomOut, btnRotateLeft, btnRotateRight, btnCalendarReset
   // -----------------------------------------------------------------------
 
   zoomIn(): void {
@@ -307,8 +331,8 @@ export class ControlsComponent implements OnInit, OnDestroy {
   }
 
   resetCalendar(): void {
-    // Zoom und Winkel auf Standardwerte zurücksetzen —
-    // entspricht dem Reset in InputController.togglePanel('calendar')
+    // Zoom und Winkel auf die korrekten Standardwerte für das aktuelle Datum
+    // zurücksetzen — entspricht btnCalendarReset in InputController.setup()
     this.clockService.astroState.calendarZoom = 1.5;
     this.clockService.astroState.angleCalendarDisk =
       TimeUtility.calculateCalendarDiskAngle(this.clockService.getCurrentDate());
@@ -320,11 +344,11 @@ export class ControlsComponent implements OnInit, OnDestroy {
   // -----------------------------------------------------------------------
 
   /**
-   * Erzeugt einen datetime-local-String aus dem aktuellen Service-Datum.
+   * Erzeugt den datetime-local-String ohne Timezone-Versatz.
    * Entspricht _createDateString() in InputController.js.
    */
   private updateDateTimeString(): void {
-    const date = this.clockService.getCurrentDate();
+    const date    = this.clockService.getCurrentDate();
     const tzOffset = date.getTimezoneOffset() * 60000;
     this.selectedDateTimeString = new Date(date.getTime() - tzOffset)
       .toISOString()
@@ -332,12 +356,11 @@ export class ControlsComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Löst einen Redraw aus, ohne das Datum zu ändern —
-   * wird für Zoom/Rotate der Kalenderscheibe benötigt.
+   * Feuert den selectedDate$-Stream erneut ohne das Datum zu ändern,
+   * damit der Canvas den aktualisierten astroState neu zeichnet.
+   * Wird für Zoom/Rotate/Reset der Kalenderscheibe benötigt.
    */
   private triggerRedraw(): void {
-    // setDate mit unverändertem Datum feuert den Stream erneut
-    // und der Canvas zeichnet mit dem aktualisierten astroState
     this.clockService.setDate(this.clockService.getCurrentDate());
   }
 }
