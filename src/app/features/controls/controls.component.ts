@@ -8,10 +8,10 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 
-import { ModalComponent } from '../../shared/modal/modal';
+import { ModalComponent } from '../../shared/modal/modal.component';
 import { HistoryModalComponent } from '../history-modal/history-modal';
-import { InfoModalComponent } from '../info-modal/info-modal';
-import { CalendarModalComponent } from '../calendar-modal/calendar-modal';
+import { InfoModalComponent } from '../info-modal/info-modal.component';
+import { CalendarModalComponent } from '../calendar-modal/calendar-modal.component';
 import { ClockSimulationService } from '../../core/services/clock-simulation.service';
 import { TimeUtility } from '../../shared/utils/TimeUtility';
 
@@ -31,8 +31,8 @@ type ActivePanel = 'simulation' | 'calendar';
     InfoModalComponent,
     CalendarModalComponent,
   ],
-  templateUrl: './controls.html',
-  styleUrls: ['./controls.css'],
+  templateUrl: './controls.component.html',
+  styleUrls: ['./controls.component.css'],
 })
 export class ControlsComponent implements OnInit, OnDestroy {
 

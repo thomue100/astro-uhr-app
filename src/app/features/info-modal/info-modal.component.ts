@@ -5,7 +5,7 @@ import { CommonModule } from '@angular/common';
   selector: 'app-info-modal-content',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './info-modal.html',
-  styleUrls: ['./info-modal.css']
+  templateUrl: './info-modal.component.html',
+  styleUrls: ['./info-modal.component.css']
 })
 export class InfoModalComponent {}

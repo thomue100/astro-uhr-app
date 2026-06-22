@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
-import { ControlsComponent } from './features/controls/controls';
-import { Canvas } from './features/canvas/canvas';
+import { ControlsComponent } from './features/controls/controls.component';
+import { CanvasComponent } from './features/canvas/canvas.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [ControlsComponent, Canvas],
-  templateUrl: './app.html',
+  imports: [ControlsComponent, CanvasComponent],
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
 })
 export class AppComponent {}

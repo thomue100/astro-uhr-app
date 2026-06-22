@@ -15,11 +15,11 @@ import { ClockRenderer } from '../../shared/utils/ClockRenderer';
 
 @Component({
   selector: 'app-canvas',
-  templateUrl: './canvas.html',
-  styleUrls: ['./canvas.css'],
+  templateUrl: './canvas.component.html',
+  styleUrls: ['./canvas.component.css'],
   standalone: true,
 })
-export class Canvas implements OnInit, AfterViewInit, OnDestroy {
+export class CanvasComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChild('canvasElement') canvasRef!: ElementRef<HTMLCanvasElement>;
 

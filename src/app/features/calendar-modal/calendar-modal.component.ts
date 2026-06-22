@@ -6,7 +6,8 @@ import { CalendarLogicService } from '../../core/services/calendar-logic.service
   selector: 'app-calendar-modal',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './calendar-modal.html'
+  templateUrl: './calendar-modal.component.html',
+  styleUrls: ['./calendar-modal.component.css']
 })
 export class CalendarModalComponent implements OnInit {
 
