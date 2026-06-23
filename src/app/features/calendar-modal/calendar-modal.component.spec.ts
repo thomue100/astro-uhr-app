@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClient } from '@angular/common/http';
-import { CalendarLogicService } from '../calendar-logic.service';
+import { CalendarLogicService } from '../../core/services/calendar-logic.service';
 import { of } from 'rxjs';
 
 describe('CalendarLogicService', () => {
