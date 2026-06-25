@@ -1,121 +1,92 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { Injectable, inject } from '@angular/core';
 import { DataFetchService } from './data-fetch.service';
 
-@Injectable({
-  providedIn: 'root'
-})
-export class CalendarLogicService {
+export interface CalendarResult {
+  title?: string;
+  dateStr: string;
+  year?: string;
+  dayOfWeek?: string;
+  usedSB?: string;
+  dailyLetter?: string;
+  sundayLetterRaw?: string;
+  ruleText?: string;
+  countHtml?: string;
+  error?: string;
+}
 
-  private dailyLetters = ['A', 'B', 'C', 'D', 'E', 'F', 'G'];
-  private weekDays = [
+@Injectable({ providedIn: 'root' })
+export class CalendarLogicService {
+  private readonly dataService = inject(DataFetchService);
+
+  private readonly dailyLetters = ['A', 'B', 'C', 'D', 'E', 'F', 'G'];
+  private readonly weekDays = [
     'Sonntag', 'Montag', 'Dienstag',
-    'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'
+    'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag',
   ];
 
-  // Korrekte Injektion beider Services
-  constructor(
-    private http: HttpClient,
-    private dataService: DataFetchService
-  ) {}
-
-  async calculate(simDate: Date) {
-
-    // 1. Sicherstellen, dass Daten geladen sind
+  async calculate(simDate: Date): Promise<CalendarResult> {
     await this.dataService.preloadData();
 
-    // 2. Daten abrufen
     const calendarData = this.dataService.getCalendarData();
     const dailyData = this.dataService.getDailyData();
 
-    // 3. Variablen EINMALIG definieren (Fehler behoben)
     const year = simDate.getFullYear().toString();
     const dateStr = simDate.toLocaleDateString('de-DE');
     const dayOfWeek = simDate.toLocaleDateString('de-DE', { weekday: 'long' });
     const monthStr = simDate.toLocaleDateString('de-DE', { month: 'long' });
     const day = simDate.getDate();
 
-    // 4. Jahr prüfen
-    const yearInfo = calendarData[year];
+    const yearInfo = calendarData[year] as Record<string, string> | undefined;
     if (!yearInfo) {
-      return {
-        error: `Keine Daten für Jahr ${year}`,
-        dateStr
-      };
+      return { error: `Keine Daten für Jahr ${year}`, dateStr };
     }
 
-    const sundayLetterRaw: string = yearInfo.dayLetter;
-
-    // 5. Tagesdaten bestimmen (Format "06. Jan")
-    const dayFormatted = simDate.getDate().toString().padStart(2, '0');
+    const sundayLetterRaw: string = yearInfo['dayLetter'] ?? '';
+    const dayFormatted = day.toString().padStart(2, '0');
     const monthShort = simDate.toLocaleDateString('de-DE', { month: 'short' });
     const key = `${dayFormatted}. ${monthShort}`;
 
-    const dailyInfo = dailyData[key];
-
+    const dailyInfo = dailyData[key] as Record<string, string> | undefined;
     if (!dailyInfo) {
-      return {
-        error: `Keine Tagesdaten für ${key}`,
-        dateStr
-      };
+      return { error: `Keine Tagesdaten für ${key}`, dateStr };
     }
 
-    const dailyLetter: string = dailyInfo.letter;
-
-    // 6. Sonntagsbuchstaben bestimmen
-    const parts = sundayLetterRaw.split(',').map((s: string) => s.trim());
+    const dailyLetter: string = dailyInfo['letter'] ?? '';
+    const parts = sundayLetterRaw.split(',').map(s => s.trim());
 
     let usedSB = '';
     let ruleText = '';
 
     if (parts.length === 2) {
-      const a = parts[0];
-      const b = parts[1];
-
+      const [a, b] = parts;
       if (simDate.getMonth() < 2) {
         usedSB = a;
-        ruleText = `
-          <strong>Lübecker Regel angewendet:</strong><br>
+        ruleText = `<strong>Lübecker Regel angewendet:</strong><br>
           Das Jahr ${year} verwendet die Buchstaben ${a} (Jan/Feb) und ${b} (ab März).<br>
-          Da der ${day}. ${monthStr} vor dem 1. März liegt, gilt der Buchstabe ${usedSB}.
-        `;
+          Da der ${day}. ${monthStr} vor dem 1. März liegt, gilt der Buchstabe ${usedSB}.`;
       } else {
         usedSB = b;
-        ruleText = `
-          <strong>Lübecker Regel angewendet:</strong><br>
+        ruleText = `<strong>Lübecker Regel angewendet:</strong><br>
           Das Jahr ${year} verwendet die Buchstaben ${a} (Jan/Feb) und ${b} (ab März).<br>
-          Da der ${day}. ${monthStr} nach dem 28. Februar liegt, gilt der Buchstabe ${usedSB}.
-        `;
+          Da der ${day}. ${monthStr} nach dem 28. Februar liegt, gilt der Buchstabe ${usedSB}.`;
       }
-    } else if (parts.length === 1) {
-      usedSB = parts[0];
-      ruleText = `
-        Für das Jahr ${year} gilt ein einheitlicher Sonntagsbuchstabe: ${usedSB}.
-      `;
+    } else {
+      usedSB = parts[0] ?? '';
+      ruleText = `Für das Jahr ${year} gilt ein einheitlicher Sonntagsbuchstabe: ${usedSB}.`;
     }
 
-    // 7. Zählung berechnen
     const sunIndex = this.dailyLetters.indexOf(usedSB);
     const dayIndex = this.dailyLetters.indexOf(dailyLetter);
-
     const diff = (dayIndex - sunIndex + 7) % 7;
 
     let countHtml = '';
     let currentIndex = sunIndex;
-
     for (let i = 0; i <= diff; i++) {
       const letter = this.dailyLetters[currentIndex];
       const dayName = this.weekDays[i];
-
-      const color =
-        i === 0 ? 'yellow' :
-        i === diff ? 'cyan' :
-        'white';
-
+      const color = i === 0 ? 'yellow' : i === diff ? 'cyan' : 'white';
       countHtml += `<span class="${color}">${letter}</span> (${dayName})`;
-
       if (i < diff) countHtml += ' → ';
-
       currentIndex = (currentIndex + 1) % 7;
     }
 
@@ -128,7 +99,7 @@ export class CalendarLogicService {
       dailyLetter,
       sundayLetterRaw,
       ruleText,
-      countHtml
+      countHtml,
     };
   }
 }

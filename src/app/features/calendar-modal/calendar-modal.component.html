@@ -1,71 +1,69 @@
-<div *ngIf="result">
-  <div class="modal-step">
-    <strong style="color: #ffcc33; font-size: 1.2em;">Die Kalenderscheibe</strong>
+<!-- src/app/features/calendar-modal/calendar-modal.component.html -->
+@if (result(); as r) {
+<div class="modal-step">
+  <strong style="color: #ffcc33; font-size: 1.2em;">Die Kalenderscheibe</strong>
 
-    <p style="font-size: 0.9em; margin-top: 5px;">
-      Die Kalenderscheibe ist in mehrere Kreise unterteilt. Im äußeren Kreis sieht man neben den 366 Tagen des Jahres –
-      366, weil der 29. Februar berücksichtigt ist – große rote Buchstaben: ABCDEFG. Diese sieben Buchstaben, die sich
-      laufend wiederholen, geben die Wochentage an. Welcher dieser Tagesbuchstaben (TB) den Sonntag bezeichnet, ist im
-      Innenkreis aus den roten Buchstaben neben den Jahreszahlen zu ersehen.
-    </p>
+  <p style="font-size: 0.9em; margin-top: 5px;">
+    Die Kalenderscheibe ist in mehrere Kreise unterteilt. Im äußeren Kreis sieht man neben den
+    366 Tagen des Jahres – 366, weil der 29. Februar berücksichtigt ist – große rote Buchstaben:
+    ABCDEFG. Diese sieben Buchstaben, die sich laufend wiederholen, geben die Wochentage an.
+    Welcher dieser Tagesbuchstaben (TB) den Sonntag bezeichnet, ist im Innenkreis aus den roten
+    Buchstaben neben den Jahreszahlen zu ersehen.
+  </p>
 
-    <p style="font-size: 0.9em; margin-top: 5px;">
-      Ganz innen stehen dabei die Daten der Ostersonntage. Dazwischen befinden sich die sogenannten Goldenen Zahlen,
-      die die Stellung des Jahres im 19‑jährigen Mondzyklus anzeigen.
-    </p>
+  <p style="font-size: 0.9em; margin-top: 5px;">
+    Ganz innen stehen dabei die Daten der Ostersonntage. Dazwischen befinden sich die sogenannten
+    Goldenen Zahlen, die die Stellung des Jahres im 19‑jährigen Mondzyklus anzeigen.
+  </p>
 
-    <hr style="border-top: 1px solid #1a4261; margin-top: 20px; margin-bottom: 20px;"/>
-    <strong style="color: #ffcc33; font-size: 1.2em;">
-      Die Lübecker Wochentags‑Regel
-    </strong>
+  <hr style="border-top: 1px solid #1a4261; margin-top: 20px; margin-bottom: 20px;" />
 
-    <p style="font-size: 0.9em; margin-top: 5px;">
-      Zurück zu den Wochentagen: Ein Sonntagsbuchstabe (SB), wie das {{ result.usedSB }} in unserem Beispiel,
-      bedeutet, dass alle mit diesem Buchstaben bezeichneten Tage Sonntage sind. Montag ist dann der nächste Buchstabe,
-      Dienstag der übernächste usw.
-    </p>
+  <strong style="color: #ffcc33; font-size: 1.2em;">Die Lübecker Wochentags‑Regel</strong>
 
-    <hr style="border-top: 1px solid #1a4261; margin-top: 20px; margin-bottom: 20px;"/>
+  <p style="font-size: 0.9em; margin-top: 5px;">
+    Zurück zu den Wochentagen: Ein Sonntagsbuchstabe (SB), wie das {{ r.usedSB }} in unserem
+    Beispiel, bedeutet, dass alle mit diesem Buchstaben bezeichneten Tage Sonntage sind. Montag
+    ist dann der nächste Buchstabe, Dienstag der übernächste usw.
+  </p>
 
-    <strong style="color: #ffcc33; font-size: 1.2em;">
-      Schritt 1: Sonntagsbuchstaben (SB) bestimmen 🗓️
-    </strong>
+  <hr style="border-top: 1px solid #1a4261; margin-top: 20px; margin-bottom: 20px;" />
 
-    <p style="margin-top: 10px;">
-      Die Jahreszahl {{ result.year }} hat die Sonntagsbuchstaben (SB): {{ result.sundayLetterRaw }}.
-    </p>
+  <strong style="color: #ffcc33; font-size: 1.2em;">
+    Schritt 1: Sonntagsbuchstaben (SB) bestimmen 🗓️
+  </strong>
 
-    <p [innerHTML]="result.ruleText"></p>
+  <p style="margin-top: 10px;">
+    Die Jahreszahl {{ r.year }} hat die Sonntagsbuchstaben (SB): {{ r.sundayLetterRaw }}.
+  </p>
 
-    <p style="margin-top: 10px;">
-      Der Tagesbuchstabe (TB) ist: {{ result.dailyLetter }}.
-    </p>
+  <p [innerHTML]="r.ruleText"></p>
 
-    <hr style="border-top: 1px solid #1a4261; margin-top: 20px; margin-bottom: 20px;"/>
-    <strong style="color: #ffcc33; font-size: 1.2em;">
-      Schritt 2: Vom SB zum TB zählen ⏱️
-    </strong>
+  <p style="margin-top: 10px;">Der Tagesbuchstabe (TB) ist: {{ r.dailyLetter }}.</p>
 
-    <p style="margin-top: 10px;">
-      Man startet die Zählung beim gültigen Sonntagsbuchstaben {{ result.usedSB }} und zählt weiter, bis der
-      Tagesbuchstabe {{ result.dailyLetter }} erreicht ist.
-    </p>
+  <hr style="border-top: 1px solid #1a4261; margin-top: 20px; margin-bottom: 20px;" />
 
-    <p style="margin-top: 10px;" [innerHTML]="result.countHtml"></p>
+  <strong style="color: #ffcc33; font-size: 1.2em;">
+    Schritt 2: Vom SB zum TB zählen ⏱️
+  </strong>
 
-    <hr style="border-top: 1px solid #1a4261; margin-top: 20px; margin-bottom: 20px;"/>
+  <p style="margin-top: 10px;">
+    Man startet die Zählung beim gültigen Sonntagsbuchstaben {{ r.usedSB }} und zählt weiter, bis
+    der Tagesbuchstabe {{ r.dailyLetter }} erreicht ist.
+  </p>
 
-    <strong style="color: #ffcc33; font-size: 1.2em;">
-      Schritt 3: Das Ergebnis ablesen 🎉
-    </strong>
+  <p style="margin-top: 10px;" [innerHTML]="r.countHtml"></p>
 
-    <p style="margin-top: 10px;">
-      Der Wochentag ergibt sich aus der Position in der Zählung (Position 0 = Sonntag, Position 6 = Samstag).
-    </p>
+  <hr style="border-top: 1px solid #1a4261; margin-top: 20px; margin-bottom: 20px;" />
 
-    <p style="margin-top: 15px; font-size: 1.2em; color: #2ecc71; font-weight: bold;">
-      Der {{ result.dateStr }} ist ein {{ result.dayOfWeek }}!
-    </p>
+  <strong style="color: #ffcc33; font-size: 1.2em;">Schritt 3: Das Ergebnis ablesen 🎉</strong>
 
-  </div>
+  <p style="margin-top: 10px;">
+    Der Wochentag ergibt sich aus der Position in der Zählung (Position 0 = Sonntag, Position 6 =
+    Samstag).
+  </p>
+
+  <p style="margin-top: 15px; font-size: 1.2em; color: #2ecc71; font-weight: bold;">
+    Der {{ r.dateStr }} ist ein {{ r.dayOfWeek }}!
+  </p>
 </div>
+}

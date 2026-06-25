@@ -1,135 +1,72 @@
+<!-- src/app/features/controls/controls.component.html -->
 <div class="controls" id="controls">
   <h2 class="app-title">Astronomische Uhr - St. Marien zu Lübeck</h2>
 
-  <div class="controls-header" id="infoButtonHeader" style="cursor:pointer;" (click)="openModal('info')">
+  <div class="controls-header" id="infoButtonHeader" (click)="openModal('info')">
     ℹ️ Einführung
   </div>
 
-  <!-- ================================================================== -->
-  <!-- Simulations-Panel                                                   -->
-  <!-- Öffnen schließt automatisch den Kalender                           -->
-  <!-- ================================================================== -->
+  <!-- Simulation Panel -->
   <div id="simulationPanel">
-    <div class="controls-header" id="controlsHeader" (click)="openSimulation()">
+    <div class="controls-header" (click)="openSimulation()">
       {{ isSimulationOpen ? '🔽' : '▶️' }} Simulation
     </div>
-
-    <div class="controls-content"
-         [class.controls-content--hidden]="!isSimulationOpen"
-         id="controlsContent">
-
-      <label for="dateTimeInput">Datum und Uhrzeit:</label>
-      <input type="datetime-local"
-             id="dateTimeInput"
-             min="1911-01-01T00:00"
-             max="2080-12-31T23:59"
-             [(ngModel)]="selectedDateTimeString"
-             (change)="onDateTimeChange()" />
-
-      <!-- Livezeit — aktualisiert sich bei Animation automatisch via Stream -->
-      <div id="liveDateTime">{{ selectedDate | date:'dd.MM.yyyy HH:mm:ss' }}</div>
-
-      <button id="btnReset" (click)="setToCurrentTime()">⏱️ Aktuelle Zeit</button>
-
-      <label for="speedSlider">
-        Geschwindigkeit: {{ animationSpeed | number:'1.1-1' }}x
-      </label>
-      <!-- (input) reagiert sofort beim Ziehen des Sliders -->
-      <input type="range"
-             id="speedSlider"
-             min="0.1"
-             max="5"
-             step="0.1"
-             [(ngModel)]="animationSpeed"
-             (input)="onSpeedChange()" />
-
-      <!-- Button-Text wechselt mit dem Animationszustand im Service -->
-      <button id="toggleButton" (click)="toggleAnimation()">
-        {{ isAnimationRunning ? '⏸️ Animation stoppen' : '▶️ Animation starten' }}
-      </button>
+    <div
+      class="controls-content"
+      [class.controls-content--hidden]="!isSimulationOpen"
+    >
+      <app-simulation-panel />
     </div>
   </div>
 
-  <!-- ================================================================== -->
-  <!-- Kalender-Panel                                                      -->
-  <!-- Öffnen schließt automatisch die Simulation und blendet die         -->
-  <!-- Kalenderscheibe im Canvas ein                                       -->
-  <!-- ================================================================== -->
+  <!-- Kalender Panel -->
   <div id="calendarPanel">
-    <div class="controls-header" id="calendarHeader" (click)="openCalendar()">
+    <div class="controls-header" (click)="openCalendar()">
       {{ isCalendarOpen ? '🔽' : '▶️' }} Kalender
     </div>
-
-    <div class="controls-content"
-         [class.controls-content--hidden]="!isCalendarOpen"
-         id="calendarContent">
-
-      <!-- Wochentag, Ostern, Goldene Zahl, Sonntagsbuchstabe, Heilige -->
-      <div id="calendarInfoDisplay" [innerHTML]="calendarInfoHtml"></div>
-
-      <!-- Zoom- und Rotationssteuerung für die Kalenderscheibe im Canvas -->
-      <div id="calendarControlsRow"
-           style="margin-top:15px; display:flex; align-items:center;
-                  justify-content:space-between; border-top:1px solid #444;
-                  padding-top:10px; gap:5px;">
-        <div style="display:flex; gap:2px;">
-          <button id="btnZoomOut" title="Zoom Out" style="width:30px;" (click)="zoomOut()">–</button>
-          <button id="btnZoomIn"  title="Zoom In"  style="width:30px;" (click)="zoomIn()">+</button>
-        </div>
-        <button id="btnCalendarReset" title="Zoom und Rotation zurücksetzen"
-                style="width:40px; font-size:16px;" (click)="resetCalendar()">⟲</button>
-        <div style="display:flex; gap:2px;">
-          <button id="btnRotateLeft"  title="Gegen den Uhrzeigersinn drehen" style="width:35px;" (click)="rotateLeft()">↺</button>
-          <button id="btnRotateRight" title="Im Uhrzeigersinn drehen"        style="width:35px;" (click)="rotateRight()">↻</button>
-        </div>
-      </div>
-
-      <button id="btnShowDayOfWeekLogic" (click)="openModal('calendar')">
-        ℹ️ Erläuterungen
-      </button>
-
-      <!-- Finsternisliste für das aktuelle Jahr -->
-      <div id="eclipseInfo" [innerHTML]="eclipseInfoHtml"></div>
+    <div
+      class="controls-content"
+      [class.controls-content--hidden]="!isCalendarOpen"
+    >
+      <app-calendar-panel (openCalendarModal)="openModal('calendar')" />
     </div>
   </div>
 
-  <!-- ================================================================== -->
-  <!-- Kunst & Geschichte (kein eigenes Panel, öffnet Modal direkt)       -->
-  <!-- ================================================================== -->
+  <!-- Kunst & Geschichte -->
   <div id="historyPanel">
-    <div class="controls-header" id="historyHeader"
-         style="cursor:pointer;" (click)="openModal('history')">
+    <div class="controls-header" (click)="openModal('history')">
       ℹ️ Kunst & Geschichte
     </div>
   </div>
 </div>
 
-<!-- ================================================================== -->
-<!-- Modals                                                               -->
-<!-- ================================================================== -->
-<app-modal *ngIf="activeModal === 'info'"
-           title="Die Astronomische Uhr 🧭"
-           (close)="closeModal()">
-  <app-info-modal-content></app-info-modal-content>
+<!-- Modals -->
+@if (activeModal() === 'info') {
+<app-modal title="Die Astronomische Uhr 🧭" (close)="closeModal()">
+  <app-info-modal-content />
   <div modal-footer>
     <button (click)="closeModal()">Schließen</button>
   </div>
 </app-modal>
+}
 
-<app-modal *ngIf="activeModal === 'calendar'"
-           [title]="'Wochentags-Rechengang für den ' + (selectedDate | date:'dd.MM.yyyy') + ' 🗓️'"
-           (close)="closeModal()">
-  <app-calendar-modal [date]="selectedDate"></app-calendar-modal>
+@if (activeModal() === 'calendar') {
+<app-modal
+  [title]="'Wochentags-Rechengang für den ' + (currentDate() | date: 'dd.MM.yyyy') + ' 🗓️'"
+  (close)="closeModal()"
+>
+  <app-calendar-modal [date]="currentDate()" />
   <div modal-footer>
     <button (click)="closeModal()">Schließen</button>
   </div>
 </app-modal>
+}
 
-<app-modal *ngIf="activeModal === 'history'"
-           title="Kunst & Geschichte der Astronomischen Uhr 📜"
-           (close)="closeModal()">
-  <app-history-modal-content></app-history-modal-content>
+@if (activeModal() === 'history') {
+<app-modal title="Kunst & Geschichte der Astronomischen Uhr 📜" (close)="closeModal()">
+  <app-history-modal-content />
   <div modal-footer>
     <button (click)="closeModal()">Schließen</button>
   </div>
 </app-modal>
+}

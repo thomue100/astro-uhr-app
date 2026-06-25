@@ -1,11 +1,10 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-info-modal-content',
   standalone: true,
-  imports: [CommonModule],
+  imports: [],
   templateUrl: './info-modal.component.html',
-  styleUrls: ['./info-modal.component.css']
+  styleUrls: ['./info-modal.component.css'],
 })
 export class InfoModalComponent {}
