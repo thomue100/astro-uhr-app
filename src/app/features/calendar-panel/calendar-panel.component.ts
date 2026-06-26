@@ -115,6 +115,10 @@ export class CalendarPanelComponent implements OnInit {
       eclHtml += `<span style="color:white;font-weight:normal">Keine Finsternisse in ${year} vorhanden.</span>`;
     }
     this.eclipseInfoHtml.set(eclHtml);
+
+    this.clockService.setAngleCalendarDisk(
+      TimeUtility.calculateCalendarDiskAngle(this.clockService.getCurrentDate())
+    );
   }
 
   private _triggerRedraw(): void {
