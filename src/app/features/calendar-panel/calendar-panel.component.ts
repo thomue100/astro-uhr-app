@@ -14,14 +14,13 @@ export class CalendarPanelComponent implements OnInit, OnDestroy {
   private dateSubscription?: Subscription;
 
   readonly openCalendarModal = output<void>();
+  readonly openCalendarViewer = output<void>(); // NEU
 
   readonly calendarInfoHtml = signal('');
   readonly eclipseInfoHtml = signal('');
 
   ngOnInit(): void {
     this._refreshCalendarInfo();
-
-    // Auf Datumsänderungen reagieren (z.B. wenn Datum manuell geändert wird)
     this.dateSubscription = this.clockService.selectedDate$.subscribe(() => {
       this._refreshCalendarInfo();
     });

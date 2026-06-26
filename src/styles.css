@@ -379,3 +379,27 @@ input[type="range"]::-moz-range-track {
         border-radius: 0 0 8px 8px !important;
     }
 }
+/* ======================================================== */
+/* === CALENDAR PANEL: Öffnen-Button                    === */
+/* ======================================================== */
+.cv-open-btn {
+    background: linear-gradient(135deg, #184a6b, #0066aa);
+    color: #ffcc33;
+    border: 1px solid #00aaff;
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 4px;
+    margin-bottom: 2px;
+    letter-spacing: 0.3px;
+    transition: background 0.25s, box-shadow 0.25s;
+    box-shadow: 0 0 8px rgba(0, 170, 255, 0.2);
+}
+
+.cv-open-btn:hover {
+    background: linear-gradient(135deg, #0066aa, #0088cc);
+    box-shadow: 0 0 14px rgba(0, 170, 255, 0.45);
+}

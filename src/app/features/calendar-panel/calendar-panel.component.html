@@ -1,6 +1,15 @@
 <!-- src/app/features/controls/panels/calendar-panel/calendar-panel.component.html -->
 <div id="calendarInfoDisplay" [innerHTML]="calendarInfoHtml()"></div>
 
+<button
+  class="cv-open-btn"
+  (click)="openCalendarViewer.emit()"
+  title="Kalenderscheibe im interaktiven Vollbild-Viewer öffnen"
+>
+  🔍 Kalenderscheibe öffnen
+</button>
+
+
 <div
   style="margin-top:15px; display:flex; align-items:center;
          justify-content:space-between; border-top:1px solid #444;

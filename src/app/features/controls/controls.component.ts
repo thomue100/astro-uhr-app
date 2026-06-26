@@ -6,6 +6,7 @@ import { InfoModalComponent } from '../info-modal/info-modal.component';
 import { CalendarModalComponent } from '../calendar-modal/calendar-modal.component';
 import { SimulationPanelComponent } from '../simulation-panel/simulation-panel.component';
 import { CalendarPanelComponent } from '../calendar-panel/calendar-panel.component';
+import { CalendarViewerComponent } from '../calendar-viewer/calendar-viewer.component'; // NEU
 import { ClockSimulationService } from '../../core/services/clock-simulation.service';
 import { TimeUtility } from '../../shared/utils/TimeUtility';
 
@@ -23,6 +24,7 @@ type ActivePanel = 'simulation' | 'calendar' | 'none';
     CalendarModalComponent,
     SimulationPanelComponent,
     CalendarPanelComponent,
+    CalendarViewerComponent, // NEU
   ],
   templateUrl: './controls.component.html',
   styleUrls: ['./controls.component.css'],
@@ -35,8 +37,8 @@ export class ControlsComponent {
 
   readonly activeModal = signal<ModalType>(null);
   readonly activePanel = signal<ActivePanel>('simulation');
+  readonly showCalendarViewer = signal(false); // NEU
 
-  // Für den CalendarModal-Input
   readonly currentDate = this.clockService.currentDate;
 
   get isSimulationOpen(): boolean {
@@ -49,7 +51,6 @@ export class ControlsComponent {
 
   openSimulation(): void {
     if (this.activePanel() === 'simulation') {
-      // Bereits offen → zuklappen
       this.activePanel.set('none');
       this.clockService.setShowCalendarDisk(false);
       this.clockService.triggerRedraw();
@@ -62,7 +63,6 @@ export class ControlsComponent {
 
   openCalendar(): void {
     if (this.activePanel() === 'calendar') {
-      // Bereits offen → zuklappen und Kalenderscheibe ausblenden
       this.activePanel.set('none');
       this.clockService.setShowCalendarDisk(false);
       this.clockService.triggerRedraw();
@@ -77,8 +77,18 @@ export class ControlsComponent {
       TimeUtility.calculateCalendarDiskAngle(this.clockService.getCurrentDate()),
     );
     this.clockService.setShowCalendarDisk(true);
-    // triggerRedraw statt setDate — Subject feuert immer zuverlässig
     this.clockService.triggerRedraw();
+  }
+
+  // NEU: Viewer öffnen/schließen
+  openCalendarViewer(): void {
+    this.showCalendarViewer.set(true);
+    document.body.style.overflow = 'hidden';
+  }
+
+  closeCalendarViewer(): void {
+    this.showCalendarViewer.set(false);
+    document.body.style.overflow = '';
   }
 
   openModal(type: Exclude<ModalType, null>): void {
@@ -95,7 +105,9 @@ export class ControlsComponent {
   }
 
   handleEscape(): void {
-    if (this.activeModal()) {
+    if (this.showCalendarViewer()) {
+      this.closeCalendarViewer();
+    } else if (this.activeModal()) {
       this.closeModal();
     }
   }

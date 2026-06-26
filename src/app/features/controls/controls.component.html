@@ -28,7 +28,10 @@
       class="controls-content"
       [class.controls-content--hidden]="!isCalendarOpen"
     >
-      <app-calendar-panel (openCalendarModal)="openModal('calendar')" />
+      <app-calendar-panel
+        (openCalendarModal)="openModal('calendar')"
+        (openCalendarViewer)="openCalendarViewer()"
+      />
     </div>
   </div>
 
@@ -39,6 +42,11 @@
     </div>
   </div>
 </div>
+
+<!-- Kalender-Viewer (Vollbild) NEU -->
+@if (showCalendarViewer()) {
+<app-calendar-viewer (close)="closeCalendarViewer()" />
+}
 
 <!-- Modals -->
 @if (activeModal() === 'info') {
