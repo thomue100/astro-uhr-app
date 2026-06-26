@@ -1,6 +1,6 @@
 // src/app/core/services/clock-simulation.service.ts
-import { Injectable, OnDestroy, signal, computed, inject } from '@angular/core';
-import { toObservable } from '@angular/core/rxjs-interop';
+import { Injectable, OnDestroy, signal } from '@angular/core';
+import { Subject } from 'rxjs';
 import { AstroConfig } from '../../shared/utils/config';
 import { TimeUtility, configureTimeUtility } from '../../shared/utils/TimeUtility';
 import { createAstroStateSignal } from '../../shared/models/astro-signal.signal';
@@ -12,14 +12,17 @@ export class ClockSimulationService implements OnDestroy {
   private readonly _currentDate = signal<Date>(new Date());
   readonly currentDate = this._currentDate.asReadonly();
 
-  // Für Komponenten die noch Observables benötigen (CanvasComponent)
-  readonly selectedDate$ = toObservable(this._currentDate);
+  // Subject statt toObservable — feuert immer, auch bei gleichem Datum
+  readonly selectedDate$ = new Subject<Date>();
 
   private readonly _astroStore = createAstroStateSignal();
   readonly astroState = this._astroStore.state;
 
   readonly isAnimationRunning = signal(false);
   readonly animationSpeed = signal(0.5);
+
+  // Merkt sich, ob der Winkel manuell gesetzt wurde (Rotate-Buttons)
+  private _manualCalendarAngle: number | null = null;
 
   private animationFrameId: number | null = null;
 
@@ -30,6 +33,7 @@ export class ClockSimulationService implements OnDestroy {
 
   ngOnDestroy(): void {
     this.stopAnimation();
+    this.selectedDate$.complete();
   }
 
   getCurrentDate(): Date {
@@ -39,6 +43,15 @@ export class ClockSimulationService implements OnDestroy {
   setDate(date: Date): void {
     this._recalculate(date);
     this._currentDate.set(date);
+    this.selectedDate$.next(date);
+  }
+
+  /**
+   * Löst ein Canvas-Redraw aus, ohne das Datum zu ändern.
+   * Wird genutzt wenn nur Store-Werte (zoom, angle, showCalendarDisk) geändert wurden.
+   */
+  triggerRedraw(): void {
+    this.selectedDate$.next(this._currentDate());
   }
 
   setShowCalendarDisk(show: boolean): void {
@@ -50,7 +63,12 @@ export class ClockSimulationService implements OnDestroy {
   }
 
   setAngleCalendarDisk(angle: number): void {
+    this._manualCalendarAngle = angle;
     this._astroStore.update({ angleCalendarDisk: angle });
+  }
+
+  resetManualCalendarAngle(): void {
+    this._manualCalendarAngle = null;
   }
 
   updateAstroStatePatch(patch: Parameters<typeof this._astroStore.update>[0]): void {
@@ -98,7 +116,11 @@ export class ClockSimulationService implements OnDestroy {
         typeof moonDiffRad === 'number' ? moonDiffRad : 0,
       );
       const angleZodiac = TimeUtility.calculateZodiacOffsetAngle(date, angleSun);
-      const angleCalendarDisk = TimeUtility.calculateCalendarDiskAngle(date);
+
+      const angleCalendarDisk =
+        this._manualCalendarAngle !== null
+          ? this._manualCalendarAngle
+          : TimeUtility.calculateCalendarDiskAngle(date);
 
       this._astroStore.update({
         angleSun: typeof angleSun === 'number' ? angleSun : 0,

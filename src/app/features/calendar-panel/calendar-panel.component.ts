@@ -1,4 +1,5 @@
-import { Component, inject, signal, output, OnInit } from '@angular/core';
+import { Component, inject, signal, output, OnInit, OnDestroy } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { ClockSimulationService } from '../../core/services/clock-simulation.service';
 import { TimeUtility } from '../../shared/utils/TimeUtility';
 
@@ -8,8 +9,9 @@ import { TimeUtility } from '../../shared/utils/TimeUtility';
   imports: [],
   templateUrl: './calendar-panel.component.html',
 })
-export class CalendarPanelComponent implements OnInit {
+export class CalendarPanelComponent implements OnInit, OnDestroy {
   private readonly clockService = inject(ClockSimulationService);
+  private dateSubscription?: Subscription;
 
   readonly openCalendarModal = output<void>();
 
@@ -18,38 +20,48 @@ export class CalendarPanelComponent implements OnInit {
 
   ngOnInit(): void {
     this._refreshCalendarInfo();
+
+    // Auf Datumsänderungen reagieren (z.B. wenn Datum manuell geändert wird)
+    this.dateSubscription = this.clockService.selectedDate$.subscribe(() => {
+      this._refreshCalendarInfo();
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.dateSubscription?.unsubscribe();
   }
 
   zoomIn(): void {
     const current = this.clockService.astroState().calendarZoom;
     this.clockService.setCalendarZoom(Math.min(3.0, current + 0.1));
-    this._triggerRedraw();
+    this.clockService.triggerRedraw();
   }
 
   zoomOut(): void {
     const current = this.clockService.astroState().calendarZoom;
     this.clockService.setCalendarZoom(Math.max(0.5, current - 0.1));
-    this._triggerRedraw();
+    this.clockService.triggerRedraw();
   }
 
   rotateLeft(): void {
     const current = this.clockService.astroState().angleCalendarDisk;
     this.clockService.setAngleCalendarDisk(current - 0.05);
-    this._triggerRedraw();
+    this.clockService.triggerRedraw();
   }
 
   rotateRight(): void {
     const current = this.clockService.astroState().angleCalendarDisk;
     this.clockService.setAngleCalendarDisk(current + 0.05);
-    this._triggerRedraw();
+    this.clockService.triggerRedraw();
   }
 
   resetCalendar(): void {
     this.clockService.setCalendarZoom(1.5);
+    this.clockService.resetManualCalendarAngle();
     this.clockService.setAngleCalendarDisk(
       TimeUtility.calculateCalendarDiskAngle(this.clockService.getCurrentDate()),
     );
-    this._triggerRedraw();
+    this.clockService.triggerRedraw();
   }
 
   private _refreshCalendarInfo(): void {
@@ -115,13 +127,5 @@ export class CalendarPanelComponent implements OnInit {
       eclHtml += `<span style="color:white;font-weight:normal">Keine Finsternisse in ${year} vorhanden.</span>`;
     }
     this.eclipseInfoHtml.set(eclHtml);
-
-    this.clockService.setAngleCalendarDisk(
-      TimeUtility.calculateCalendarDiskAngle(this.clockService.getCurrentDate())
-    );
-  }
-
-  private _triggerRedraw(): void {
-    this.clockService.setDate(this.clockService.getCurrentDate());
   }
 }

@@ -53,11 +53,15 @@ export class CanvasComponent implements OnInit, AfterViewInit, OnDestroy {
         this.renderer.calculateResponsiveSize(width, height);
       }
 
-      // Observable-Stream bleibt für Renderer-Tick (Canvas-API ist imperativ)
+      // selectedDate$ ist jetzt ein Subject — feuert immer zuverlässig,
+      // auch wenn das Datum sich nicht geändert hat (z.B. bei Zoom/Rotate/showCalendarDisk)
       this.clockSubscription = this.clockService.selectedDate$.subscribe(() => {
-        // Signal als aktuellen Snapshot lesen
+        // astroState() liest den aktuellen Signal-Wert (inkl. showCalendarDisk, zoom, angle)
         this.renderer.drawClock(this.clockService.astroState());
       });
+
+      // Ersten Frame zeichnen
+      this.renderer.drawClock(this.clockService.astroState());
 
       if (container) {
         this.resizeObserver = new ResizeObserver(entries => {

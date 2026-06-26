@@ -10,7 +10,7 @@ import { ClockSimulationService } from '../../core/services/clock-simulation.ser
 import { TimeUtility } from '../../shared/utils/TimeUtility';
 
 type ModalType = 'info' | 'history' | 'calendar' | null;
-type ActivePanel = 'simulation' | 'calendar';
+type ActivePanel = 'simulation' | 'calendar' | 'none';
 
 @Component({
   selector: 'app-controls',
@@ -48,14 +48,26 @@ export class ControlsComponent {
   }
 
   openSimulation(): void {
-    if (this.activePanel() === 'simulation') return;
+    if (this.activePanel() === 'simulation') {
+      // Bereits offen → zuklappen
+      this.activePanel.set('none');
+      this.clockService.setShowCalendarDisk(false);
+      this.clockService.triggerRedraw();
+      return;
+    }
     this.activePanel.set('simulation');
     this.clockService.setShowCalendarDisk(false);
-    this._triggerRedraw();
+    this.clockService.triggerRedraw();
   }
 
   openCalendar(): void {
-    if (this.activePanel() === 'calendar') return;
+    if (this.activePanel() === 'calendar') {
+      // Bereits offen → zuklappen und Kalenderscheibe ausblenden
+      this.activePanel.set('none');
+      this.clockService.setShowCalendarDisk(false);
+      this.clockService.triggerRedraw();
+      return;
+    }
     if (this.clockService.isAnimationRunning()) {
       this.clockService.stopAnimation();
     }
@@ -65,7 +77,8 @@ export class ControlsComponent {
       TimeUtility.calculateCalendarDiskAngle(this.clockService.getCurrentDate()),
     );
     this.clockService.setShowCalendarDisk(true);
-    this._triggerRedraw();
+    // triggerRedraw statt setDate — Subject feuert immer zuverlässig
+    this.clockService.triggerRedraw();
   }
 
   openModal(type: Exclude<ModalType, null>): void {
@@ -85,9 +98,5 @@ export class ControlsComponent {
     if (this.activeModal()) {
       this.closeModal();
     }
-  }
-
-  private _triggerRedraw(): void {
-    this.clockService.setDate(this.clockService.getCurrentDate());
   }
 }
