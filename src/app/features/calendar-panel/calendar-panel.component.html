@@ -1,6 +1,10 @@
 <!-- src/app/features/controls/panels/calendar-panel/calendar-panel.component.html -->
 <div id="calendarInfoDisplay" [innerHTML]="calendarInfoHtml()"></div>
 
+<div id="eclipseInfo" [innerHTML]="eclipseInfoHtml()"></div>
+
+<button (click)="openCalendarModal.emit()">ℹ️ Erläuterungen</button>
+
 <button
   class="cv-open-btn"
   (click)="openCalendarViewer.emit()"
@@ -8,7 +12,3 @@
 >
   🔍 Kalenderscheibe öffnen
 </button>
-
-<button (click)="openCalendarModal.emit()">ℹ️ Erläuterungen</button>
-
-<div id="eclipseInfo" [innerHTML]="eclipseInfoHtml()"></div>
