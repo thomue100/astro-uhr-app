@@ -38,6 +38,10 @@ export class CalendarViewerComponent implements OnInit, AfterViewInit, OnDestroy
   private offsetX = 0;
   private offsetY = 0;
 
+  // Rotations-Zustand (Radiant, Drehung um Bildmitte)
+  private rotation = 0;
+  private readonly rotationStep = Math.PI / 24; // 7.5° pro Klick
+
   // Drag-Zustand (Maus)
   private isDragging = false;
   private lastMousePos: Point = { x: 0, y: 0 };
@@ -95,6 +99,18 @@ export class CalendarViewerComponent implements OnInit, AfterViewInit, OnDestroy
     this.applyZoom(0.8, this.centerPoint());
   }
 
+  /** Dreht die Scheibe um einen Schritt gegen den Uhrzeigersinn */
+  rotateLeft(): void {
+    this.rotation -= this.rotationStep;
+    this.draw();
+  }
+
+  /** Dreht die Scheibe um einen Schritt im Uhrzeigersinn */
+  rotateRight(): void {
+    this.rotation += this.rotationStep;
+    this.draw();
+  }
+
   resetView(): void {
     if (!this.canvasRef) return;
     const canvas = this.canvasRef.nativeElement;
@@ -102,6 +118,7 @@ export class CalendarViewerComponent implements OnInit, AfterViewInit, OnDestroy
     this.scale = size / Math.max(this.image.naturalWidth || 1000, this.image.naturalHeight || 1000);
     this.offsetX = (canvas.width - (this.image.naturalWidth || 1000) * this.scale) / 2;
     this.offsetY = (canvas.height - (this.image.naturalHeight || 1000) * this.scale) / 2;
+    this.rotation = 0;
     this.draw();
   }
 
@@ -234,10 +251,17 @@ export class CalendarViewerComponent implements OnInit, AfterViewInit, OnDestroy
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     if (this.imageLoaded && this.image.naturalWidth > 0) {
+      const imgW = this.image.naturalWidth * this.scale;
+      const imgH = this.image.naturalHeight * this.scale;
+      // Mittelpunkt des (verschobenen, skalierten) Bildes
+      const cx = this.offsetX + imgW / 2;
+      const cy = this.offsetY + imgH / 2;
+
       ctx.save();
-      ctx.translate(this.offsetX, this.offsetY);
-      ctx.scale(this.scale, this.scale);
-      ctx.drawImage(this.image, 0, 0);
+      // Rotationszentrum = Bildmitte
+      ctx.translate(cx, cy);
+      ctx.rotate(this.rotation);
+      ctx.drawImage(this.image, -imgW / 2, -imgH / 2, imgW, imgH);
       ctx.restore();
     } else {
       // Fallback-Text
@@ -256,6 +280,11 @@ export class CalendarViewerComponent implements OnInit, AfterViewInit, OnDestroy
     ctx.font = '14px sans-serif';
     ctx.textAlign = 'right';
     ctx.fillText(`${Math.round(this.scale * 100)}%`, canvas.width - 10, canvas.height - 10);
+
+    // Rotations-Anzeige
+    const deg = Math.round((this.rotation * 180) / Math.PI) % 360;
+    ctx.textAlign = 'left';
+    ctx.fillText(`${deg >= 0 ? '+' : ''}${deg}°`, 10, canvas.height - 10);
   }
 
   private resizeCanvas(): void {

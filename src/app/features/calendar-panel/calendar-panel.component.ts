@@ -14,7 +14,7 @@ export class CalendarPanelComponent implements OnInit, OnDestroy {
   private dateSubscription?: Subscription;
 
   readonly openCalendarModal = output<void>();
-  readonly openCalendarViewer = output<void>(); // NEU
+  readonly openCalendarViewer = output<void>();
 
   readonly calendarInfoHtml = signal('');
   readonly eclipseInfoHtml = signal('');
@@ -28,39 +28,6 @@ export class CalendarPanelComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.dateSubscription?.unsubscribe();
-  }
-
-  zoomIn(): void {
-    const current = this.clockService.astroState().calendarZoom;
-    this.clockService.setCalendarZoom(Math.min(3.0, current + 0.1));
-    this.clockService.triggerRedraw();
-  }
-
-  zoomOut(): void {
-    const current = this.clockService.astroState().calendarZoom;
-    this.clockService.setCalendarZoom(Math.max(0.5, current - 0.1));
-    this.clockService.triggerRedraw();
-  }
-
-  rotateLeft(): void {
-    const current = this.clockService.astroState().angleCalendarDisk;
-    this.clockService.setAngleCalendarDisk(current - 0.05);
-    this.clockService.triggerRedraw();
-  }
-
-  rotateRight(): void {
-    const current = this.clockService.astroState().angleCalendarDisk;
-    this.clockService.setAngleCalendarDisk(current + 0.05);
-    this.clockService.triggerRedraw();
-  }
-
-  resetCalendar(): void {
-    this.clockService.setCalendarZoom(1.5);
-    this.clockService.resetManualCalendarAngle();
-    this.clockService.setAngleCalendarDisk(
-      TimeUtility.calculateCalendarDiskAngle(this.clockService.getCurrentDate()),
-    );
-    this.clockService.triggerRedraw();
   }
 
   private _refreshCalendarInfo(): void {

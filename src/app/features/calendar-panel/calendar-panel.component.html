@@ -9,25 +9,6 @@
   🔍 Kalenderscheibe öffnen
 </button>
 
-
-<div
-  style="margin-top:15px; display:flex; align-items:center;
-         justify-content:space-between; border-top:1px solid #444;
-         padding-top:10px; gap:5px;"
->
-  <div style="display:flex; gap:2px;">
-    <button style="width:30px;" title="Zoom Out" (click)="zoomOut()">–</button>
-    <button style="width:30px;" title="Zoom In" (click)="zoomIn()">+</button>
-  </div>
-
-  <button style="width:40px; font-size:16px;" title="Zurücksetzen" (click)="resetCalendar()">⟲</button>
-
-  <div style="display:flex; gap:2px;">
-    <button style="width:35px;" title="Gegen den Uhrzeigersinn" (click)="rotateLeft()">↺</button>
-    <button style="width:35px;" title="Im Uhrzeigersinn" (click)="rotateRight()">↻</button>
-  </div>
-</div>
-
 <button (click)="openCalendarModal.emit()">ℹ️ Erläuterungen</button>
 
 <div id="eclipseInfo" [innerHTML]="eclipseInfoHtml()"></div>

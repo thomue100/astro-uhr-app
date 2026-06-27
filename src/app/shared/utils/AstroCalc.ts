@@ -81,11 +81,35 @@ export function calculateMoonAngle(sunAngle: number, moonDiffRad: number): numbe
     return sunAngle + moonDiffRad;
 }
 
+/**
+ * Berechnet den Rotationswinkel der Kalenderscheibe so, dass der aktuelle Tag
+ * auf der 9-Uhr-Position (links) angezeigt wird.
+ *
+ * Referenz: Auf dem physischen Bild liegt der 2. Juni auf der 9-Uhr-Position.
+ * 9-Uhr-Position entspricht im Canvas-Koordinatensystem dem Winkel -π/2.
+ *
+ * Die Scheibe dreht sich mit fortschreitenden Tagen gegen den Uhrzeigersinn
+ * (da höhere Tage des Jahres einen kleineren Winkel erhalten sollen, damit
+ * der aktuelle Tag immer bei -π/2 erscheint).
+ */
 export function calculateCalendarDiskAngle(simDate: Date): number {
     ensureConfig();
     const year = simDate.getFullYear();
+    const isLeap = isLeapYear(year);
+    const daysInYear = isLeap ? 366 : 365;
     const dayOfYear = getDayOfYear(simDate);
-    const daysInYear = isLeapYear(year) ? 366 : 365;
-    const fracOfYear = (dayOfYear - 1) / daysInYear;
-    return fracOfYear * CONFIG.TWO_PI;
+
+    // Tag des Jahres für den 2. Juni (1-basiert):
+    // Jan 31 + Feb 28/29 + Mär 31 + Apr 30 + Mai 31 = 151/152 Tage → 1. Jun = 152/153 → 2. Jun = 153/154
+    const june2DayOfYear = isLeap ? 154 : 153;
+
+    // Wie viele Tage sind seit dem 2. Juni vergangen (kann negativ sein)?
+    const daysSinceRef = dayOfYear - june2DayOfYear;
+
+    // Als Bruchteil des Jahres
+    const fracSinceRef = daysSinceRef / daysInYear;
+
+    // 2. Juni soll bei -π/2 (9 Uhr) sein.
+    // Mit wachsenden Tagen dreht die Scheibe sich gegen den Uhrzeigersinn (Winkel wird kleiner).
+    return -CONFIG.HALF_PI - fracSinceRef * CONFIG.TWO_PI;
 }
