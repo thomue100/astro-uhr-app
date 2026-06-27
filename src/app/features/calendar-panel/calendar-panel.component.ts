@@ -14,10 +14,9 @@ export class CalendarPanelComponent implements OnInit, OnDestroy {
   private dateSubscription?: Subscription;
 
   readonly openCalendarModal = output<void>();
-  readonly openCalendarViewer = output<void>();
 
+  // Ein einziger HTML-Block für alle Kalender-Infos
   readonly calendarInfoHtml = signal('');
-  readonly eclipseInfoHtml = signal('');
 
   ngOnInit(): void {
     this._refreshCalendarInfo();
@@ -30,68 +29,72 @@ export class CalendarPanelComponent implements OnInit, OnDestroy {
     this.dateSubscription?.unsubscribe();
   }
 
+  private _row(label: string, value: string): string {
+    return `
+      <div class="cal-row">
+        <span class="cal-label">${label}</span>
+        <span class="cal-value">${value}</span>
+      </div>`;
+  }
+
   private _refreshCalendarInfo(): void {
     const date = this.clockService.getCurrentDate();
     const year = date.getFullYear();
 
     if (isNaN(date.getTime()) || year < 1911 || year > 2080) {
       this.calendarInfoHtml.set(
-        '<strong style="color:#ff5555">Ungültiges Jahr.</strong> Bitte Datum zwischen 1911 und 2080 wählen.',
+        '<p class="cal-error">Ungültiges Jahr. Bitte Datum zwischen 1911 und 2080 wählen.</p>',
       );
-      this.eclipseInfoHtml.set('');
       return;
     }
 
-    const yearInfo = TimeUtility.getCalendarInfo(year);
-    const dailyInfo = TimeUtility.getDailyCalendarInfo(date);
-    const dayOfWeek = TimeUtility.getDayOfWeekString(date);
-    const dateStr = date.toLocaleDateString('de-DE');
+    const yearInfo   = TimeUtility.getCalendarInfo(year);
+    const dailyInfo  = TimeUtility.getDailyCalendarInfo(date);
+    const dayOfWeek  = TimeUtility.getDayOfWeekString(date);
+    const dateStr    = date.toLocaleDateString('de-DE');
+    const eclipses   = TimeUtility.getEclipseInfo(year);
 
-    let html = `
-      <strong style="color:#ffcc33;font-weight:normal">Wochentag für ${dateStr}:</strong>
-      <span style="color:white;font-weight:normal"> ${dayOfWeek}</span><br>
-    `;
+    let html = '<div class="cal-block">';
 
+    // ── Abschnitt: Datum & Wochentag ────────────────────────────────────────
+    html += `<div class="cal-section-title">📅 ${dateStr}</div>`;
+    html += this._row('Wochentag', dayOfWeek);
+
+    // ── Abschnitt: Jahresdaten ──────────────────────────────────────────────
     if (yearInfo) {
-      html += `
-        <strong style="color:#ffcc33;font-weight:normal">Osterdatum ${year}:</strong>
-        <span style="color:white;font-weight:normal"> ${yearInfo['easterDate'] ?? '--'}</span><br>
-        <strong style="color:#ffcc33;font-weight:normal">Goldene Zahl:</strong>
-        <span style="color:white;font-weight:normal"> ${yearInfo['goldenNumber'] ?? '--'}</span><br>
-        <strong style="color:#ffcc33;font-weight:normal">Sonntagsbuchstabe:</strong>
-        <span style="color:white;font-weight:normal"> ${yearInfo['dayLetter'] ?? '--'}</span><br>
-      `;
+      html += `<div class="cal-divider"></div>`;
+      html += `<div class="cal-section-title">📆 Jahr ${year}</div>`;
+      html += this._row('Osterdatum',         yearInfo['easterDate']  ?? '--');
+      html += this._row('Goldene Zahl',       yearInfo['goldenNumber'] ?? '--');
+      html += this._row('Sonntagsbuchstabe',  yearInfo['dayLetter']   ?? '--');
     } else {
-      html += `<strong style="color:#ff5555;font-weight:normal">Jahresdaten für ${year} nicht vorhanden.</strong><br>`;
+      html += `<div class="cal-divider"></div>`;
+      html += `<p class="cal-error">Jahresdaten für ${year} nicht vorhanden.</p>`;
     }
 
-    if (dailyInfo?.['letter'] !== 'N/A') {
-      html += `
-        <strong style="color:#ffcc33;font-weight:normal">Tagesbuchstabe:</strong>
-        <span style="color:white;font-weight:normal"> ${dailyInfo?.['letter']}</span><br>
-        <strong style="color:#ffcc33;font-weight:normal">Tagesheilige(r):</strong>
-        <span style="color:white;font-weight:normal"> ${dailyInfo?.['saint']}</span>
-      `;
-    } else if (yearInfo) {
-      html += `<strong style="color:#ff5555;font-weight:normal">Tagesdaten nicht vorhanden.</strong>`;
+    // ── Abschnitt: Tagesdaten ───────────────────────────────────────────────
+    if (dailyInfo && dailyInfo['letter'] !== 'N/A') {
+      html += this._row('Tagesbuchstabe',  dailyInfo['letter']);
+      html += this._row('Tagesheilige(r)', dailyInfo['saint']);
     }
 
-    this.calendarInfoHtml.set(html);
+    // ── Abschnitt: Finsternisse ─────────────────────────────────────────────
+    html += `<div class="cal-divider"></div>`;
+    html += `<div class="cal-section-title">🌑 Finsternisse ${year}</div>`;
 
-    const eclipses = TimeUtility.getEclipseInfo(year);
-    let eclHtml = `<strong style="color:#ffcc33;font-weight:normal">Finsternisse ${year}:</strong><br>`;
     if (eclipses.length > 0) {
       eclipses.forEach((e: Record<string, string>) => {
-        eclHtml += `
-          <span style="color:#ffcc33;font-weight:normal">• Datum:</span>
-          <span style="color:white"> ${e['date']}</span><br>
-          <span style="color:#ffcc33;font-weight:normal">&nbsp;&nbsp;Typ:</span>
-          <span style="color:white"> ${e['type']}</span><br>
-        `;
+        html += `
+          <div class="cal-eclipse">
+            <span class="cal-eclipse-type">${e['type']}</span>
+            <span class="cal-eclipse-date">${e['date']}</span>
+          </div>`;
       });
     } else {
-      eclHtml += `<span style="color:white;font-weight:normal">Keine Finsternisse in ${year} vorhanden.</span>`;
+      html += `<div class="cal-row"><span class="cal-value cal-muted">Keine Finsternisse in ${year}</span></div>`;
     }
-    this.eclipseInfoHtml.set(eclHtml);
+
+    html += '</div>'; // .cal-block
+    this.calendarInfoHtml.set(html);
   }
 }

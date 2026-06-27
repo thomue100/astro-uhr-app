@@ -1,1 +1,117 @@
+/* ======================================================== */
+/* === CANVAS WRAPPER                                   === */
+/* ======================================================== */
 
+.canvas-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/*
+ * canvas-container ist der Anker für die absolut positionierte Steuerleiste.
+ * position: relative ist dafür zwingend notwendig.
+ */
+.canvas-container {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* ======================================================== */
+/* === SCHWEBENDE STEUERLEISTE                          === */
+/* ======================================================== */
+
+/*
+ * Die Leiste liegt ÜBER dem Canvas (position: absolute + z-index).
+ * Sie nimmt dadurch keinen Platz im Layout ein — das Canvas-Element
+ * behält seine Größe, egal ob die Leiste sichtbar ist oder nicht.
+ * Kein Springen mehr beim Umschalten zwischen Simulation und Kalender.
+ */
+.calendar-controls-bar {
+  position: absolute;
+  bottom: 12px;           /* 12px vom unteren Rand des Canvas */
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: center;
+
+  padding: 5px 10px;
+  background-color: rgba(14, 32, 48, 0.88);  /* leicht transparent */
+  border: 1px solid #1a4261;
+  border-radius: 8px;
+  backdrop-filter: blur(4px);
+
+  /* Standardmäßig unsichtbar und nicht anklickbar */
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+/* Sichtbar-Klasse – wird per Angular [class.] gesetzt */
+.calendar-controls-bar--visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Hinweistext */
+.cc-hint {
+  color: #88aacc;
+  font-size: 0.75rem;
+  white-space: nowrap;
+  margin-left: 4px;
+}
+
+/* Buttons */
+.cc-btn {
+  background: #184a6b;
+  color: #ffcc33;
+  border: 1px solid #00aaff;
+  border-radius: 6px;
+  padding: 5px 10px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+  width: auto;
+  min-width: 40px;
+  white-space: nowrap;
+}
+
+.cc-btn:hover {
+  background: #0066aa;
+}
+
+/* Cursor-Änderung wenn Drag-Modus aktiv */
+.canvas-draggable {
+  cursor: grab;
+}
+
+.canvas-draggable:active {
+  cursor: grabbing;
+}
+
+/* ── Mobile Anpassung ─────────────────────────────────── */
+@media (max-width: 600px) {
+  .cc-hint {
+    display: none;
+  }
+
+  .cc-btn {
+    padding: 4px 7px;
+    font-size: 0.76rem;
+    min-width: 36px;
+  }
+
+  .calendar-controls-bar {
+    bottom: 8px;
+    gap: 4px;
+    padding: 4px 6px;
+  }
+}

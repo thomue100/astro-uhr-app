@@ -30,8 +30,8 @@
     >
       <app-calendar-panel
         (openCalendarModal)="openModal('calendar')"
-        (openCalendarViewer)="openCalendarViewer()"
       />
+      <!-- (openCalendarViewer) wurde entfernt -->
     </div>
   </div>
 
@@ -43,10 +43,7 @@
   </div>
 </div>
 
-<!-- Kalender-Viewer (Vollbild) NEU -->
-@if (showCalendarViewer()) {
-<app-calendar-viewer (close)="closeCalendarViewer()" />
-}
+<!-- CalendarViewer (@if showCalendarViewer) wurde entfernt -->
 
 <!-- Modals -->
 @if (activeModal() === 'info') {

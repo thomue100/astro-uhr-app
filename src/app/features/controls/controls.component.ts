@@ -6,7 +6,7 @@ import { InfoModalComponent } from '../info-modal/info-modal.component';
 import { CalendarModalComponent } from '../calendar-modal/calendar-modal.component';
 import { SimulationPanelComponent } from '../simulation-panel/simulation-panel.component';
 import { CalendarPanelComponent } from '../calendar-panel/calendar-panel.component';
-import { CalendarViewerComponent } from '../calendar-viewer/calendar-viewer.component'; // NEU
+// CalendarViewerComponent wurde entfernt – Logik ist jetzt im CanvasComponent.
 import { ClockSimulationService } from '../../core/services/clock-simulation.service';
 import { TimeUtility } from '../../shared/utils/TimeUtility';
 
@@ -24,7 +24,7 @@ type ActivePanel = 'simulation' | 'calendar' | 'none';
     CalendarModalComponent,
     SimulationPanelComponent,
     CalendarPanelComponent,
-    CalendarViewerComponent, // NEU
+    // CalendarViewerComponent entfernt
   ],
   templateUrl: './controls.component.html',
   styleUrls: ['./controls.component.css'],
@@ -37,7 +37,7 @@ export class ControlsComponent {
 
   readonly activeModal = signal<ModalType>(null);
   readonly activePanel = signal<ActivePanel>('simulation');
-  readonly showCalendarViewer = signal(false); // NEU
+  // showCalendarViewer wurde entfernt – der separate Viewer existiert nicht mehr.
 
   readonly currentDate = this.clockService.currentDate;
 
@@ -80,16 +80,7 @@ export class ControlsComponent {
     this.clockService.triggerRedraw();
   }
 
-  // NEU: Viewer öffnen/schließen
-  openCalendarViewer(): void {
-    this.showCalendarViewer.set(true);
-    document.body.style.overflow = 'hidden';
-  }
-
-  closeCalendarViewer(): void {
-    this.showCalendarViewer.set(false);
-    document.body.style.overflow = '';
-  }
+  // openCalendarViewer und closeCalendarViewer wurden entfernt.
 
   openModal(type: Exclude<ModalType, null>): void {
     if (this.clockService.isAnimationRunning()) {
@@ -105,9 +96,7 @@ export class ControlsComponent {
   }
 
   handleEscape(): void {
-    if (this.showCalendarViewer()) {
-      this.closeCalendarViewer();
-    } else if (this.activeModal()) {
+    if (this.activeModal()) {
       this.closeModal();
     }
   }

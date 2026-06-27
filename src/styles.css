@@ -114,33 +114,14 @@ body {
     margin-bottom: 4px;
 }
 
-#liveDateTime,
-#calendarInfoDisplay {
+#liveDateTime
+{
     background: rgba(255, 255, 255, 0.05);
     padding: 6px 10px;
     border-radius: 6px;
     font-size: 13px;
     color: #f4f4f4;
     line-height: 1.35;
-}
-
-#calendarInfoDisplay {
-    padding: 5px 8px;
-    font-size: 12.5px;
-}
-
-#eclipseInfo {
-    max-height: 110px;
-    overflow-y: auto;
-    padding-right: 8px;
-    font-size: 12.5px;
-    color: #f4f4f4;
-}
-
-#eclipseInfo h3 {
-    color: #ffcc33;
-    margin: 4px 0 6px 0;
-    font-size: 14px;
 }
 
 /* ======================================================== */
@@ -402,4 +383,97 @@ input[type="range"]::-moz-range-track {
 .cv-open-btn:hover {
     background: linear-gradient(135deg, #0066aa, #0088cc);
     box-shadow: 0 0 14px rgba(0, 170, 255, 0.45);
+}
+
+/* ======================================================== */
+/* === KALENDER-PANEL: Einheitliches Daten-Layout       === */
+/* === Muss in src/styles.css eingefügt werden,         === */
+/* === da innerHTML kein Component-Scoping kennt.       === */
+/* ======================================================== */
+
+.cal-panel-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Äußerer Block – rahmt alle Kalender-Infos ein */
+.cal-block {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid #1a4261;
+  border-radius: 6px;
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+/* Abschnitts-Überschrift (z.B. "📅 27.6.2026") */
+.cal-section-title {
+  color: #ffcc33;
+  font-size: 12.5px;
+  font-weight: 700;
+  margin-top: 2px;
+  margin-bottom: 1px;
+}
+
+/* Trennlinie zwischen Abschnitten */
+.cal-divider {
+  border-top: 1px solid #1a4261;
+  margin: 5px 0 4px 0;
+}
+
+/* Eine Daten-Zeile: Label links, Wert rechts */
+.cal-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 6px;
+  font-size: 12.5px;
+  line-height: 1.5;
+}
+
+.cal-label {
+  color: #88aacc;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.cal-value {
+  color: #f4f4f4;
+  text-align: right;
+  word-break: break-word;
+}
+
+.cal-muted {
+  color: #6688aa;
+  font-style: italic;
+}
+
+/* Finsternis-Eintrag: Typ oben, Datum darunter, leicht eingerückt */
+.cal-eclipse {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: 3px 0 3px 8px;
+  border-left: 2px solid #1a4261;
+  margin: 2px 0;
+  font-size: 12px;
+}
+
+.cal-eclipse-type {
+  color: #f4f4f4;
+  font-weight: 600;
+}
+
+.cal-eclipse-date {
+  color: #88aacc;
+  font-size: 11.5px;
+}
+
+/* Fehlermeldung */
+.cal-error {
+  color: #ff7070;
+  font-size: 12px;
+  margin: 2px 0;
 }
