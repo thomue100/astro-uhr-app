@@ -241,22 +241,45 @@ export class ClockRenderer {
   }
 
   /**
-   * Zeichnet die Kalenderscheibe.
-   * Zoom-Faktor aus state.calendarZoom (Standard 1.5).
-   * Rotation aus state.angleCalendarDisk.
+   * Zeichnet die Kalenderscheibe vollständig im Canvas.
+   *
+   * Der Zoom-Faktor (calendarZoom) steuert die Darstellungsgröße:
+   *   - 1.0  = Scheibe füllt genau den Canvas-Durchmesser (rOuter * 2)
+   *   - < 1.0 = Scheibe kleiner (mehr Rand sichtbar)
+   *   - > 1.0 = Scheibe größer (Ränder werden abgeschnitten)
+   *
+   * ──────────────────────────────────────────────────────────────────────────
+   * FEINEINSTELLUNG ZOOM: Den Wert CALENDAR_DISK_FIT_FACTOR anpassen,
+   * um die Scheibe im Canvas vollständig sichtbar zu machen.
+   *   - Zu groß (Ränder abgeschnitten) → Wert verkleinern (z.B. 0.90)
+   *   - Zu klein (viel Leerraum)        → Wert vergrößern (z.B. 0.98)
+   * ──────────────────────────────────────────────────────────────────────────
    */
   drawCalendarDisk(center: { x: number; y: number }, maxRadius: number, rotationAngle: number, state: any): void {
     const ctx        = this.ctx;
     const img        = this.images?.calendarDisk;
     const TWO_PI     = this.config?.TWO_PI ?? Math.PI * 2;
+
+    // ↓↓↓ ZOOM NACHJUSTIEREN: Faktor für vollständige Darstellung im Canvas ↓↓↓
+    const CALENDAR_DISK_FIT_FACTOR = 0.93; // 0.93 = leichter Sicherheitsrand
+    // ↑↑↑ Erhöhen → Scheibe größer; Verkleinern → mehr Rand sichtbar           ↑↑↑
+
+    // Der calendarZoom aus dem State (Standardwert 1.5) wird auf den Fit-Faktor gemappt:
+    // Bei zoom=1.5 (Standard) füllt die Scheibe den Canvas fast vollständig.
+    // maxRadius ist bereits rOuter (= c.width * 0.37 * 1.12), daher:
+    // radius = Canvas-Hälfte (c.width/2) * CALENDAR_DISK_FIT_FACTOR
+    const canvasHalf = this.canvas.width / 2;
     const zoomFactor = state.calendarZoom || 1.5;
-    const radius     = maxRadius * zoomFactor;
+
+    // Die Scheibe soll bei Zoom=1.5 den Canvas-Durchmesser vollständig ausfüllen.
+    // Dazu normalisieren wir: bei zoom=1.5 → radius = canvasHalf * FIT_FACTOR
+    const radius = canvasHalf * CALENDAR_DISK_FIT_FACTOR * (zoomFactor / 1.5);
 
     if (img && img.complete && img.naturalWidth > 0) {
       this.withContext(() => {
         ctx.translate(center.x, center.y);
         ctx.rotate(rotationAngle);
-        const size = radius * 2 * 0.99;
+        const size = radius * 2;
         ctx.globalAlpha = 1.0;
         ctx.drawImage(img, -size / 2, -size / 2, size, size);
       });
@@ -265,7 +288,7 @@ export class ClockRenderer {
       this.withContext(() => {
         ctx.translate(center.x, center.y);
         ctx.beginPath();
-        ctx.arc(0, 0, maxRadius * 0.99, 0, TWO_PI);
+        ctx.arc(0, 0, canvasHalf * CALENDAR_DISK_FIT_FACTOR, 0, TWO_PI);
         ctx.fillStyle = '#1e3a5f';
         ctx.fill();
         ctx.fillStyle    = 'white';

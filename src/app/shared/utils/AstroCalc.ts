@@ -91,7 +91,20 @@ export function calculateMoonAngle(sunAngle: number, moonDiffRad: number): numbe
  * Die Scheibe dreht sich mit fortschreitenden Tagen gegen den Uhrzeigersinn
  * (da höhere Tage des Jahres einen kleineren Winkel erhalten sollen, damit
  * der aktuelle Tag immer bei -π/2 erscheint).
+ *
+ * ─────────────────────────────────────────────────────────────────────────────
+ * FEINEINSTELLUNG: Falls die Scheibe nach einer Bildänderung erneut versetzt
+ * erscheint, passe den Wert CALENDAR_DISK_OFFSET unten an:
+ *   - Scheibe dreht sich zu weit im Uhrzeigersinn  → Wert verkleinern (Richtung 0)
+ *   - Scheibe dreht sich zu weit gegen den UZS     → Wert vergrößern (Richtung π)
+ *   - Aktuelle Korrektur: +Math.PI (180°), behebt den Spiegelungsversatz des Bildes
+ * ─────────────────────────────────────────────────────────────────────────────
  */
+
+// ↓↓↓ HIER NACHJUSTIEREN, falls die Kalenderscheibe versetzt erscheint ↓↓↓
+const CALENDAR_DISK_OFFSET = Math.PI; // 180°-Korrektur für das Bild-Koordinatensystem
+// ↑↑↑ Mögliche Werte: 0, Math.PI/2, Math.PI, 3*Math.PI/2 (= 0°, 90°, 180°, 270°) ↑↑↑
+
 export function calculateCalendarDiskAngle(simDate: Date): number {
     ensureConfig();
     const year = simDate.getFullYear();
@@ -111,5 +124,6 @@ export function calculateCalendarDiskAngle(simDate: Date): number {
 
     // 2. Juni soll bei -π/2 (9 Uhr) sein.
     // Mit wachsenden Tagen dreht die Scheibe sich gegen den Uhrzeigersinn (Winkel wird kleiner).
-    return -CONFIG.HALF_PI - fracSinceRef * CONFIG.TWO_PI;
+    // CALENDAR_DISK_OFFSET korrigiert den 180°-Versatz des Bildes.
+    return -CONFIG.HALF_PI - fracSinceRef * CONFIG.TWO_PI + CALENDAR_DISK_OFFSET;
 }

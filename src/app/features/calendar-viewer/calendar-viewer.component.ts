@@ -31,30 +31,40 @@ export class CalendarViewerComponent implements OnInit, AfterViewInit, OnDestroy
   private image = new Image();
   private imageLoaded = false;
 
-  // Transformations-Zustand
+  // ─── Transformations-Zustand ───────────────────────────────────────────────
   private scale = 1.0;
-  private minScale = 0.3;
-  private maxScale = 8.0;
+  private readonly minScale = 0.3;
+  private readonly maxScale = 8.0;
   private offsetX = 0;
   private offsetY = 0;
 
   // Rotations-Zustand (Radiant, Drehung um Bildmitte)
   private rotation = 0;
-  private readonly rotationStep = Math.PI / 24; // 7.5° pro Klick
+  private readonly rotationStep = Math.PI / 24; // 7,5° pro Klick
 
-  // Drag-Zustand (Maus)
+  // ─── Drag-Zustand (Maus) ──────────────────────────────────────────────────
   private isDragging = false;
   private lastMousePos: Point = { x: 0, y: 0 };
 
-  // Touch-Zustand
+  // ─── Touch-Zustand ────────────────────────────────────────────────────────
+  // Letzter Abstand zwischen zwei Fingern (Pinch-Zoom)
   private lastTouchDist = 0;
+  // Letzter Mittelpunkt zweier Finger
   private lastTouchCenter: Point = { x: 0, y: 0 };
+  // Letzter Winkel zwischen zwei Fingern (Zwei-Finger-Rotation)
+  private lastTouchAngle = 0;
+  // Gibt an, ob gerade ein Zwei-Finger-Gesture aktiv ist (Zoom + Rotation)
+  private isTwoFingerGesture = false;
+  // Gibt an, ob ein Ein-Finger-Drag aktiv ist
   private isTouchDragging = false;
 
   private animFrameId: number | null = null;
 
+  // ─────────────────────────────────────────────────────────────────────────
+  // Lifecycle
+  // ─────────────────────────────────────────────────────────────────────────
+
   ngOnInit(): void {
-    // Bild vorladen
     this.image.src = 'assets/images/hintergrund/kalenderscheibe.png';
     this.image.onload = () => {
       this.imageLoaded = true;
@@ -89,12 +99,23 @@ export class CalendarViewerComponent implements OnInit, AfterViewInit, OnDestroy
     this.draw();
   }
 
-  // --- Öffentliche Aktionen (Buttons) ---
+  // ─────────────────────────────────────────────────────────────────────────
+  // Öffentliche Aktionen (Footer-Buttons)
+  // ─────────────────────────────────────────────────────────────────────────
 
+  /** Vergrößert die Scheibe um 25 % bezogen auf die Canvas-Mitte */
   zoomIn(): void {
     this.applyZoom(1.25, this.centerPoint());
   }
 
+  /**
+   * Verkleinert die Scheibe um ~20 % bezogen auf die Canvas-Mitte.
+   *
+   * Frühere Implementierung: applyZoom(0.8, ...) – das war korrekt, aber
+   * applyZoom berechnete actualFactor aus newScale/oldScale, was bei
+   * minScale-Begrenzung zu Offset-Versatz führte.  Der Fix liegt in
+   * applyZoom selbst (siehe dort).
+   */
   zoomOut(): void {
     this.applyZoom(0.8, this.centerPoint());
   }
@@ -111,13 +132,21 @@ export class CalendarViewerComponent implements OnInit, AfterViewInit, OnDestroy
     this.draw();
   }
 
+  /** Setzt Zoom, Position und Rotation auf den Ausgangszustand zurück */
   resetView(): void {
     if (!this.canvasRef) return;
     const canvas = this.canvasRef.nativeElement;
-    const size = Math.min(canvas.width, canvas.height) * 0.9;
-    this.scale = size / Math.max(this.image.naturalWidth || 1000, this.image.naturalHeight || 1000);
-    this.offsetX = (canvas.width - (this.image.naturalWidth || 1000) * this.scale) / 2;
-    this.offsetY = (canvas.height - (this.image.naturalHeight || 1000) * this.scale) / 2;
+    const imgW = this.image.naturalWidth  || 1000;
+    const imgH = this.image.naturalHeight || 1000;
+
+    // Scheibe soll zu 90 % des kleinsten Canvas-Maßes passen
+    const fitSize = Math.min(canvas.width, canvas.height) * 0.9;
+    this.scale = fitSize / Math.max(imgW, imgH);
+
+    // Zentrieren
+    this.offsetX = (canvas.width  - imgW * this.scale) / 2;
+    this.offsetY = (canvas.height - imgH * this.scale) / 2;
+
     this.rotation = 0;
     this.draw();
   }
@@ -126,7 +155,9 @@ export class CalendarViewerComponent implements OnInit, AfterViewInit, OnDestroy
     this.close.emit();
   }
 
-  // --- Maus-Events ---
+  // ─────────────────────────────────────────────────────────────────────────
+  // Maus-Events
+  // ─────────────────────────────────────────────────────────────────────────
 
   onMouseDown(event: MouseEvent): void {
     this.isDragging = true;
@@ -164,26 +195,36 @@ export class CalendarViewerComponent implements OnInit, AfterViewInit, OnDestroy
     this.applyZoom(factor, mousePos);
   }
 
-  // --- Touch-Events ---
+  // ─────────────────────────────────────────────────────────────────────────
+  // Touch-Events (Ein-Finger-Pan + Zwei-Finger-Pinch/Zoom + Zwei-Finger-Rotation)
+  // ─────────────────────────────────────────────────────────────────────────
 
   onTouchStart(event: TouchEvent): void {
     event.preventDefault();
+
     if (event.touches.length === 1) {
+      // Ein-Finger: nur Pan
       this.isTouchDragging = true;
+      this.isTwoFingerGesture = false;
       this.lastTouchCenter = {
         x: event.touches[0].clientX,
         y: event.touches[0].clientY,
       };
     } else if (event.touches.length === 2) {
+      // Zwei-Finger: Zoom + Rotation
       this.isTouchDragging = false;
-      this.lastTouchDist = this.getTouchDistance(event.touches);
+      this.isTwoFingerGesture = true;
+      this.lastTouchDist   = this.getTouchDistance(event.touches);
       this.lastTouchCenter = this.getTouchCenter(event.touches);
+      this.lastTouchAngle  = this.getTouchAngle(event.touches);
     }
   }
 
   onTouchMove(event: TouchEvent): void {
     event.preventDefault();
-    if (event.touches.length === 1 && this.isTouchDragging) {
+
+    if (event.touches.length === 1 && this.isTouchDragging && !this.isTwoFingerGesture) {
+      // ── Ein-Finger-Pan ──────────────────────────────────────────────────
       const dx = event.touches[0].clientX - this.lastTouchCenter.x;
       const dy = event.touches[0].clientY - this.lastTouchCenter.y;
       this.offsetX += dx;
@@ -193,56 +234,93 @@ export class CalendarViewerComponent implements OnInit, AfterViewInit, OnDestroy
         y: event.touches[0].clientY,
       };
       this.draw();
+
     } else if (event.touches.length === 2) {
-      const dist = this.getTouchDistance(event.touches);
+      // ── Zwei-Finger: Pinch-Zoom + Rotation + Pan ────────────────────────
+      const dist   = this.getTouchDistance(event.touches);
       const center = this.getTouchCenter(event.touches);
+      const angle  = this.getTouchAngle(event.touches);
+
       const rect = this.canvasRef.nativeElement.getBoundingClientRect();
       const canvasCenter: Point = {
         x: center.x - rect.left,
         y: center.y - rect.top,
       };
 
+      // Pinch-Zoom
       if (this.lastTouchDist > 0) {
         const factor = dist / this.lastTouchDist;
         this.applyZoom(factor, canvasCenter);
       }
 
-      // Pan während Pinch
+      // Zwei-Finger-Rotation: Winkeldifferenz zwischen den Fingern
+      if (this.lastTouchAngle !== 0) {
+        const angleDelta = angle - this.lastTouchAngle;
+        this.rotation += angleDelta;
+      }
+
+      // Zwei-Finger-Pan (Mittelpunkt-Verschiebung)
       const dx = center.x - this.lastTouchCenter.x;
       const dy = center.y - this.lastTouchCenter.y;
       this.offsetX += dx;
       this.offsetY += dy;
 
-      this.lastTouchDist = dist;
+      this.lastTouchDist   = dist;
       this.lastTouchCenter = center;
+      this.lastTouchAngle  = angle;
       this.draw();
     }
   }
 
   onTouchEnd(event: TouchEvent): void {
     if (event.touches.length < 2) {
-      this.lastTouchDist = 0;
+      this.isTwoFingerGesture = false;
+      this.lastTouchDist  = 0;
+      this.lastTouchAngle = 0;
     }
     if (event.touches.length === 0) {
       this.isTouchDragging = false;
     }
+    // Falls ein Finger losgelassen wird aber noch einer übrig ist:
+    // nahtlos in Ein-Finger-Pan wechseln
+    if (event.touches.length === 1) {
+      this.isTouchDragging = true;
+      this.lastTouchCenter = {
+        x: event.touches[0].clientX,
+        y: event.touches[0].clientY,
+      };
+    }
   }
 
-  // --- Private Hilfsmethoden ---
+  // ─────────────────────────────────────────────────────────────────────────
+  // Private Hilfsmethoden
+  // ─────────────────────────────────────────────────────────────────────────
 
+  /**
+   * Zoom um `factor` bezogen auf den Punkt `center` (Canvas-Koordinaten).
+   *
+   * FIX: Der offset wird NUR dann neu berechnet, wenn scale wirklich verändert
+   * wird (actualFactor != 1).  Damit verhält sich zoomOut beim ersten Klick
+   * korrekt, auch wenn die Scheibe noch nicht manuell vergrößert wurde.
+   */
   private applyZoom(factor: number, center: Point): void {
-    const newScale = Math.min(this.maxScale, Math.max(this.minScale, this.scale * factor));
-    const actualFactor = newScale / this.scale;
+    const oldScale = this.scale;
+    const newScale = Math.min(this.maxScale, Math.max(this.minScale, oldScale * factor));
+
+    // Wenn minScale/maxScale bereits erreicht ist, gibt es nichts zu tun
+    if (newScale === oldScale) return;
+
+    const actualFactor = newScale / oldScale;
     this.offsetX = center.x - actualFactor * (center.x - this.offsetX);
     this.offsetY = center.y - actualFactor * (center.y - this.offsetY);
-    this.scale = newScale;
+    this.scale   = newScale;
     this.draw();
   }
 
   private draw(): void {
     if (!this.ctx) return;
     const canvas = this.canvasRef.nativeElement;
-    const ctx = this.ctx;
+    const ctx    = this.ctx;
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -251,37 +329,37 @@ export class CalendarViewerComponent implements OnInit, AfterViewInit, OnDestroy
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     if (this.imageLoaded && this.image.naturalWidth > 0) {
-      const imgW = this.image.naturalWidth * this.scale;
+      const imgW = this.image.naturalWidth  * this.scale;
       const imgH = this.image.naturalHeight * this.scale;
       // Mittelpunkt des (verschobenen, skalierten) Bildes
       const cx = this.offsetX + imgW / 2;
       const cy = this.offsetY + imgH / 2;
 
       ctx.save();
-      // Rotationszentrum = Bildmitte
       ctx.translate(cx, cy);
       ctx.rotate(this.rotation);
       ctx.drawImage(this.image, -imgW / 2, -imgH / 2, imgW, imgH);
       ctx.restore();
     } else {
-      // Fallback-Text
-      ctx.fillStyle = '#ffcc33';
-      ctx.font = '20px sans-serif';
-      ctx.textAlign = 'center';
+      ctx.fillStyle    = '#ffcc33';
+      ctx.font         = '20px sans-serif';
+      ctx.textAlign    = 'center';
+      ctx.textBaseline = 'middle';
       ctx.fillText(
         'Kalenderscheibe wird geladen...',
-        canvas.width / 2,
+        canvas.width  / 2,
         canvas.height / 2,
       );
     }
 
-    // Zoom-Anzeige
-    ctx.fillStyle = 'rgba(255, 204, 51, 0.8)';
-    ctx.font = '14px sans-serif';
-    ctx.textAlign = 'right';
+    // ── HUD: Zoom-Anzeige (unten rechts) ───────────────────────────────────
+    ctx.fillStyle    = 'rgba(255, 204, 51, 0.8)';
+    ctx.font         = '14px sans-serif';
+    ctx.textAlign    = 'right';
+    ctx.textBaseline = 'alphabetic';
     ctx.fillText(`${Math.round(this.scale * 100)}%`, canvas.width - 10, canvas.height - 10);
 
-    // Rotations-Anzeige
+    // ── HUD: Rotations-Anzeige (unten links) ───────────────────────────────
     const deg = Math.round((this.rotation * 180) / Math.PI) % 360;
     ctx.textAlign = 'left';
     ctx.fillText(`${deg >= 0 ? '+' : ''}${deg}°`, 10, canvas.height - 10);
@@ -290,9 +368,9 @@ export class CalendarViewerComponent implements OnInit, AfterViewInit, OnDestroy
   private resizeCanvas(): void {
     if (!this.canvasRef || !this.containerRef) return;
     const container = this.containerRef.nativeElement;
-    const canvas = this.canvasRef.nativeElement;
-    canvas.width = container.clientWidth;
-    canvas.height = container.clientHeight;
+    const canvas    = this.canvasRef.nativeElement;
+    canvas.width    = container.clientWidth;
+    canvas.height   = container.clientHeight;
   }
 
   private centerPoint(): Point {
@@ -312,5 +390,16 @@ export class CalendarViewerComponent implements OnInit, AfterViewInit, OnDestroy
       x: (touches[0].clientX + touches[1].clientX) / 2,
       y: (touches[0].clientY + touches[1].clientY) / 2,
     };
+  }
+
+  /**
+   * Gibt den Winkel (in Radiant) zurück, den die Verbindungslinie zwischen
+   * zwei Touch-Punkten mit der horizontalen Achse einschließt.
+   * Wird für die Zwei-Finger-Rotation verwendet.
+   */
+  private getTouchAngle(touches: TouchList): number {
+    const dx = touches[1].clientX - touches[0].clientX;
+    const dy = touches[1].clientY - touches[0].clientY;
+    return Math.atan2(dy, dx);
   }
 }
