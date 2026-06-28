@@ -1,4 +1,5 @@
-import { signal, computed } from '@angular/core';
+// src/app/shared/models/astro-signal.signal.ts
+import { signal } from '@angular/core';
 
 export interface AstroState {
   angleSun: number;
@@ -13,6 +14,9 @@ export interface AstroState {
   showHeiland: boolean;
   calendarZoom: number;
   angleCalendarDisk: number;
+  // NEU: Verschiebung der Kalenderscheibe in Canvas-Pixeln
+  calendarOffsetX: number;
+  calendarOffsetY: number;
 }
 
 export const INITIAL_ASTRO_STATE: AstroState = {
@@ -28,6 +32,8 @@ export const INITIAL_ASTRO_STATE: AstroState = {
   showHeiland: true,
   calendarZoom: 1.5,
   angleCalendarDisk: 0,
+  calendarOffsetX: 0,
+  calendarOffsetY: 0,
 };
 
 export function createAstroStateSignal() {

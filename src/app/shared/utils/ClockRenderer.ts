@@ -1,21 +1,10 @@
-// ClockRenderer.ts — Canvas-Zeichenlogik, portiert aus Renderer.js
-
+// src/app/shared/utils/ClockRenderer.ts
 export class ClockRenderer {
   private ctx: CanvasRenderingContext2D;
   private canvas: HTMLCanvasElement;
   private images: any;
   private config: any;
 
-  /**
-   * @param canvas  Das Canvas-Element
-   * @param ctx     Der 2D-Renderkontext
-   * @param imageManager  ImageManager-Instanz — der Renderer liest .images daraus
-   * @param config  AstroConfig mit TWO_PI, zodiacData, moonDimensions, usw.
-   *
-   * WICHTIG: In Renderer.js war die Signatur (ctx, canvas, images, config).
-   * In der Angular-Version ist sie (canvas, ctx, imageManager, config),
-   * damit canvas.ts konsistent mit dem ViewChild-Zugriff bleibt.
-   */
   constructor(
     canvas: HTMLCanvasElement,
     ctx: CanvasRenderingContext2D,
@@ -24,7 +13,6 @@ export class ClockRenderer {
   ) {
     this.canvas  = canvas;
     this.ctx     = ctx;
-    // ImageManager besitzt ein .images-Objekt; direktes images-Objekt wird ebenfalls akzeptiert
     this.images  = imageManager?.images ?? imageManager;
     this.config  = config ?? imageManager?.config ?? (window as any)['AstroConfig'] ?? {};
   }
@@ -34,10 +22,6 @@ export class ClockRenderer {
     fn();
     this.ctx.restore();
   }
-
-  // -----------------------------------------------------------------------
-  // Haupt-Zeichenmethode
-  // -----------------------------------------------------------------------
 
   drawClock(state: any): void {
     const ctx = this.ctx;
@@ -53,10 +37,6 @@ export class ClockRenderer {
     const parseAngle = (val: any): number =>
       typeof val === 'number' && !isNaN(val) ? val : 0;
 
-    // ENTFERNT: state.showCalendarDisk = false;
-    // showCalendarDisk wird vom ControlsComponent über den Service gesetzt
-    // (true wenn Kalender-Panel offen, false wenn Simulation-Panel offen)
-
     if (state.showCalendarDisk) {
       this.drawCalendarDisk(
         center,
@@ -66,7 +46,6 @@ export class ClockRenderer {
       );
     } else {
       const combinedAngle = parseAngle(state.angleZodiac) + parseAngle(state.bgInitialAngle);
-
       this.fillRingBetween(rLarge * 1.005, rOuter, '#6d87a5', center);
       this.drawGoldenRings(rLarge * 1.005, rOuter, center);
       this.draw24HourDial(rLarge, center);
@@ -79,10 +58,6 @@ export class ClockRenderer {
       this.drawHeilandImage(center);
     }
   }
-
-  // -----------------------------------------------------------------------
-  // Generische Hilfsmethode
-  // -----------------------------------------------------------------------
 
   _drawRadialAsset(
     center: { x: number; y: number },
@@ -105,10 +80,6 @@ export class ClockRenderer {
       }
     });
   }
-
-  // -----------------------------------------------------------------------
-  // Spezifische Zeichenfunktionen — 1:1 aus Renderer.js portiert
-  // -----------------------------------------------------------------------
 
   fillRingBetween(rInner: number, rOuter: number, color: string, center: { x: number; y: number }): void {
     const ctx    = this.ctx;
@@ -147,7 +118,6 @@ export class ClockRenderer {
         ctx.drawImage(img, -size / 2, -size / 2, size, size);
       });
     } else {
-      // Fallback: Römische Ziffern
       const PI      = this.config?.PI      ?? Math.PI;
       const HALF_PI = this.config?.HALF_PI ?? Math.PI / 2;
       const numerals = this.config?.romanNumerals ??
@@ -228,12 +198,12 @@ export class ClockRenderer {
     ctx.save();
     ctx.translate(this.canvas.width / 2, this.canvas.height / 2);
     ctx.rotate(rotationAngle);
-    const numStars      = 96;
-    const starOuter     = radius * 0.015;
-    const starInner     = starOuter * 0.5;
-    const r             = radius - starOuter;
+    const numStars  = 96;
+    const starOuter = radius * 0.015;
+    const starInner = starOuter * 0.5;
+    const r         = radius - starOuter;
     for (let i = 0; i < numStars; i++) {
-      const angle = (i * TWO_PI) / numStars;
+      const angle     = (i * TWO_PI) / numStars;
       const numPoints = (i + 1) % 4 === 0 ? 8 : 4;
       this.drawStar(Math.cos(angle) * r, Math.sin(angle) * r, numPoints, starOuter, starInner, 'gold');
     }
@@ -241,52 +211,43 @@ export class ClockRenderer {
   }
 
   /**
-   * Zeichnet die Kalenderscheibe vollständig im Canvas.
+   * Zeichnet die Kalenderscheibe mit Zoom, Rotation UND Verschiebung (offsetX/Y).
    *
-   * Der Zoom-Faktor (calendarZoom) steuert die Darstellungsgröße:
-   *   - 1.0  = Scheibe füllt genau den Canvas-Durchmesser (rOuter * 2)
-   *   - < 1.0 = Scheibe kleiner (mehr Rand sichtbar)
-   *   - > 1.0 = Scheibe größer (Ränder werden abgeschnitten)
-   *
-   * ──────────────────────────────────────────────────────────────────────────
-   * FEINEINSTELLUNG ZOOM: Den Wert CALENDAR_DISK_FIT_FACTOR anpassen,
-   * um die Scheibe im Canvas vollständig sichtbar zu machen.
-   *   - Zu groß (Ränder abgeschnitten) → Wert verkleinern (z.B. 0.90)
-   *   - Zu klein (viel Leerraum)        → Wert vergrößern (z.B. 0.98)
-   * ──────────────────────────────────────────────────────────────────────────
+   * Die Scheibe dreht sich immer um ihren eigenen Mittelpunkt (center + offset),
+   * nicht um den Canvas-Mittelpunkt. Das erlaubt sauberes Verschieben + Drehen
+   * unabhängig voneinander.
    */
-  drawCalendarDisk(center: { x: number; y: number }, maxRadius: number, rotationAngle: number, state: any): void {
-    const ctx        = this.ctx;
-    const img        = this.images?.calendarDisk;
-    const TWO_PI     = this.config?.TWO_PI ?? Math.PI * 2;
+  drawCalendarDisk(
+    center: { x: number; y: number },
+    maxRadius: number,
+    rotationAngle: number,
+    state: any
+  ): void {
+    const ctx    = this.ctx;
+    const img    = this.images?.calendarDisk;
+    const TWO_PI = this.config?.TWO_PI ?? Math.PI * 2;
 
-    // ↓↓↓ ZOOM NACHJUSTIEREN: Faktor für vollständige Darstellung im Canvas ↓↓↓
-    const CALENDAR_DISK_FIT_FACTOR = 0.93; // 0.93 = leichter Sicherheitsrand
-    // ↑↑↑ Erhöhen → Scheibe größer; Verkleinern → mehr Rand sichtbar           ↑↑↑
-
-    // Der calendarZoom aus dem State (Standardwert 1.5) wird auf den Fit-Faktor gemappt:
-    // Bei zoom=1.5 (Standard) füllt die Scheibe den Canvas fast vollständig.
-    // maxRadius ist bereits rOuter (= c.width * 0.37 * 1.12), daher:
-    // radius = Canvas-Hälfte (c.width/2) * CALENDAR_DISK_FIT_FACTOR
+    const CALENDAR_DISK_FIT_FACTOR = 0.93;
     const canvasHalf = this.canvas.width / 2;
     const zoomFactor = state.calendarZoom || 1.5;
+    const radius     = canvasHalf * CALENDAR_DISK_FIT_FACTOR * (zoomFactor / 1.5);
 
-    // Die Scheibe soll bei Zoom=1.5 den Canvas-Durchmesser vollständig ausfüllen.
-    // Dazu normalisieren wir: bei zoom=1.5 → radius = canvasHalf * FIT_FACTOR
-    const radius = canvasHalf * CALENDAR_DISK_FIT_FACTOR * (zoomFactor / 1.5);
+    // Verschobener Mittelpunkt
+    const cx = center.x + (state.calendarOffsetX ?? 0);
+    const cy = center.y + (state.calendarOffsetY ?? 0);
 
     if (img && img.complete && img.naturalWidth > 0) {
       this.withContext(() => {
-        ctx.translate(center.x, center.y);
+        // Zuerst zum (verschobenen) Mittelpunkt, dann drehen
+        ctx.translate(cx, cy);
         ctx.rotate(rotationAngle);
         const size = radius * 2;
         ctx.globalAlpha = 1.0;
         ctx.drawImage(img, -size / 2, -size / 2, size, size);
       });
     } else {
-      // Fallback wenn Bild nicht geladen
       this.withContext(() => {
-        ctx.translate(center.x, center.y);
+        ctx.translate(cx, cy);
         ctx.beginPath();
         ctx.arc(0, 0, canvasHalf * CALENDAR_DISK_FIT_FACTOR, 0, TWO_PI);
         ctx.fillStyle = '#1e3a5f';
@@ -336,10 +297,10 @@ export class ClockRenderer {
   }
 
   drawMoon(radius: number, angle: number, days: number, center: { x: number; y: number }): void {
-    const ctx             = this.ctx;
-    const dynamicH        = this.canvas.width * 0.04;
-    const dynamicW        = dynamicH * (this.config?.moonDimensions?.aspectRatio ?? 1);
-    const HALF_PI         = this.config?.HALF_PI ?? Math.PI / 2;
+    const ctx      = this.ctx;
+    const dynamicH = this.canvas.width * 0.04;
+    const dynamicW = dynamicH * (this.config?.moonDimensions?.aspectRatio ?? 1);
+    const HALF_PI  = this.config?.HALF_PI ?? Math.PI / 2;
 
     const getMoonSymbol = (d: number): string => {
       const symbols = ['🌘','🌗','🌖','🌕','🌔','🌓','🌒','🌑'];
@@ -396,20 +357,19 @@ export class ClockRenderer {
       ctx.rotate(rotationAngle);
 
       for (const name of zodiacData.names) {
-        const angle       = zodiacData.angles?.[name];
+        const angle = zodiacData.angles?.[name];
         if (angle === undefined) continue;
 
-        const img         = this.images?.zodiac?.[name];
-        const scale       = zodiacData.scaleFactors?.[name]  ?? 1;
-        const radialOff   = zodiacData.radialOffsets?.[name] ?? 0;
-        const rPos        = rBase + radius * radialOff;
-        const x           = Math.cos(angle) * rPos;
-        const y           = Math.sin(angle) * rPos;
-        const size        = fontSize * scale;
+        const img       = this.images?.zodiac?.[name];
+        const scale     = zodiacData.scaleFactors?.[name]  ?? 1;
+        const radialOff = zodiacData.radialOffsets?.[name] ?? 0;
+        const rPos      = rBase + radius * radialOff;
+        const x         = Math.cos(angle) * rPos;
+        const y         = Math.sin(angle) * rPos;
+        const size      = fontSize * scale;
 
         ctx.save();
         ctx.translate(x, y);
-        // Rotation aufheben damit die Zeichen aufrecht stehen
         ctx.rotate(-rotationAngle);
 
         if (img && img.complete && img.naturalWidth > 0) {
@@ -426,10 +386,6 @@ export class ClockRenderer {
     });
   }
 
-  /**
-   * Berechnet die Canvas-Größe responsiv und gibt die interne Auflösung zurück.
-   * Entspricht updateCanvasSizeAndRedraw() in Renderer.js (vereinfacht ohne DOM-Refs).
-   */
   calculateResponsiveSize(availableWidth: number, availableHeight: number): number {
     const size = Math.max(Math.min(availableWidth, availableHeight), 200);
     this.canvas.width  = size;
@@ -438,12 +394,13 @@ export class ClockRenderer {
   }
 
   private _fallbackZodiacData(): any {
-    const names = ['widder','stier','zwilling','krebs','loewe','jungfrau',
-                   'waage','skorpion','schuetze','steinbock','wassermann','fische'];
+    const names   = ['widder','stier','zwilling','krebs','loewe','jungfrau',
+                     'waage','skorpion','schuetze','steinbock','wassermann','fische'];
     const angles: any  = {};
     const symbols: any = ['♈','♉','♊','♋','♌','♍','♎','♏','♐','♑','♒','♓'];
     names.forEach((n, i) => { angles[n] = ((i * 30 - 105) * Math.PI) / 180; });
-    return { names, angles, symbols: Object.fromEntries(names.map((n,i) => [n, symbols[i]])),
+    return { names, angles,
+             symbols: Object.fromEntries(names.map((n, i) => [n, symbols[i]])),
              scaleFactors: {}, radialOffsets: {} };
   }
 }

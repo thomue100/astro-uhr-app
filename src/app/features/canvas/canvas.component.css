@@ -9,78 +9,83 @@
 }
 
 /*
- * canvas-container ist der Anker für die absolut positionierte Steuerleiste.
- * position: relative ist dafür zwingend notwendig.
+ * position: relative ist der Anker für die absolut positionierte
+ * Steuerleiste. touch-action: none verhindert, dass der Browser
+ * eigene Scroll-/Zoom-Gesten abfängt, bevor Angular die Events bekommt.
  */
 .canvas-container {
   position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
+  touch-action: none;
 }
+
+/* ── Cursor-Feedback je nach aktivem Modus ────────────────── */
+.canvas-rotate { cursor: grab; }
+.canvas-rotate:active { cursor: grabbing; }
+.canvas-pan    { cursor: move; }
+.canvas-pan:active { cursor: grabbing; }
 
 /* ======================================================== */
 /* === SCHWEBENDE STEUERLEISTE                          === */
 /* ======================================================== */
 
 /*
- * Die Leiste liegt ÜBER dem Canvas (position: absolute + z-index).
- * Sie nimmt dadurch keinen Platz im Layout ein — das Canvas-Element
- * behält seine Größe, egal ob die Leiste sichtbar ist oder nicht.
- * Kein Springen mehr beim Umschalten zwischen Simulation und Kalender.
+ * position: absolute + opacity/pointer-events statt @if:
+ * Die Leiste belegt keinen Platz im Layout → kein Springen.
  */
 .calendar-controls-bar {
   position: absolute;
-  bottom: 12px;           /* 12px vom unteren Rand des Canvas */
+  bottom: 12px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 10;
 
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 4px;
   flex-wrap: wrap;
   justify-content: center;
 
-  padding: 5px 10px;
-  background-color: rgba(14, 32, 48, 0.88);  /* leicht transparent */
+  padding: 5px 8px;
+  background-color: rgba(14, 32, 48, 0.92);
   border: 1px solid #1a4261;
   border-radius: 8px;
   backdrop-filter: blur(4px);
 
-  /* Standardmäßig unsichtbar und nicht anklickbar */
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.2s ease;
 }
 
-/* Sichtbar-Klasse – wird per Angular [class.] gesetzt */
 .calendar-controls-bar--visible {
   opacity: 1;
   pointer-events: auto;
 }
 
-/* Hinweistext */
-.cc-hint {
-  color: #88aacc;
-  font-size: 0.75rem;
-  white-space: nowrap;
-  margin-left: 4px;
+/* Dünner vertikaler Trenner zwischen Button-Gruppen */
+.cc-separator {
+  width: 1px;
+  height: 20px;
+  background: #1a4261;
+  margin: 0 2px;
+  flex-shrink: 0;
 }
 
-/* Buttons */
+/* Alle Buttons in der Leiste */
 .cc-btn {
   background: #184a6b;
   color: #ffcc33;
   border: 1px solid #00aaff;
   border-radius: 6px;
-  padding: 5px 10px;
-  font-size: 0.82rem;
+  padding: 4px 9px;
+  font-size: 0.78rem;
   font-weight: 600;
   cursor: pointer;
   transition: background 0.2s;
   width: auto;
-  min-width: 40px;
+  min-width: 36px;
   white-space: nowrap;
 }
 
@@ -88,30 +93,33 @@
   background: #0066aa;
 }
 
-/* Cursor-Änderung wenn Drag-Modus aktiv */
-.canvas-draggable {
-  cursor: grab;
+/* Modus-Button: aktiver Zustand leuchtet auf */
+.cc-mode-btn {
+  border-color: #336688;
+  color: #88aacc;
 }
 
-.canvas-draggable:active {
-  cursor: grabbing;
+.cc-mode-btn--active {
+  background: #0a3d5c;
+  border-color: #ffcc33;
+  color: #ffcc33;
 }
 
-/* ── Mobile Anpassung ─────────────────────────────────── */
+/* ── Mobile ───────────────────────────────────────────── */
 @media (max-width: 600px) {
-  .cc-hint {
-    display: none;
-  }
-
   .cc-btn {
-    padding: 4px 7px;
-    font-size: 0.76rem;
-    min-width: 36px;
+    padding: 4px 6px;
+    font-size: 0.72rem;
+    min-width: 30px;
   }
 
   .calendar-controls-bar {
-    bottom: 8px;
-    gap: 4px;
-    padding: 4px 6px;
+    bottom: 6px;
+    gap: 3px;
+    padding: 4px 5px;
+  }
+
+  .cc-separator {
+    display: none; /* Auf kleinen Screens weglassen */
   }
 }

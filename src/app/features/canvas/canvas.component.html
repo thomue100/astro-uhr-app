@@ -5,25 +5,53 @@
     <canvas
       #canvasElement
       id="canvas"
-      [class.canvas-draggable]="showCalendarControls()"
+      [class.canvas-rotate]="showCalendarControls() && interactionMode() === 'rotate'"
+      [class.canvas-pan]="showCalendarControls() && interactionMode() === 'pan'"
       (mousedown)="onCanvasMouseDown($event)"
       (mousemove)="onCanvasMouseMove($event)"
       (mouseup)="onCanvasMouseUp()"
       (mouseleave)="onCanvasMouseLeave()"
       (wheel)="onCanvasWheel($event)"
+      (touchstart)="onCanvasTouchStart($event)"
+      (touchmove)="onCanvasTouchMove($event)"
+      (touchend)="onCanvasTouchEnd($event)"
     ></canvas>
 
-    <!-- Steuerleiste schwebt über dem Canvas, nimmt keinen Platz ein -->
+    <!-- Steuerleiste schwebt über dem Canvas – nimmt keinen Platz im Layout ein -->
     <div
       class="calendar-controls-bar"
       [class.calendar-controls-bar--visible]="showCalendarControls()"
     >
+      <!-- Zoom -->
       <button class="cc-btn" (click)="zoomOut()" title="Verkleinern">🔍−</button>
       <button class="cc-btn" (click)="zoomIn()" title="Vergrößern">🔍+</button>
+
+      <div class="cc-separator"></div>
+
+      <!-- Rotation -->
       <button class="cc-btn" (click)="rotateLeft()" title="Links drehen">↺</button>
       <button class="cc-btn" (click)="rotateRight()" title="Rechts drehen">↻</button>
-      <button class="cc-btn" (click)="resetView()" title="Ansicht zurücksetzen">⟲</button>
-      <span class="cc-hint">Ziehen zum Drehen · Rad zum Zoomen</span>
+
+      <div class="cc-separator"></div>
+
+      <!-- Modus-Umschalter -->
+      <button
+        class="cc-btn cc-mode-btn"
+        [class.cc-mode-btn--active]="interactionMode() === 'rotate'"
+        (click)="setMode('rotate')"
+        title="Drehen-Modus"
+      >⟳ Drehen</button>
+      <button
+        class="cc-btn cc-mode-btn"
+        [class.cc-mode-btn--active]="interactionMode() === 'pan'"
+        (click)="setMode('pan')"
+        title="Verschieben-Modus"
+      >✥ Verschieben</button>
+
+      <div class="cc-separator"></div>
+
+      <!-- Reset -->
+      <button class="cc-btn" (click)="resetView()" title="Ansicht zurücksetzen">⟲ Reset</button>
     </div>
   </div>
 

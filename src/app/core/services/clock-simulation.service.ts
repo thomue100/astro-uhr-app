@@ -8,11 +8,9 @@ import { createAstroStateSignal } from '../../shared/models/astro-signal.signal'
 @Injectable({ providedIn: 'root' })
 export class ClockSimulationService implements OnDestroy {
 
-  // --- Signals ---
   private readonly _currentDate = signal<Date>(new Date());
   readonly currentDate = this._currentDate.asReadonly();
 
-  // Subject statt toObservable — feuert immer, auch bei gleichem Datum
   readonly selectedDate$ = new Subject<Date>();
 
   private readonly _astroStore = createAstroStateSignal();
@@ -21,9 +19,7 @@ export class ClockSimulationService implements OnDestroy {
   readonly isAnimationRunning = signal(false);
   readonly animationSpeed = signal(0.5);
 
-  // Merkt sich, ob der Winkel manuell gesetzt wurde (Rotate-Buttons)
   private _manualCalendarAngle: number | null = null;
-
   private animationFrameId: number | null = null;
 
   constructor() {
@@ -46,10 +42,6 @@ export class ClockSimulationService implements OnDestroy {
     this.selectedDate$.next(date);
   }
 
-  /**
-   * Löst ein Canvas-Redraw aus, ohne das Datum zu ändern.
-   * Wird genutzt wenn nur Store-Werte (zoom, angle, showCalendarDisk) geändert wurden.
-   */
   triggerRedraw(): void {
     this.selectedDate$.next(this._currentDate());
   }
@@ -65,6 +57,11 @@ export class ClockSimulationService implements OnDestroy {
   setAngleCalendarDisk(angle: number): void {
     this._manualCalendarAngle = angle;
     this._astroStore.update({ angleCalendarDisk: angle });
+  }
+
+  // NEU: Offset der Kalenderscheibe setzen
+  setCalendarOffset(dx: number, dy: number): void {
+    this._astroStore.update({ calendarOffsetX: dx, calendarOffsetY: dy });
   }
 
   resetManualCalendarAngle(): void {
