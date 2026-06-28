@@ -28,6 +28,186 @@
     </li>
   </ul>
 
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <!-- BILD-VIEWER: Erhaltenes Uhrwerk im St.-Annen-Museum            -->
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <div class="img-viewer-card">
+    <div class="img-viewer-caption">
+      <span class="img-viewer-caption-title">📷 Das erhaltene Uhrwerk im St.-Annen-Museum, Lübeck</span>
+      <span class="img-viewer-caption-sub">
+        Reste der ersten Astronomischen Uhr von 1405 — Tierkreisscheibe mit vergoldeten Figuren,
+        Zahnräder und Zeiger. Das untere Rad ist das Antriebsrad des Uhrwerks.
+      </span>
+    </div>
+
+    <!-- Bild-Bühne: hier wird gezoomt und gescrollt -->
+    <div
+      class="img-viewer-stage"
+      id="imgViewerStage"
+      onwheel="imgViewerWheel(event)"
+      onmousedown="imgViewerMouseDown(event)"
+      onmousemove="imgViewerMouseMove(event)"
+      onmouseup="imgViewerMouseUp(event)"
+      onmouseleave="imgViewerMouseUp(event)"
+      ontouchstart="imgViewerTouchStart(event)"
+      ontouchmove="imgViewerTouchMove(event)"
+      ontouchend="imgViewerTouchEnd(event)"
+    >
+      <img
+        id="imgViewerImg"
+        class="img-viewer-img"
+        src="assets/images/history-modal/st-annen.jpg"
+        alt="Erhaltenes Uhrwerk der ersten Astronomischen Uhr von 1405 im St.-Annen-Museum Lübeck"
+        draggable="false"
+        onerror="this.parentElement.parentElement.querySelector('.img-viewer-error').style.display='block'; this.style.display='none';"
+      />
+      <div class="img-viewer-error" style="display:none;">
+        ⚠️ Bild nicht gefunden. Bitte <code>st-annen.jpg</code> nach
+        <code>public/assets/images/</code> kopieren.
+      </div>
+    </div>
+
+    <!-- Steuerleiste -->
+    <div class="img-viewer-controls">
+      <button class="img-viewer-btn" onclick="imgViewerZoom(-0.3)" title="Verkleinern">🔍−</button>
+      <button class="img-viewer-btn" onclick="imgViewerZoom(+0.3)" title="Vergrößern">🔍+</button>
+      <button class="img-viewer-btn" onclick="imgViewerReset()"   title="Zurücksetzen">⟲ Reset</button>
+      <span class="img-viewer-hint">Mausrad · Klicken &amp; Ziehen · Pinch</span>
+    </div>
+  </div>
+
+  <!-- Inline-Script: isolierter Viewer ohne globale Konflikte -->
+  <script>
+  (function () {
+    // Zustand
+    let scale = 1, minScale = 0.3, maxScale = 5;
+    let offsetX = 0, offsetY = 0;
+    let dragging = false, startX = 0, startY = 0, baseX = 0, baseY = 0;
+    // Touch
+    let lastDist = 0, lastTX = 0, lastTY = 0, twoFinger = false;
+
+    function getEl() {
+      return {
+        img:   document.getElementById('imgViewerImg'),
+        stage: document.getElementById('imgViewerStage')
+      };
+    }
+
+    function applyTransform() {
+      const { img } = getEl();
+      if (!img) return;
+      img.style.transform =
+        'translate(' + offsetX + 'px, ' + offsetY + 'px) scale(' + scale + ')';
+    }
+
+    function clampOffset() {
+      // Weiche Begrenzung: Bild darf nicht komplett aus dem Stage laufen
+      const { img, stage } = getEl();
+      if (!img || !stage) return;
+      const sw = stage.clientWidth,  sh = stage.clientHeight;
+      const iw = img.naturalWidth  * scale;
+      const ih = img.naturalHeight * scale;
+      const margin = Math.min(sw, sh) * 0.25; // mind. 25% sichtbar
+      offsetX = Math.min(offsetX,  sw * 0.5 + iw * 0.5 - margin);
+      offsetX = Math.max(offsetX, -sw * 0.5 - iw * 0.5 + margin);
+      offsetY = Math.min(offsetY,  sh * 0.5 + ih * 0.5 - margin);
+      offsetY = Math.max(offsetY, -sh * 0.5 - ih * 0.5 + margin);
+    }
+
+    // ── API-Funktionen (global im Modal-Scope) ───────────────────────
+    window.imgViewerZoom = function (delta) {
+      scale = Math.min(maxScale, Math.max(minScale, scale + delta));
+      clampOffset();
+      applyTransform();
+    };
+
+    window.imgViewerReset = function () {
+      scale = 1; offsetX = 0; offsetY = 0;
+      applyTransform();
+    };
+
+    // ── Mausrad-Zoom ────────────────────────────────────────────────
+    window.imgViewerWheel = function (e) {
+      e.preventDefault();
+      const delta = e.deltaY < 0 ? 0.2 : -0.2;
+      window.imgViewerZoom(delta);
+    };
+
+    // ── Maus-Drag ───────────────────────────────────────────────────
+    window.imgViewerMouseDown = function (e) {
+      dragging = true;
+      startX = e.clientX; startY = e.clientY;
+      baseX  = offsetX;   baseY  = offsetY;
+      e.preventDefault();
+    };
+
+    window.imgViewerMouseMove = function (e) {
+      if (!dragging) return;
+      offsetX = baseX + (e.clientX - startX);
+      offsetY = baseY + (e.clientY - startY);
+      clampOffset();
+      applyTransform();
+    };
+
+    window.imgViewerMouseUp = function () { dragging = false; };
+
+    // ── Touch ───────────────────────────────────────────────────────
+    window.imgViewerTouchStart = function (e) {
+      e.preventDefault();
+      if (e.touches.length === 1) {
+        twoFinger = false;
+        lastTX = e.touches[0].clientX;
+        lastTY = e.touches[0].clientY;
+      } else if (e.touches.length === 2) {
+        twoFinger = true;
+        const dx = e.touches[0].clientX - e.touches[1].clientX;
+        const dy = e.touches[0].clientY - e.touches[1].clientY;
+        lastDist = Math.sqrt(dx*dx + dy*dy);
+      }
+    };
+
+    window.imgViewerTouchMove = function (e) {
+      e.preventDefault();
+      if (e.touches.length === 1 && !twoFinger) {
+        const dx = e.touches[0].clientX - lastTX;
+        const dy = e.touches[0].clientY - lastTY;
+        offsetX += dx; offsetY += dy;
+        lastTX = e.touches[0].clientX;
+        lastTY = e.touches[0].clientY;
+        clampOffset();
+        applyTransform();
+      } else if (e.touches.length === 2) {
+        const dx   = e.touches[0].clientX - e.touches[1].clientX;
+        const dy   = e.touches[0].clientY - e.touches[1].clientY;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        if (lastDist > 0) {
+          const factor = dist / lastDist;
+          scale = Math.min(maxScale, Math.max(minScale, scale * factor));
+          clampOffset();
+          applyTransform();
+        }
+        lastDist = dist;
+      }
+    };
+
+    window.imgViewerTouchEnd = function (e) {
+      if (e.touches.length < 2) { twoFinger = false; lastDist = 0; }
+      if (e.touches.length === 1) {
+        lastTX = e.touches[0].clientX;
+        lastTY = e.touches[0].clientY;
+      }
+    };
+
+    // Init: Bild nach Laden zentrieren
+    document.addEventListener('DOMContentLoaded', function () {
+      window.imgViewerReset();
+    });
+    // Fallback falls DOMContentLoaded schon gefeuert hat
+    if (document.readyState !== 'loading') { window.imgViewerReset(); }
+  })();
+  </script>
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+
   <hr style="border-top: 1px solid #1a4261; margin-top: 20px; margin-bottom: 20px;"/>
 
   <h3 style="color: #ffcc33; font-size: 1.1em; margin-top: 15px;">Der Neubau und die Technik (1955–1976)</h3>
@@ -66,7 +246,7 @@
     <li style="margin-bottom: 5px;">
       <strong style="font-size: 1.0em;">Tierkreis:</strong> Die kupfergetriebene Sonne und der Mond bewegen sich
       astronomisch korrekt durch den Tierkreis. Der Tierkreisring ist als mitgehender blauer Himmelsring dargestellt und
-      umfasst 13 Sternbilder, einschließlich des Schlangenträgers (*Ophiuchus*).
+      umfasst 13 Sternbilder, einschließlich des Schlangenträgers (<em>Ophiuchus</em>).
     </li>
     <li style="margin-bottom: 5px;">
       <strong style="font-size: 1.0em;">Ikonografie der Ecken:</strong> Die vier Ecken der Kalenderscheibe werden von
@@ -88,7 +268,7 @@
   <ul style="font-size: 0.9em; margin-top: 5px; padding-left: 20px;">
     <li style="margin-bottom: 5px;">
       <strong style="font-size: 1.0em;">Figurenumgang:</strong> Anstelle der Kurfürsten des Vorgängermodells zeigen die
-      Figuren des Rundgangs nun die „Gläubigen der Welt“ oder „Völker der Welt“.
+      Figuren des Rundgangs nun die „Gläubigen der Welt" oder „Völker der Welt".
     </li>
     <li style="margin-bottom: 5px;">
       <strong style="font-size: 1.0em;">Figuren:</strong> Die von Marianne Schmidt geschaffenen Figuren stellen
@@ -108,3 +288,118 @@
     </li>
   </ul>
 </div>
+
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<!-- STYLES: Scoped über ID, damit sie nur den Viewer betreffen         -->
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<style>
+  /* Karte um den Viewer */
+  .img-viewer-card {
+    margin: 16px 0;
+    border: 1px solid #1a4261;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #071522;
+  }
+
+  /* Beschriftung */
+  .img-viewer-caption {
+    padding: 8px 12px;
+    background: #0e2030;
+    border-bottom: 1px solid #1a4261;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .img-viewer-caption-title {
+    color: #ffcc33;
+    font-size: 0.85em;
+    font-weight: 700;
+  }
+
+  .img-viewer-caption-sub {
+    color: #88aacc;
+    font-size: 0.78em;
+    line-height: 1.4;
+  }
+
+  /* Bild-Bühne */
+  .img-viewer-stage {
+    position: relative;
+    width: 100%;
+    height: 340px;          /* Feste Höhe — Bild scrollt innerhalb */
+    overflow: hidden;
+    cursor: grab;
+    background: #040e17;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    touch-action: none;     /* Verhindert Browser-Scroll während Pinch */
+  }
+
+  .img-viewer-stage:active { cursor: grabbing; }
+
+  /* Das Bild selbst */
+  .img-viewer-img {
+    /* Startgröße: passt in die Stage */
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    /* transform-origin muss Mitte sein für korrektes Zoomen */
+    transform-origin: center center;
+    transform: translate(0, 0) scale(1);
+    transition: none;        /* Kein CSS-Transition — JS animiert direkt */
+    user-select: none;
+    -webkit-user-drag: none;
+  }
+
+  /* Fehlermeldung */
+  .img-viewer-error {
+    color: #ff9966;
+    font-size: 0.85em;
+    padding: 20px;
+    text-align: center;
+    line-height: 1.6;
+  }
+
+  /* Steuerleiste unter dem Bild */
+  .img-viewer-controls {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 10px;
+    background: #0e2030;
+    border-top: 1px solid #1a4261;
+    flex-wrap: wrap;
+  }
+
+  .img-viewer-btn {
+    background: #184a6b;
+    color: #ffcc33;
+    border: 1px solid #00aaff;
+    border-radius: 5px;
+    padding: 4px 10px;
+    font-size: 0.78em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+    width: auto;
+    min-width: 44px;
+    white-space: nowrap;
+  }
+
+  .img-viewer-btn:hover { background: #0066aa; }
+
+  .img-viewer-hint {
+    color: #6688aa;
+    font-size: 0.72em;
+    margin-left: 4px;
+  }
+
+  /* Mobile: Stage etwas kleiner */
+  @media (max-width: 600px) {
+    .img-viewer-stage  { height: 240px; }
+    .img-viewer-hint   { display: none; }
+  }
+</style>
