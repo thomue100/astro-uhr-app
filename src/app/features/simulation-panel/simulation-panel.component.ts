@@ -1,29 +1,26 @@
-import { Component, inject, signal, computed, effect } from '@angular/core';
+// src/app/features/simulation-panel/simulation-panel.component.ts
+import { Component, inject, signal, effect } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { DatePipe, DecimalPipe } from '@angular/common'; // DecimalPipe hier hinzufügen
+import { DatePipe, DecimalPipe } from '@angular/common';
 import { ClockSimulationService } from '../../core/services/clock-simulation.service';
+import { TranslatePipe } from '../../shared/pipes/translate.pipe';
 
 @Component({
   selector: 'app-simulation-panel',
   standalone: true,
-  imports: [FormsModule, DatePipe, DecimalPipe], // DecimalPipe hier zum Array hinzufügen
+  imports: [FormsModule, DatePipe, DecimalPipe, TranslatePipe],
   templateUrl: './simulation-panel.component.html',
 })
 export class SimulationPanelComponent {
   readonly clockService = inject(ClockSimulationService);
 
   readonly selectedDateTimeString = signal('');
-  readonly animationSpeed = signal(0.5);
-
-  // Für die Liveanzeige — reagiert auf Signal-Änderungen automatisch
-  readonly currentDate = this.clockService.currentDate;
-  readonly isAnimationRunning = this.clockService.isAnimationRunning;
+  readonly animationSpeed         = signal(0.5);
+  readonly currentDate            = this.clockService.currentDate;
+  readonly isAnimationRunning     = this.clockService.isAnimationRunning;
 
   constructor() {
-    // Einmalig initialisieren
     this._syncDateTimeString(this.clockService.getCurrentDate());
-
-    // Wenn Animation läuft: Input-String NICHT bei jedem Frame aktualisieren
     effect(() => {
       const date = this.currentDate();
       if (!this.isAnimationRunning()) {
@@ -40,16 +37,12 @@ export class SimulationPanelComponent {
     const min = new Date('1911-01-01T00:00');
     const max = new Date('2080-12-31T23:59');
     if (d < min || d > max) return;
-    if (this.clockService.isAnimationRunning()) {
-      this.clockService.stopAnimation();
-    }
+    if (this.clockService.isAnimationRunning()) this.clockService.stopAnimation();
     this.clockService.setDate(d);
   }
 
   setToCurrentTime(): void {
-    if (this.clockService.isAnimationRunning()) {
-      this.clockService.stopAnimation();
-    }
+    if (this.clockService.isAnimationRunning()) this.clockService.stopAnimation();
     const now = new Date();
     this.clockService.setDate(now);
     this._syncDateTimeString(now);

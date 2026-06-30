@@ -1,6 +1,5 @@
 <!-- src/app/features/canvas/canvas.component.html -->
 <div class="canvas-wrapper">
-
   <div class="canvas-container">
     <canvas
       #canvasElement
@@ -17,42 +16,30 @@
       (touchend)="onCanvasTouchEnd($event)"
     ></canvas>
 
-    <!-- Steuerleiste schwebt über dem Canvas – nimmt keinen Platz im Layout ein -->
     <div
       class="calendar-controls-bar"
       [class.calendar-controls-bar--visible]="showCalendarControls()"
     >
-      <!-- Zoom -->
-      <button class="cc-btn" (click)="zoomOut()" title="Verkleinern">🔍−</button>
-      <button class="cc-btn" (click)="zoomIn()" title="Vergrößern">🔍+</button>
-
+      <button class="cc-btn" (click)="zoomOut()"     [title]="'calendar_disk.zoom_out'    | translate">🔍−</button>
+      <button class="cc-btn" (click)="zoomIn()"      [title]="'calendar_disk.zoom_in'     | translate">🔍+</button>
       <div class="cc-separator"></div>
-
-      <!-- Rotation -->
-      <button class="cc-btn" (click)="rotateLeft()" title="Links drehen">↺</button>
-      <button class="cc-btn" (click)="rotateRight()" title="Rechts drehen">↻</button>
-
+      <button class="cc-btn" (click)="rotateLeft()"  [title]="'calendar_disk.rotate_left' | translate">↺</button>
+      <button class="cc-btn" (click)="rotateRight()" [title]="'calendar_disk.rotate_right'| translate">↻</button>
       <div class="cc-separator"></div>
-
-      <!-- Modus-Umschalter -->
       <button
         class="cc-btn cc-mode-btn"
         [class.cc-mode-btn--active]="interactionMode() === 'rotate'"
         (click)="setMode('rotate')"
-        title="Drehen-Modus"
-      >⟳ Drehen</button>
+      >{{ 'calendar_disk.mode_rotate' | translate }}</button>
       <button
         class="cc-btn cc-mode-btn"
         [class.cc-mode-btn--active]="interactionMode() === 'pan'"
         (click)="setMode('pan')"
-        title="Verschieben-Modus"
-      >✥ Verschieben</button>
-
+      >{{ 'calendar_disk.mode_pan' | translate }}</button>
       <div class="cc-separator"></div>
-
-      <!-- Reset -->
-      <button class="cc-btn" (click)="resetView()" title="Ansicht zurücksetzen">⟲ Reset</button>
+      <button class="cc-btn" (click)="resetView()" [title]="'calendar_disk.reset' | translate">
+        {{ 'calendar_disk.reset' | translate }}
+      </button>
     </div>
   </div>
-
 </div>

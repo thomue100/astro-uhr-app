@@ -1,14 +1,7 @@
 // src/app/features/canvas/canvas.component.ts
 import {
-  Component,
-  ElementRef,
-  OnInit,
-  AfterViewInit,
-  OnDestroy,
-  ViewChild,
-  inject,
-  signal,
-  effect,
+  Component, ElementRef, OnInit, AfterViewInit, OnDestroy,
+  ViewChild, inject, signal, effect,
 } from '@angular/core';
 import { Subscription } from 'rxjs';
 
@@ -17,15 +10,8 @@ import { AstroConfig } from '../../shared/utils/config';
 import { ImageManager } from '../../shared/utils/ImageManager';
 import { ClockRenderer } from '../../shared/utils/ClockRenderer';
 import { TimeUtility } from '../../shared/utils/TimeUtility';
+import { TranslatePipe } from '../../shared/pipes/translate.pipe';
 
-/**
- * Interaktionsmodi für die Kalenderscheibe.
- *
- *  rotate – Mausrad / Ein-Finger-Wischen dreht die Scheibe
- *  pan    – Linke Maustaste / Ein-Finger-Wischen verschiebt die Scheibe
- *
- * Zwei Finger (Touch) können immer gleichzeitig zoomen UND verschieben.
- */
 type InteractionMode = 'rotate' | 'pan';
 
 @Component({
@@ -33,6 +19,7 @@ type InteractionMode = 'rotate' | 'pan';
   templateUrl: './canvas.component.html',
   styleUrls: ['./canvas.component.css'],
   standalone: true,
+  imports: [TranslatePipe],
 })
 export class CanvasComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('canvasElement') canvasRef!: ElementRef<HTMLCanvasElement>;
@@ -44,46 +31,33 @@ export class CanvasComponent implements OnInit, AfterViewInit, OnDestroy {
   private renderer!: ClockRenderer;
   private resizeObserver!: ResizeObserver;
 
-  // ── UI-Zustand ────────────────────────────────────────────────────────────
   readonly showCalendarControls = signal(false);
-  // Aktiver Modus: 'rotate' oder 'pan'
-  readonly interactionMode = signal<InteractionMode>('rotate');
+  readonly interactionMode      = signal<InteractionMode>('rotate');
 
-  // ── Zoom ──────────────────────────────────────────────────────────────────
   private currentZoom    = 1.5;
   private readonly zoomStep = 0.25;
   private readonly minZoom  = 0.5;
   private readonly maxZoom  = 4.0;
 
-  // ── Rotation ──────────────────────────────────────────────────────────────
   private rotationOffset    = 0;
-  private readonly rotationStep = Math.PI / 24; // 7.5° per click
+  private readonly rotationStep = Math.PI / 24;
 
-  // ── Pan-Offset (Verschiebung der Scheibenmitte) ───────────────────────────
   private panOffsetX = 0;
   private panOffsetY = 0;
 
-  // ── Maus-Drag ─────────────────────────────────────────────────────────────
-  private isDragging     = false;
-  // Für Rotate-Drag
-  private dragStartAngle    = 0;
-  private dragBaseRotation  = 0;
-  // Für Pan-Drag
-  private dragStartX = 0;
-  private dragStartY = 0;
-  private dragBasePanX = 0;
-  private dragBasePanY = 0;
+  private isDragging       = false;
+  private dragStartAngle   = 0;
+  private dragBaseRotation = 0;
+  private dragStartX       = 0;
+  private dragStartY       = 0;
+  private dragBasePanX     = 0;
+  private dragBasePanY     = 0;
 
-  // ── Touch-Gesten ──────────────────────────────────────────────────────────
   private isTouchActive      = false;
   private isTwoFingerGesture = false;
-
-  // Ein-Finger
-  private lastTouchAngle = 0;  // für Rotate-Modus
-  private lastTouchX     = 0;  // für Pan-Modus
-  private lastTouchY     = 0;
-
-  // Zwei-Finger
+  private lastTouchAngle     = 0;
+  private lastTouchX         = 0;
+  private lastTouchY         = 0;
   private lastPinchDist       = 0;
   private lastTwoFingerAngle  = 0;
   private lastTwoFingerCenterX = 0;
@@ -95,7 +69,6 @@ export class CanvasComponent implements OnInit, AfterViewInit, OnDestroy {
       const show  = state.showCalendarDisk;
       this.showCalendarControls.set(show);
       if (!show) {
-        // Alles zurücksetzen wenn Kalender-Panel geschlossen
         this.rotationOffset = 0;
         this.currentZoom    = 1.5;
         this.panOffsetX     = 0;
@@ -117,19 +90,15 @@ export class CanvasComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.imageManager.preloadImages().then(() => {
       this.renderer = new ClockRenderer(canvas, ctx, this.imageManager, AstroConfig);
-
       const container = canvas.parentElement;
       if (container) {
         const { width, height } = container.getBoundingClientRect();
         this.renderer.calculateResponsiveSize(width, height);
       }
-
       this.clockSubscription = this.clockService.selectedDate$.subscribe(() => {
         this.renderer.drawClock(this.clockService.astroState());
       });
-
       this.renderer.drawClock(this.clockService.astroState());
-
       if (container) {
         this.resizeObserver = new ResizeObserver(entries => {
           requestAnimationFrame(() => {
@@ -149,37 +118,18 @@ export class CanvasComponent implements OnInit, AfterViewInit, OnDestroy {
     this.resizeObserver?.disconnect();
   }
 
-  // ── Modus-Umschalter (Template-Button) ───────────────────────────────────
-
-  setMode(mode: InteractionMode): void {
-    this.interactionMode.set(mode);
-  }
-
-  // ── Zoom-Buttons ──────────────────────────────────────────────────────────
+  setMode(mode: InteractionMode): void { this.interactionMode.set(mode); }
 
   zoomIn(): void {
     this.currentZoom = Math.min(this.maxZoom, this.currentZoom + this.zoomStep);
     this._pushZoom();
   }
-
   zoomOut(): void {
     this.currentZoom = Math.max(this.minZoom, this.currentZoom - this.zoomStep);
     this._pushZoom();
   }
-
-  // ── Rotations-Buttons ─────────────────────────────────────────────────────
-
-  rotateLeft(): void {
-    this.rotationOffset -= this.rotationStep;
-    this._applyRotation();
-  }
-
-  rotateRight(): void {
-    this.rotationOffset += this.rotationStep;
-    this._applyRotation();
-  }
-
-  // ── Reset ─────────────────────────────────────────────────────────────────
+  rotateLeft(): void  { this.rotationOffset -= this.rotationStep; this._applyRotation(); }
+  rotateRight(): void { this.rotationOffset += this.rotationStep; this._applyRotation(); }
 
   resetView(): void {
     this.rotationOffset = 0;
@@ -188,226 +138,154 @@ export class CanvasComponent implements OnInit, AfterViewInit, OnDestroy {
     this.panOffsetY     = 0;
     this.clockService.setCalendarZoom(this.currentZoom);
     this.clockService.setCalendarOffset(0, 0);
-    const baseAngle = TimeUtility.calculateCalendarDiskAngle(
-      this.clockService.getCurrentDate()
-    );
-    this.clockService.setAngleCalendarDisk(baseAngle);
+    const base = TimeUtility.calculateCalendarDiskAngle(this.clockService.getCurrentDate());
+    this.clockService.setAngleCalendarDisk(base);
     this.clockService.triggerRedraw();
   }
 
-  // ── Maus-Events ───────────────────────────────────────────────────────────
-
-  onCanvasMouseDown(event: MouseEvent): void {
+  onCanvasMouseDown(e: MouseEvent): void {
     if (!this.showCalendarControls()) return;
     this.isDragging = true;
-
     if (this.interactionMode() === 'rotate') {
       const c = this._canvasCenter();
-      this.dragStartAngle   = Math.atan2(event.clientY - c.y, event.clientX - c.x);
+      this.dragStartAngle   = Math.atan2(e.clientY - c.y, e.clientX - c.x);
       this.dragBaseRotation = this.clockService.astroState().angleCalendarDisk;
     } else {
-      this.dragStartX   = event.clientX;
-      this.dragStartY   = event.clientY;
-      this.dragBasePanX = this.panOffsetX;
-      this.dragBasePanY = this.panOffsetY;
+      this.dragStartX   = e.clientX; this.dragStartY   = e.clientY;
+      this.dragBasePanX = this.panOffsetX; this.dragBasePanY = this.panOffsetY;
     }
-    event.preventDefault();
+    e.preventDefault();
   }
 
-  onCanvasMouseMove(event: MouseEvent): void {
+  onCanvasMouseMove(e: MouseEvent): void {
     if (!this.isDragging) return;
-
     if (this.interactionMode() === 'rotate') {
-      const c            = this._canvasCenter();
-      const currentAngle = Math.atan2(event.clientY - c.y, event.clientX - c.x);
-      const delta        = currentAngle - this.dragStartAngle;
+      const c = this._canvasCenter();
+      const delta = Math.atan2(e.clientY - c.y, e.clientX - c.x) - this.dragStartAngle;
       this.clockService.setAngleCalendarDisk(this.dragBaseRotation + delta);
     } else {
-      this.panOffsetX = this.dragBasePanX + (event.clientX - this.dragStartX);
-      this.panOffsetY = this.dragBasePanY + (event.clientY - this.dragStartY);
+      this.panOffsetX = this.dragBasePanX + (e.clientX - this.dragStartX);
+      this.panOffsetY = this.dragBasePanY + (e.clientY - this.dragStartY);
       this.clockService.setCalendarOffset(this.panOffsetX, this.panOffsetY);
     }
     this.clockService.triggerRedraw();
-    event.preventDefault();
+    e.preventDefault();
   }
 
   onCanvasMouseUp(): void {
-    if (this.isDragging && this.interactionMode() === 'rotate') {
-      // Offset für Buttons synchron halten
-      this._syncRotationOffset();
-    }
+    if (this.isDragging && this.interactionMode() === 'rotate') this._syncRotationOffset();
     this.isDragging = false;
   }
+  onCanvasMouseLeave(): void { this.onCanvasMouseUp(); }
 
-  onCanvasMouseLeave(): void {
-    this.onCanvasMouseUp();
+  onCanvasWheel(e: WheelEvent): void {
+    if (!this.showCalendarControls()) return;
+    e.preventDefault();
+    e.deltaY < 0 ? this.zoomIn() : this.zoomOut();
   }
 
-  onCanvasWheel(event: WheelEvent): void {
+  onCanvasTouchStart(e: TouchEvent): void {
     if (!this.showCalendarControls()) return;
-    event.preventDefault();
-    event.deltaY < 0 ? this.zoomIn() : this.zoomOut();
-  }
-
-  // ── Touch-Events ──────────────────────────────────────────────────────────
-
-  onCanvasTouchStart(event: TouchEvent): void {
-    if (!this.showCalendarControls()) return;
-    event.preventDefault();
+    e.preventDefault();
     this.isTouchActive = true;
-
-    if (event.touches.length === 1) {
+    if (e.touches.length === 1) {
       this.isTwoFingerGesture = false;
-      const t = event.touches[0];
-
+      const t = e.touches[0];
       if (this.interactionMode() === 'rotate') {
         const c = this._canvasCenter();
         this.lastTouchAngle = Math.atan2(t.clientY - c.y, t.clientX - c.x);
       } else {
-        this.lastTouchX = t.clientX;
-        this.lastTouchY = t.clientY;
+        this.lastTouchX = t.clientX; this.lastTouchY = t.clientY;
       }
-    } else if (event.touches.length === 2) {
+    } else if (e.touches.length === 2) {
       this.isTwoFingerGesture = true;
-      this.lastPinchDist        = this._touchDist(event.touches);
-      this.lastTwoFingerAngle   = this._touchAngle(event.touches);
-      const ctr                 = this._touchCenter(event.touches);
+      this.lastPinchDist        = this._touchDist(e.touches);
+      this.lastTwoFingerAngle   = this._touchAngle(e.touches);
+      const ctr = this._touchCenter(e.touches);
       this.lastTwoFingerCenterX = ctr.x;
       this.lastTwoFingerCenterY = ctr.y;
     }
   }
 
-  onCanvasTouchMove(event: TouchEvent): void {
+  onCanvasTouchMove(e: TouchEvent): void {
     if (!this.showCalendarControls() || !this.isTouchActive) return;
-    event.preventDefault();
-
-    if (event.touches.length === 1 && !this.isTwoFingerGesture) {
-      // ── Ein-Finger ──────────────────────────────────────────────────────
-      const t = event.touches[0];
-
+    e.preventDefault();
+    if (e.touches.length === 1 && !this.isTwoFingerGesture) {
+      const t = e.touches[0];
       if (this.interactionMode() === 'rotate') {
-        const c            = this._canvasCenter();
-        const currentAngle = Math.atan2(t.clientY - c.y, t.clientX - c.x);
-        const delta        = currentAngle - this.lastTouchAngle;
-        const newAngle     = this.clockService.astroState().angleCalendarDisk + delta;
-        this.lastTouchAngle = currentAngle;
-        this.clockService.setAngleCalendarDisk(newAngle);
+        const c = this._canvasCenter();
+        const curr  = Math.atan2(t.clientY - c.y, t.clientX - c.x);
+        const delta = curr - this.lastTouchAngle;
+        this.lastTouchAngle = curr;
+        this.clockService.setAngleCalendarDisk(
+          this.clockService.astroState().angleCalendarDisk + delta);
       } else {
-        const dx        = t.clientX - this.lastTouchX;
-        const dy        = t.clientY - this.lastTouchY;
-        this.panOffsetX += dx;
-        this.panOffsetY += dy;
-        this.lastTouchX  = t.clientX;
-        this.lastTouchY  = t.clientY;
+        this.panOffsetX += t.clientX - this.lastTouchX;
+        this.panOffsetY += t.clientY - this.lastTouchY;
+        this.lastTouchX = t.clientX; this.lastTouchY = t.clientY;
         this.clockService.setCalendarOffset(this.panOffsetX, this.panOffsetY);
       }
       this.clockService.triggerRedraw();
-
-    } else if (event.touches.length === 2) {
-      // ── Zwei Finger: Pinch-Zoom + Rotation + Pan ────────────────────────
-      const dist   = this._touchDist(event.touches);
-      const angle  = this._touchAngle(event.touches);
-      const center = this._touchCenter(event.touches);
-
-      // Zoom (Pinch)
+    } else if (e.touches.length === 2) {
+      const dist  = this._touchDist(e.touches);
+      const angle = this._touchAngle(e.touches);
+      const ctr   = this._touchCenter(e.touches);
       if (this.lastPinchDist > 0) {
-        const factor  = dist / this.lastPinchDist;
-        this.currentZoom = Math.min(
-          this.maxZoom,
-          Math.max(this.minZoom, this.currentZoom * factor)
-        );
+        this.currentZoom = Math.min(this.maxZoom,
+          Math.max(this.minZoom, this.currentZoom * (dist / this.lastPinchDist)));
         this.clockService.setCalendarZoom(this.currentZoom);
       }
-
-      // Rotation (Zwei-Finger-Drehen)
-      const angleDelta = angle - this.lastTwoFingerAngle;
-      const newAngle   = this.clockService.astroState().angleCalendarDisk + angleDelta;
-      this.clockService.setAngleCalendarDisk(newAngle);
-
-      // Pan (Zwei-Finger-Verschieben — Mittelpunkt der Geste)
-      const panDx     = center.x - this.lastTwoFingerCenterX;
-      const panDy     = center.y - this.lastTwoFingerCenterY;
-      this.panOffsetX += panDx;
-      this.panOffsetY += panDy;
+      this.clockService.setAngleCalendarDisk(
+        this.clockService.astroState().angleCalendarDisk + (angle - this.lastTwoFingerAngle));
+      this.panOffsetX += ctr.x - this.lastTwoFingerCenterX;
+      this.panOffsetY += ctr.y - this.lastTwoFingerCenterY;
       this.clockService.setCalendarOffset(this.panOffsetX, this.panOffsetY);
-
-      this.lastPinchDist        = dist;
-      this.lastTwoFingerAngle   = angle;
-      this.lastTwoFingerCenterX = center.x;
-      this.lastTwoFingerCenterY = center.y;
-
+      this.lastPinchDist = dist; this.lastTwoFingerAngle = angle;
+      this.lastTwoFingerCenterX = ctr.x; this.lastTwoFingerCenterY = ctr.y;
       this.clockService.triggerRedraw();
     }
   }
 
-  onCanvasTouchEnd(event: TouchEvent): void {
-    if (event.touches.length === 0) {
-      this.isTouchActive = false;
-      this._syncRotationOffset();
-    }
-    if (event.touches.length < 2) {
-      this.isTwoFingerGesture = false;
-      this.lastPinchDist      = 0;
-    }
-    // Nahtloser Übergang Zwei → Ein Finger
-    if (event.touches.length === 1) {
+  onCanvasTouchEnd(e: TouchEvent): void {
+    if (e.touches.length === 0) { this.isTouchActive = false; this._syncRotationOffset(); }
+    if (e.touches.length < 2)   { this.isTwoFingerGesture = false; this.lastPinchDist = 0; }
+    if (e.touches.length === 1) {
       this.isTouchActive = true;
-      const t = event.touches[0];
+      const t = e.touches[0];
       if (this.interactionMode() === 'rotate') {
         const c = this._canvasCenter();
         this.lastTouchAngle = Math.atan2(t.clientY - c.y, t.clientX - c.x);
       } else {
-        this.lastTouchX = t.clientX;
-        this.lastTouchY = t.clientY;
+        this.lastTouchX = t.clientX; this.lastTouchY = t.clientY;
       }
     }
   }
-
-  // ── Private Hilfsmethoden ─────────────────────────────────────────────────
 
   private _canvasCenter(): { x: number; y: number } {
     const r = this.canvasRef.nativeElement.getBoundingClientRect();
     return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
   }
-
-  private _touchDist(touches: TouchList): number {
-    const dx = touches[0].clientX - touches[1].clientX;
-    const dy = touches[0].clientY - touches[1].clientY;
+  private _touchDist(t: TouchList): number {
+    const dx = t[0].clientX - t[1].clientX, dy = t[0].clientY - t[1].clientY;
     return Math.sqrt(dx * dx + dy * dy);
   }
-
-  private _touchAngle(touches: TouchList): number {
-    return Math.atan2(
-      touches[1].clientY - touches[0].clientY,
-      touches[1].clientX - touches[0].clientX
-    );
+  private _touchAngle(t: TouchList): number {
+    return Math.atan2(t[1].clientY - t[0].clientY, t[1].clientX - t[0].clientX);
   }
-
-  private _touchCenter(touches: TouchList): { x: number; y: number } {
-    return {
-      x: (touches[0].clientX + touches[1].clientX) / 2,
-      y: (touches[0].clientY + touches[1].clientY) / 2,
-    };
+  private _touchCenter(t: TouchList): { x: number; y: number } {
+    return { x: (t[0].clientX + t[1].clientX) / 2, y: (t[0].clientY + t[1].clientY) / 2 };
   }
-
   private _applyRotation(): void {
-    const base = TimeUtility.calculateCalendarDiskAngle(
-      this.clockService.getCurrentDate()
-    );
+    const base = TimeUtility.calculateCalendarDiskAngle(this.clockService.getCurrentDate());
     this.clockService.setAngleCalendarDisk(base + this.rotationOffset);
     this.clockService.triggerRedraw();
   }
-
   private _pushZoom(): void {
     this.clockService.setCalendarZoom(this.currentZoom);
     this.clockService.triggerRedraw();
   }
-
   private _syncRotationOffset(): void {
-    const base = TimeUtility.calculateCalendarDiskAngle(
-      this.clockService.getCurrentDate()
-    );
-    this.rotationOffset =
-      this.clockService.astroState().angleCalendarDisk - base;
+    const base = TimeUtility.calculateCalendarDiskAngle(this.clockService.getCurrentDate());
+    this.rotationOffset = this.clockService.astroState().angleCalendarDisk - base;
   }
 }

@@ -11,9 +11,12 @@ import { firstValueFrom, forkJoin } from 'rxjs';
 
 import { routes } from './app.routes';
 import { TimeUtility } from './shared/utils/TimeUtility';
+import { TranslationService } from './core/services/translation.service';
 
-function initCalendarData(): () => Promise<void> {
+/** Lädt Kalender-JSONs und beide Sprach-Dateien parallel beim App-Start */
+function initApp(): () => Promise<void> {
   const http = inject(HttpClient);
+  const t    = inject(TranslationService);
   return async () => {
     try {
       const [daily, calendar, eclipse] = await firstValueFrom(
@@ -24,12 +27,13 @@ function initCalendarData(): () => Promise<void> {
         ]),
       );
       TimeUtility.DailyCalendarData = daily;
-      TimeUtility.CalendarData = calendar;
-      TimeUtility.EclipseData = eclipse;
-      console.log('Astro-Uhr: Kalenderdaten erfolgreich geladen.');
+      TimeUtility.CalendarData      = calendar;
+      TimeUtility.EclipseData       = eclipse;
     } catch (e) {
-      console.error('Astro-Uhr: Fehler beim Laden der Kalenderdaten:', e);
+      console.error('Fehler beim Laden der Kalenderdaten:', e);
     }
+    // Übersetzungsdateien laden (parallel zu den Kalender-Daten)
+    await t.loadAll();
   };
 }
 
@@ -40,7 +44,7 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(),
     {
       provide: APP_INITIALIZER,
-      useFactory: initCalendarData,
+      useFactory: initApp,
       multi: true,
       deps: [],
     },

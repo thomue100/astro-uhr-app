@@ -8,11 +8,6 @@
   align-items: center;
 }
 
-/*
- * position: relative ist der Anker für die absolut positionierte
- * Steuerleiste. touch-action: none verhindert, dass der Browser
- * eigene Scroll-/Zoom-Gesten abfängt, bevor Angular die Events bekommt.
- */
 .canvas-container {
   position: relative;
   display: flex;
@@ -21,7 +16,6 @@
   touch-action: none;
 }
 
-/* ── Cursor-Feedback je nach aktivem Modus ────────────────── */
 .canvas-rotate { cursor: grab; }
 .canvas-rotate:active { cursor: grabbing; }
 .canvas-pan    { cursor: move; }
@@ -32,8 +26,9 @@
 /* ======================================================== */
 
 /*
- * position: absolute + opacity/pointer-events statt @if:
- * Die Leiste belegt keinen Platz im Layout → kein Springen.
+ * position: absolute → kein Einfluss auf das Layout, kein Springen.
+ * Die Leiste bleibt immer im DOM, wird nur über opacity/pointer-events
+ * ein- und ausgeblendet.
  */
 .calendar-controls-bar {
   position: absolute;
@@ -44,11 +39,12 @@
 
   display: flex;
   align-items: center;
-  gap: 4px;
+  /* Kleiner sichtbarer Abstand zwischen den Buttons */
+  gap: 3px;
   flex-wrap: wrap;
   justify-content: center;
 
-  padding: 5px 8px;
+  padding: 4px 6px;
   background-color: rgba(14, 32, 48, 0.92);
   border: 1px solid #1a4261;
   border-radius: 8px;
@@ -64,33 +60,46 @@
   pointer-events: auto;
 }
 
-/* Dünner vertikaler Trenner zwischen Button-Gruppen */
+/* Dünner Trenner zwischen Button-Gruppen — gibt zusätzliche optische Struktur */
 .cc-separator {
   width: 1px;
-  height: 20px;
-  background: #1a4261;
+  height: 18px;
+  background: #2a4f72;
   margin: 0 2px;
   flex-shrink: 0;
 }
 
-/* Alle Buttons in der Leiste */
+/*
+ * Buttons: feste Maße + Schatten + Border sorgen dafür, dass sie klar
+ * als anklickbare Buttons erkennbar sind, ohne dabei zu wachsen.
+ * box-sizing: border-box verhindert, dass Border/Padding die
+ * Gesamtgröße verändern.
+ */
 .cc-btn {
+  box-sizing: border-box;
   background: #184a6b;
   color: #ffcc33;
-  border: 1px solid #00aaff;
-  border-radius: 6px;
-  padding: 4px 9px;
-  font-size: 0.78rem;
+  border: 1px solid #2f8fc4;
+  border-radius: 5px;
+  padding: 4px 8px;
+  font-size: 0.76rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: background 0.15s, border-color 0.15s, transform 0.1s;
   width: auto;
-  min-width: 36px;
+  min-width: 30px;
   white-space: nowrap;
+  /* leichter Schatten macht den Button "greifbarer" ohne Größenänderung */
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
 }
 
 .cc-btn:hover {
   background: #0066aa;
+  border-color: #66ccff;
+}
+
+.cc-btn:active {
+  transform: scale(0.94);
 }
 
 /* Modus-Button: aktiver Zustand leuchtet auf */
@@ -109,17 +118,17 @@
 @media (max-width: 600px) {
   .cc-btn {
     padding: 4px 6px;
-    font-size: 0.72rem;
-    min-width: 30px;
+    font-size: 0.7rem;
+    min-width: 26px;
   }
 
   .calendar-controls-bar {
     bottom: 6px;
-    gap: 3px;
-    padding: 4px 5px;
+    gap: 2px;
+    padding: 3px 4px;
   }
 
   .cc-separator {
-    display: none; /* Auf kleinen Screens weglassen */
+    display: none;
   }
 }

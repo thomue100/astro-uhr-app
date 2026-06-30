@@ -1,20 +1,32 @@
 <!-- src/app/features/controls/controls.component.html -->
 <div class="controls" id="controls">
-  <h2 class="app-title">Astronomische Uhr - St. Marien zu Lübeck</h2>
+
+  <!-- Titel + Sprach-Umschalter -->
+  <div class="app-title-row">
+    <h2 class="app-title">
+      {{ 'app.title' | translate }}
+      <span class="app-subtitle">{{ 'app.subtitle' | translate }}</span>
+    </h2>
+    <button
+      type="button"
+      class="lang-btn"
+      (click)="t.toggle()"
+      [title]="t.currentLang() === 'de'
+        ? ('lang.switch_to_en' | translate)
+        : ('lang.switch_to_de' | translate)"
+    >{{ t.currentLang() === 'de' ? ('lang.en' | translate) : ('lang.de' | translate) }}</button>
+  </div>
 
   <div class="controls-header" id="infoButtonHeader" (click)="openModal('info')">
-    ℹ️ Einführung
+    {{ 'nav.intro' | translate }}
   </div>
 
   <!-- Simulation Panel -->
   <div id="simulationPanel">
     <div class="controls-header" (click)="openSimulation()">
-      {{ isSimulationOpen ? '🔽' : '▶️' }} Simulation
+      {{ isSimulationOpen ? '🔽' : '▶️' }} {{ 'nav.simulation' | translate }}
     </div>
-    <div
-      class="controls-content"
-      [class.controls-content--hidden]="!isSimulationOpen"
-    >
+    <div class="controls-content" [class.controls-content--hidden]="!isSimulationOpen">
       <app-simulation-panel />
     </div>
   </div>
@@ -22,56 +34,49 @@
   <!-- Kalender Panel -->
   <div id="calendarPanel">
     <div class="controls-header" (click)="openCalendar()">
-      {{ isCalendarOpen ? '🔽' : '▶️' }} Kalender
+      {{ isCalendarOpen ? '🔽' : '▶️' }} {{ 'nav.calendar' | translate }}
     </div>
-    <div
-      class="controls-content"
-      [class.controls-content--hidden]="!isCalendarOpen"
-    >
-      <app-calendar-panel
-        (openCalendarModal)="openModal('calendar')"
-      />
-      <!-- (openCalendarViewer) wurde entfernt -->
+    <div class="controls-content" [class.controls-content--hidden]="!isCalendarOpen">
+      <app-calendar-panel (openCalendarModal)="openModal('calendar')" />
     </div>
   </div>
 
   <!-- Kunst & Geschichte -->
   <div id="historyPanel">
     <div class="controls-header" (click)="openModal('history')">
-      ℹ️ Kunst & Geschichte
+      {{ 'nav.history' | translate }}
     </div>
   </div>
-</div>
 
-<!-- CalendarViewer (@if showCalendarViewer) wurde entfernt -->
+</div>
 
 <!-- Modals -->
 @if (activeModal() === 'info') {
-<app-modal title="Die Astronomische Uhr 🧭" (close)="closeModal()">
-  <app-info-modal-content />
-  <div modal-footer>
-    <button (click)="closeModal()">Schließen</button>
-  </div>
-</app-modal>
+  <app-modal [title]="'modal_intro.title' | translate" (close)="closeModal()">
+    <app-info-modal-content />
+    <div modal-footer>
+      <button (click)="closeModal()">{{ 'modal.close' | translate }}</button>
+    </div>
+  </app-modal>
 }
 
 @if (activeModal() === 'calendar') {
-<app-modal
-  [title]="'Wochentags-Rechengang für den ' + (currentDate() | date: 'dd.MM.yyyy') + ' 🗓️'"
-  (close)="closeModal()"
->
-  <app-calendar-modal [date]="currentDate()" />
-  <div modal-footer>
-    <button (click)="closeModal()">Schließen</button>
-  </div>
-</app-modal>
+  <app-modal
+    [title]="('modal_calendar.weekday_title' | translate) + ' ' + (currentDate() | date:'dd.MM.yyyy') + ' 🗓️'"
+    (close)="closeModal()"
+  >
+    <app-calendar-modal [date]="currentDate()" />
+    <div modal-footer>
+      <button (click)="closeModal()">{{ 'modal.close' | translate }}</button>
+    </div>
+  </app-modal>
 }
 
 @if (activeModal() === 'history') {
-<app-modal title="Kunst & Geschichte der Astronomischen Uhr 📜" (close)="closeModal()">
-  <app-history-modal-content />
-  <div modal-footer>
-    <button (click)="closeModal()">Schließen</button>
-  </div>
-</app-modal>
+  <app-modal [title]="'modal_history.title' | translate" (close)="closeModal()">
+    <app-history-modal-content />
+    <div modal-footer>
+      <button (click)="closeModal()">{{ 'modal.close' | translate }}</button>
+    </div>
+  </app-modal>
 }

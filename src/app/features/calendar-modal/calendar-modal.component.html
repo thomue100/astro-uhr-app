@@ -1,69 +1,68 @@
 <!-- src/app/features/calendar-modal/calendar-modal.component.html -->
 @if (result(); as r) {
 <div class="modal-step">
-  <strong style="color: #ffcc33; font-size: 1.2em;">Die Kalenderscheibe</strong>
 
+  <strong style="color: #ffcc33; font-size: 1.2em;">
+    {{ 'modal_calendar.title' | translate }}
+  </strong>
   <p style="font-size: 0.9em; margin-top: 5px;">
-    Die Kalenderscheibe ist in mehrere Kreise unterteilt. Im äußeren Kreis sieht man neben den
-    366 Tagen des Jahres – 366, weil der 29. Februar berücksichtigt ist – große rote Buchstaben:
-    ABCDEFG. Diese sieben Buchstaben, die sich laufend wiederholen, geben die Wochentage an.
-    Welcher dieser Tagesbuchstaben (TB) den Sonntag bezeichnet, ist im Innenkreis aus den roten
-    Buchstaben neben den Jahreszahlen zu ersehen.
+    {{ 'modal_calendar.intro' | translate }}
   </p>
-
   <p style="font-size: 0.9em; margin-top: 5px;">
-    Ganz innen stehen dabei die Daten der Ostersonntage. Dazwischen befinden sich die sogenannten
-    Goldenen Zahlen, die die Stellung des Jahres im 19‑jährigen Mondzyklus anzeigen.
-  </p>
-
-  <hr style="border-top: 1px solid #1a4261; margin-top: 20px; margin-bottom: 20px;" />
-
-  <strong style="color: #ffcc33; font-size: 1.2em;">Die Lübecker Wochentags‑Regel</strong>
-
-  <p style="font-size: 0.9em; margin-top: 5px;">
-    Zurück zu den Wochentagen: Ein Sonntagsbuchstabe (SB), wie das {{ r.usedSB }} in unserem
-    Beispiel, bedeutet, dass alle mit diesem Buchstaben bezeichneten Tage Sonntage sind. Montag
-    ist dann der nächste Buchstabe, Dienstag der übernächste usw.
+    {{ 'modal_calendar.inner' | translate }}
   </p>
 
   <hr style="border-top: 1px solid #1a4261; margin-top: 20px; margin-bottom: 20px;" />
 
   <strong style="color: #ffcc33; font-size: 1.2em;">
-    Schritt 1: Sonntagsbuchstaben (SB) bestimmen 🗓️
+    {{ 'modal_calendar.rule_title' | translate }}
   </strong>
-
-  <p style="margin-top: 10px;">
-    Die Jahreszahl {{ r.year }} hat die Sonntagsbuchstaben (SB): {{ r.sundayLetterRaw }}.
+  <p style="font-size: 0.9em; margin-top: 5px;">
+    {{ 'modal_calendar.rule_intro' | translate }}
+    {{ r.usedSB }}
   </p>
 
+  <hr style="border-top: 1px solid #1a4261; margin-top: 20px; margin-bottom: 20px;" />
+
+  <!-- Schritt 1 -->
+  <strong style="color: #ffcc33; font-size: 1.2em;">
+    {{ 'modal_calendar.step1_title' | translate }}
+  </strong>
+  <p style="margin-top: 10px;">
+    {{ 'modal_calendar.step1_year' | translate }} {{ r.year }}
+    {{ 'modal_calendar.step1_has'  | translate }} {{ r.sundayLetterRaw }}.
+  </p>
   <p [innerHTML]="r.ruleText"></p>
-
-  <p style="margin-top: 10px;">Der Tagesbuchstabe (TB) ist: {{ r.dailyLetter }}.</p>
+  <p style="margin-top: 10px;">
+    {{ 'modal_calendar.step1_letter' | translate }} {{ r.dailyLetter }}.
+  </p>
 
   <hr style="border-top: 1px solid #1a4261; margin-top: 20px; margin-bottom: 20px;" />
 
+  <!-- Schritt 2 -->
   <strong style="color: #ffcc33; font-size: 1.2em;">
-    Schritt 2: Vom SB zum TB zählen ⏱️
+    {{ 'modal_calendar.step2_title' | translate }}
   </strong>
-
   <p style="margin-top: 10px;">
-    Man startet die Zählung beim gültigen Sonntagsbuchstaben {{ r.usedSB }} und zählt weiter, bis
-    der Tagesbuchstabe {{ r.dailyLetter }} erreicht ist.
+    {{ 'modal_calendar.step2_text' | translate }}
   </p>
-
   <p style="margin-top: 10px;" [innerHTML]="r.countHtml"></p>
 
   <hr style="border-top: 1px solid #1a4261; margin-top: 20px; margin-bottom: 20px;" />
 
-  <strong style="color: #ffcc33; font-size: 1.2em;">Schritt 3: Das Ergebnis ablesen 🎉</strong>
-
+  <!-- Schritt 3 -->
+  <strong style="color: #ffcc33; font-size: 1.2em;">
+    {{ 'modal_calendar.step3_title' | translate }}
+  </strong>
   <p style="margin-top: 10px;">
-    Der Wochentag ergibt sich aus der Position in der Zählung (Position 0 = Sonntag, Position 6 =
-    Samstag).
+    {{ 'modal_calendar.step3_text' | translate }}
+  </p>
+  <p style="margin-top: 15px; font-size: 1.2em; color: #2ecc71; font-weight: bold;">
+    {{ 'modal_calendar.result_prefix' | translate }}
+    {{ r.dateStr }}
+    {{ 'modal_calendar.result_is' | translate }}
+    {{ r.dayOfWeek }}!
   </p>
 
-  <p style="margin-top: 15px; font-size: 1.2em; color: #2ecc71; font-weight: bold;">
-    Der {{ r.dateStr }} ist ein {{ r.dayOfWeek }}!
-  </p>
 </div>
 }

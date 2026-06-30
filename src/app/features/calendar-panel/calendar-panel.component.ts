@@ -1,86 +1,71 @@
-import { Component, inject, signal, output, OnInit, OnDestroy } from '@angular/core';
+// src/app/features/calendar-panel/calendar-panel.component.ts
+import { Component, inject, computed, signal, output, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { ClockSimulationService } from '../../core/services/clock-simulation.service';
+import { TranslationService } from '../../core/services/translation.service';
+import { TranslatePipe } from '../../shared/pipes/translate.pipe';
 import { TimeUtility } from '../../shared/utils/TimeUtility';
 
 @Component({
   selector: 'app-calendar-panel',
   standalone: true,
-  imports: [],
+  imports: [TranslatePipe],
   templateUrl: './calendar-panel.component.html',
 })
 export class CalendarPanelComponent implements OnInit, OnDestroy {
   private readonly clockService = inject(ClockSimulationService);
+  readonly t = inject(TranslationService);
+
   private dateSubscription?: Subscription;
+
+  // Signal, um ein manuelles Re-Rendering auszulösen, falls sich externe Abhängigkeiten ändern
+  private readonly refreshTrigger = signal(0);
 
   readonly openCalendarModal = output<void>();
 
-  // Ein einziger HTML-Block für alle Kalender-Infos
-  readonly calendarInfoHtml = signal('');
+  // Die Berechnung erfolgt nun in einem computed-Signal
+  readonly calendarInfoHtml = computed(() => {
+    // Abhängigkeit registrieren
+    this.refreshTrigger();
 
-  ngOnInit(): void {
-    this._refreshCalendarInfo();
-    this.dateSubscription = this.clockService.selectedDate$.subscribe(() => {
-      this._refreshCalendarInfo();
-    });
-  }
-
-  ngOnDestroy(): void {
-    this.dateSubscription?.unsubscribe();
-  }
-
-  private _row(label: string, value: string): string {
-    return `
-      <div class="cal-row">
-        <span class="cal-label">${label}</span>
-        <span class="cal-value">${value}</span>
-      </div>`;
-  }
-
-  private _refreshCalendarInfo(): void {
     const date = this.clockService.getCurrentDate();
     const year = date.getFullYear();
 
     if (isNaN(date.getTime()) || year < 1911 || year > 2080) {
-      this.calendarInfoHtml.set(
-        '<p class="cal-error">Ungültiges Jahr. Bitte Datum zwischen 1911 und 2080 wählen.</p>',
-      );
-      return;
+      return `<p class="cal-error">${this.t.translate('calendar.invalid_year')}</p>`;
     }
 
-    const yearInfo   = TimeUtility.getCalendarInfo(year);
-    const dailyInfo  = TimeUtility.getDailyCalendarInfo(date);
-    const dayOfWeek  = TimeUtility.getDayOfWeekString(date);
-    const dateStr    = date.toLocaleDateString('de-DE');
-    const eclipses   = TimeUtility.getEclipseInfo(year);
+    const yearInfo = TimeUtility.getCalendarInfo(year);
+    const dailyInfo = TimeUtility.getDailyCalendarInfo(date);
+    const dateStr = date.toLocaleDateString('de-DE');
+    const eclipses = TimeUtility.getEclipseInfo(year);
+
+    const weekdayDE = TimeUtility.getDayOfWeekString(date);
+    const weekday = this.t.translate(`weekdays.${weekdayDE}`);
 
     let html = '<div class="cal-block">';
 
-    // ── Abschnitt: Datum & Wochentag ────────────────────────────────────────
     html += `<div class="cal-section-title">📅 ${dateStr}</div>`;
-    html += this._row('Wochentag', dayOfWeek);
+    html += this._row(this.t.translate('calendar.weekday'), weekday);
 
-    // ── Abschnitt: Jahresdaten ──────────────────────────────────────────────
     if (yearInfo) {
       html += `<div class="cal-divider"></div>`;
-      html += `<div class="cal-section-title">📆 Jahr ${year}</div>`;
-      html += this._row('Osterdatum',         yearInfo['easterDate']  ?? '--');
-      html += this._row('Goldene Zahl',       yearInfo['goldenNumber'] ?? '--');
-      html += this._row('Sonntagsbuchstabe',  yearInfo['dayLetter']   ?? '--');
+      html += `<div class="cal-section-title">📆 ${year}</div>`;
+      html += this._row(this.t.translate('calendar.easter'), yearInfo['easterDate'] ?? '--');
+      html += this._row(this.t.translate('calendar.golden_number'), yearInfo['goldenNumber'] ?? '--');
+      html += this._row(this.t.translate('calendar.sunday_letter'), yearInfo['dayLetter'] ?? '--');
     } else {
       html += `<div class="cal-divider"></div>`;
-      html += `<p class="cal-error">Jahresdaten für ${year} nicht vorhanden.</p>`;
+      html += `<p class="cal-error">${this.t.translate('calendar.no_year_data')} ${year}</p>`;
     }
 
-    // ── Abschnitt: Tagesdaten ───────────────────────────────────────────────
-    if (dailyInfo && dailyInfo['letter'] !== 'N/A') {
-      html += this._row('Tagesbuchstabe',  dailyInfo['letter']);
-      html += this._row('Tagesheilige(r)', dailyInfo['saint']);
+    if (dailyInfo?.['letter'] !== 'N/A') {
+      html += this._row(this.t.translate('calendar.day_letter'), dailyInfo?.['letter'] ?? '--');
+      html += this._row(this.t.translate('calendar.saint'), dailyInfo?.['saint'] ?? '--');
     }
 
-    // ── Abschnitt: Finsternisse ─────────────────────────────────────────────
     html += `<div class="cal-divider"></div>`;
-    html += `<div class="cal-section-title">🌑 Finsternisse ${year}</div>`;
+    html += `<div class="cal-section-title">🌑 ${this.t.translate('calendar.eclipses')} ${year}</div>`;
 
     if (eclipses.length > 0) {
       eclipses.forEach((e: Record<string, string>) => {
@@ -91,10 +76,34 @@ export class CalendarPanelComponent implements OnInit, OnDestroy {
           </div>`;
       });
     } else {
-      html += `<div class="cal-row"><span class="cal-value cal-muted">Keine Finsternisse in ${year}</span></div>`;
+      html += `<div class="cal-row">
+        <span class="cal-value cal-muted">
+          ${this.t.translate('calendar.no_eclipses')} ${year}
+        </span>
+      </div>`;
     }
 
-    html += '</div>'; // .cal-block
-    this.calendarInfoHtml.set(html);
+    html += '</div>';
+    return html;
+  });
+
+  ngOnInit(): void {
+    // Bei Datumswechsel das Signal aktualisieren
+    this.dateSubscription = this.clockService.selectedDate$.subscribe(() => {
+      this.refreshTrigger.update(n => n + 1);
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.dateSubscription?.unsubscribe();
+  }
+
+  // Hilfsmethode für die HTML-Struktur
+  private _row(label: string, value: string): string {
+    return `
+      <div class="cal-row">
+        <span class="cal-label">${label}</span>
+        <span class="cal-value">${value}</span>
+      </div>`;
   }
 }

@@ -1,104 +1,110 @@
 <!-- src/app/features/history-modal/history-modal.component.html -->
 <div class="modal-step">
-  <strong style="color: #ffcc33; font-size: 1.2em;">Die Geschichte der Astronomischen Uhr 📜</strong>
+
+  <strong style="color: #ffcc33; font-size: 1.2em;">
+    {{ 'modal_history.headline' | translate }}
+  </strong>
   <p style="font-size: 0.9em; margin-top: 5px;">
-    Die Uhr in St. Marien steht in einer langen Tradition von Repräsentation und Innovation
-    in der Hansestadt Lübeck.
+    {{ 'modal_history.intro' | translate }}
   </p>
 
-  <h3 style="color: #ffcc33; font-size: 1.1em; margin-top: 15px;">Die Vorgängeruhren (1405–1942)</h3>
+  <h3 style="color: #ffcc33; font-size: 1.1em; margin-top: 15px;">
+    {{ 'modal_history.predecessors_title' | translate }}
+  </h3>
   <ul style="font-size: 0.9em; margin-top: 5px; padding-left: 20px;">
     <li style="margin-bottom: 5px;">
-      <strong>Erste Uhr (1405):</strong> Die erste Astronomische Uhr, bestehend aus
-      Kalenderscheibe und Planetarium, wurde in Betrieb genommen. Ein erhaltenes Relikt,
-      der geschnitzte Tierkreis, wird heute im St.-Annen-Museum ausgestellt.
+      <strong>{{ 'modal_history.clock1_label' | translate }}</strong>
+      {{ 'modal_history.clock1_text' | translate }}
     </li>
     <li style="margin-bottom: 5px;">
-      <strong>Zweite Uhr (1561–1566):</strong> Matthias van Oß baute die zweite, noch
-      repräsentativere Uhr. Sie zeichnete sich durch reiche Schnitzereien von Hinrich
-      Matthes und den berühmten Kurfürstenlauf aus.
+      <strong>{{ 'modal_history.clock2_label' | translate }}</strong>
+      {{ 'modal_history.clock2_text' | translate }}
     </li>
     <li style="margin-bottom: 5px;">
-      <strong>Spätere Anpassungen:</strong> Die Turmuhrenfabrik Eduard Korfhage erneuerte
-      1889–1890 den Antrieb. Wegen des alten Uhrwerks musste in jedem Schaltjahr am
-      1. März die Kalenderscheibe manuell zurückgestellt werden.
+      <strong>{{ 'modal_history.clock3_label' | translate }}</strong>
+      {{ 'modal_history.clock3_text' | translate }}
     </li>
     <li style="margin-bottom: 5px;">
-      <strong>Zerstörung:</strong> Die historische Uhr wurde am Palmarum (29. März) 1942
-      beim Bombenangriff auf Lübeck restlos zerstört.
+      <strong>{{ 'modal_history.clock4_label' | translate }}</strong>
+      {{ 'modal_history.clock4_text' | translate }}
     </li>
   </ul>
 
-  <!-- Interaktiver Bild-Viewer: St.-Annen-Museum -->
   <app-image-viewer [config]="stAnnenImage" />
 
   <hr style="border-top: 1px solid #1a4261; margin-top: 20px; margin-bottom: 20px;"/>
 
-  <h3 style="color: #ffcc33; font-size: 1.1em; margin-top: 15px;">Der Neubau und die Technik (1955–1976)</h3>
+  <h3 style="color: #ffcc33; font-size: 1.1em; margin-top: 15px;">
+    {{ 'modal_history.rebuild_title' | translate }}
+  </h3>
   <ul style="font-size: 0.9em; margin-top: 5px; padding-left: 20px;">
     <li style="margin-bottom: 5px;">
-      <strong>Wiederaufbau:</strong> Der Neubau wurde maßgeblich von Paul Behrens initiiert
-      und geplant, der die Arbeiten im Äußeren eng an das historische Vorbild anlehnte.
+      <strong>{{ 'modal_history.rebuild1_label' | translate }}</strong>
+      {{ 'modal_history.rebuild1_text' | translate }}
     </li>
     <li style="margin-bottom: 5px;">
-      <strong>Technik:</strong> Behrens kaufte ein gut erhaltenes älteres Turmuhrenwerk und
-      arbeitete es auf. Das Zeigerwerk sowie die Mechanismen für den Figurenumgang wurden
-      neu gefertigt.
+      <strong>{{ 'modal_history.rebuild2_label' | translate }}</strong>
+      {{ 'modal_history.rebuild2_text' | translate }}
     </li>
     <li style="margin-bottom: 5px;">
-      <strong>Fertigstellung:</strong> Die neue Uhr wurde 1967 in Gang gesetzt und 1976
-      endgültig fertiggestellt. Die Angaben der Mittelscheibe reichen von 1911 bis 2080.
+      <strong>{{ 'modal_history.rebuild3_label' | translate }}</strong>
+      {{ 'modal_history.rebuild3_text' | translate }}
     </li>
   </ul>
 
   <hr style="border-top: 1px solid #1a4261; margin-top: 20px; margin-bottom: 20px;"/>
 
-  <h3 style="color: #ffcc33; font-size: 1.1em; margin-top: 15px;">Künstlerische Aspekte und Ikonografie 🎨</h3>
+  <h3 style="color: #ffcc33; font-size: 1.1em; margin-top: 15px;">
+    {{ 'modal_history.art_title' | translate }}
+  </h3>
   <p style="font-size: 0.9em; margin-top: 5px;">
-    Die Uhr folgt der charakteristischen Dreiteilung mittelalterlicher astronomischer
-    Großuhren: Kalendarium unten, Uhrscheibe in der Mitte und Figurenumgang oben.
+    {{ 'modal_history.art_intro' | translate }}
   </p>
 
-  <h4 style="color: #ffcc33; font-size: 1.0em; margin-top: 15px;">Uhrscheibe und Kalendarium</h4>
+  <h4 style="color: #ffcc33; font-size: 1.0em; margin-top: 15px;">
+    {{ 'modal_history.art_dial_title' | translate }}
+  </h4>
   <ul style="font-size: 0.9em; margin-top: 5px; padding-left: 20px;">
     <li style="margin-bottom: 5px;">
-      <strong>Zentrum:</strong> Die Mitte des Planetariums nimmt die Gestalt des Heilands
-      (Christus) ein, was auf das Johannes-Evangelium hindeutet.
+      <strong>{{ 'modal_history.art_center_label' | translate }}</strong>
+      {{ 'modal_history.art_center_text' | translate }}
     </li>
     <li style="margin-bottom: 5px;">
-      <strong>Tierkreis:</strong> Die kupfergetriebene Sonne und der Mond bewegen sich
-      astronomisch korrekt durch den Tierkreis. Der Ring umfasst 13 Sternbilder,
-      einschließlich des Schlangenträgers (<em>Ophiuchus</em>).
+      <strong>{{ 'modal_history.art_zodiac_label' | translate }}</strong>
+      {{ 'modal_history.art_zodiac_text' | translate }}
     </li>
     <li style="margin-bottom: 5px;">
-      <strong>Künstlerische Ausführung:</strong> Die Figuren stammen von Kunsttischler
-      Heinrich Brand, die Polymentvergoldung von Malermeister Alfred Mundt.
+      <strong>{{ 'modal_history.art_craft_label' | translate }}</strong>
+      {{ 'modal_history.art_craft_text' | translate }}
     </li>
   </ul>
 
-  <blockquote style="font-size: 0.9em; margin-top: 15px; padding: 10px;
-    border-left: 4px solid #ffcc33; background-color: #1a4261;">
-    <p style="margin: 0; font-style: italic;">Inschrift auf der Uhrscheibe:</p>
+  <blockquote style="font-size: 0.9em; margin-top: 15px; margin-bottom: 10px;
+    padding: 10px; border-left: 4px solid #ffcc33; background-color: #1a4261;">
+    <p style="margin: 0; font-style: italic;">
+      {{ 'modal_history.inscription_label' | translate }}
+    </p>
     <p style="margin: 5px 0 0 0;">
-      „SO OFT DU DIE KLINGENDE GLOCKE HÖRST VERGISS NICHT DEINEN GOTT
-      DER ÜBER ALLE GESTIRNE HERRSCHT LOBEN UND IHM ZU DANKEN"
+      "{{ 'modal_history.inscription_text' | translate }}"
     </p>
   </blockquote>
 
-  <h4 style="color: #ffcc33; font-size: 1.0em; margin-top: 15px;">Figurenumgang und Glockenaufsatz</h4>
+  <h4 style="color: #ffcc33; font-size: 1.0em; margin-top: 15px;">
+    {{ 'modal_history.figures_title' | translate }}
+  </h4>
   <ul style="font-size: 0.9em; margin-top: 5px; padding-left: 20px;">
     <li style="margin-bottom: 5px;">
-      <strong>Figurenumgang:</strong> Die Figuren des Rundgangs zeigen die „Gläubigen der
-      Welt" — von Marianne Schmidt geschaffen.
+      <strong>{{ 'modal_history.fig1_label' | translate }}</strong>
+      {{ 'modal_history.fig1_text' | translate }}
     </li>
     <li style="margin-bottom: 5px;">
-      <strong>Zeremonie:</strong> Sie treten aus der linken Tür, verneigen sich vor Christus
-      und werden von ihm gesegnet.
+      <strong>{{ 'modal_history.fig2_label' | translate }}</strong>
+      {{ 'modal_history.fig2_text' | translate }}
     </li>
     <li style="margin-bottom: 5px;">
-      <strong>Glockenfiguren:</strong> Von Fritz Block geschnitzt. Die Stundenglocke wird
-      von einem alten Mann mit Sanduhr angeschlagen. Die Janusfigur (alter Mann / junge
-      Frau) deutet Vergangenheit und Zukunft an.
+      <strong>{{ 'modal_history.fig3_label' | translate }}</strong>
+      {{ 'modal_history.fig3_text' | translate }}
     </li>
   </ul>
+
 </div>

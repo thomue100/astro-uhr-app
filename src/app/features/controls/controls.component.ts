@@ -1,3 +1,4 @@
+// src/app/features/controls/controls.component.ts
 import { Component, inject, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { ModalComponent } from '../../shared/modal/modal.component';
@@ -6,8 +7,9 @@ import { InfoModalComponent } from '../info-modal/info-modal.component';
 import { CalendarModalComponent } from '../calendar-modal/calendar-modal.component';
 import { SimulationPanelComponent } from '../simulation-panel/simulation-panel.component';
 import { CalendarPanelComponent } from '../calendar-panel/calendar-panel.component';
-// CalendarViewerComponent wurde entfernt – Logik ist jetzt im CanvasComponent.
 import { ClockSimulationService } from '../../core/services/clock-simulation.service';
+import { TranslationService } from '../../core/services/translation.service';
+import { TranslatePipe } from '../../shared/pipes/translate.pipe';
 import { TimeUtility } from '../../shared/utils/TimeUtility';
 
 type ModalType = 'info' | 'history' | 'calendar' | null;
@@ -18,13 +20,13 @@ type ActivePanel = 'simulation' | 'calendar' | 'none';
   standalone: true,
   imports: [
     DatePipe,
+    TranslatePipe,
     ModalComponent,
     HistoryModalComponent,
     InfoModalComponent,
     CalendarModalComponent,
     SimulationPanelComponent,
     CalendarPanelComponent,
-    // CalendarViewerComponent entfernt
   ],
   templateUrl: './controls.component.html',
   styleUrls: ['./controls.component.css'],
@@ -34,20 +36,14 @@ type ActivePanel = 'simulation' | 'calendar' | 'none';
 })
 export class ControlsComponent {
   private readonly clockService = inject(ClockSimulationService);
+  readonly t = inject(TranslationService);
 
-  readonly activeModal = signal<ModalType>(null);
-  readonly activePanel = signal<ActivePanel>('simulation');
-  // showCalendarViewer wurde entfernt – der separate Viewer existiert nicht mehr.
+  readonly activeModal  = signal<ModalType>(null);
+  readonly activePanel  = signal<ActivePanel>('simulation');
+  readonly currentDate  = this.clockService.currentDate;
 
-  readonly currentDate = this.clockService.currentDate;
-
-  get isSimulationOpen(): boolean {
-    return this.activePanel() === 'simulation';
-  }
-
-  get isCalendarOpen(): boolean {
-    return this.activePanel() === 'calendar';
-  }
+  get isSimulationOpen(): boolean { return this.activePanel() === 'simulation'; }
+  get isCalendarOpen():   boolean { return this.activePanel() === 'calendar'; }
 
   openSimulation(): void {
     if (this.activePanel() === 'simulation') {
@@ -68,9 +64,7 @@ export class ControlsComponent {
       this.clockService.triggerRedraw();
       return;
     }
-    if (this.clockService.isAnimationRunning()) {
-      this.clockService.stopAnimation();
-    }
+    if (this.clockService.isAnimationRunning()) this.clockService.stopAnimation();
     this.activePanel.set('calendar');
     this.clockService.setCalendarZoom(1.5);
     this.clockService.setAngleCalendarDisk(
@@ -80,12 +74,8 @@ export class ControlsComponent {
     this.clockService.triggerRedraw();
   }
 
-  // openCalendarViewer und closeCalendarViewer wurden entfernt.
-
   openModal(type: Exclude<ModalType, null>): void {
-    if (this.clockService.isAnimationRunning()) {
-      this.clockService.stopAnimation();
-    }
+    if (this.clockService.isAnimationRunning()) this.clockService.stopAnimation();
     this.activeModal.set(type);
     document.body.style.overflow = 'hidden';
   }
@@ -96,8 +86,6 @@ export class ControlsComponent {
   }
 
   handleEscape(): void {
-    if (this.activeModal()) {
-      this.closeModal();
-    }
+    if (this.activeModal()) this.closeModal();
   }
 }

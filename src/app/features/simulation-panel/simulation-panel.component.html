@@ -1,5 +1,5 @@
-<!-- src/app/features/controls/panels/simulation-panel/simulation-panel.component.html -->
-<label for="dateTimeInput">Datum und Uhrzeit:</label>
+<!-- src/app/features/simulation-panel/simulation-panel.component.html -->
+<label for="dateTimeInput">{{ 'simulation.date_label' | translate }}</label>
 <input
   type="datetime-local"
   id="dateTimeInput"
@@ -13,10 +13,13 @@
   {{ currentDate() | date: 'dd.MM.yyyy HH:mm:ss' }}
 </div>
 
-<button (click)="setToCurrentTime()">⏱️ Aktuelle Zeit</button>
+<button (click)="setToCurrentTime()">
+  {{ 'simulation.current_time' | translate }}
+</button>
 
 <label for="speedSlider">
-  Geschwindigkeit: {{ animationSpeed() | number: '1.1-1' }}x
+  {{ 'simulation.speed_label' | translate }}
+  {{ animationSpeed() | number: '1.1-1' }}x
 </label>
 <input
   type="range"
@@ -29,5 +32,7 @@
 />
 
 <button (click)="toggleAnimation()">
-  {{ isAnimationRunning() ? '⏸️ Animation stoppen' : '▶️ Animation starten' }}
+  {{ isAnimationRunning()
+      ? ('simulation.anim_stop'  | translate)
+      : ('simulation.anim_start' | translate) }}
 </button>
