@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SimulationPanel } from './simulation-panel';
+import { SimulationPanelComponent } from './simulation-panel.component';
 
-describe('SimulationPanel', () => {
-  let component: SimulationPanel;
-  let fixture: ComponentFixture<SimulationPanel>;
+describe('SimulationPanelComponent', () => {
+  let component: SimulationPanelComponent;
+  let fixture: ComponentFixture<SimulationPanelComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SimulationPanel],
+      imports: [SimulationPanelComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(SimulationPanel);
+    fixture = TestBed.createComponent(SimulationPanelComponent);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });

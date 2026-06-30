@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { HistoryModalComponent } from './history-modal';
+import { HistoryModalComponent } from './history-modal.component';
 
 describe('HistoryModalComponent', () => {
 
