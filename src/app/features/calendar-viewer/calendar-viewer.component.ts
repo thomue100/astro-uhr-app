@@ -34,7 +34,7 @@ export class CalendarViewerComponent implements OnInit, AfterViewInit, OnDestroy
   // ─── Transformations-Zustand ───────────────────────────────────────────────
   private scale = 1.0;
   private readonly minScale = 0.3;
-  private readonly maxScale = 8.0;
+  private readonly maxScale = 20.0;
   private offsetX = 0;
   private offsetY = 0;
 
