@@ -59,7 +59,8 @@ body {
   padding: 10px 14px 8px 14px;
 }
 
-.app-title {
+.app-title,
+.app-subtitle {
   margin: 0;
   flex: 1;
   min-width: 0;
@@ -67,14 +68,6 @@ body {
   font-size: 1.05rem;
   font-weight: bold;
   line-height: 1.3;
-}
-
-.app-subtitle {
-  display: block;
-  font-size: 0.78em;
-  font-weight: normal;
-  color: #88aacc;
-  margin-top: 2px;
 }
 
 /* Sprach-Button: explizite Breite überschreibt globales button{width:100%} */

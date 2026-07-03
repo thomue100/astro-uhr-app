@@ -18,7 +18,7 @@ export class HistoryModalComponent {
   // damit Titel und Untertitel bei Sprachwechsel automatisch aktualisiert werden.
   get stAnnenImage(): ImageViewerConfig {
     return {
-      src:      'assets/images/st-annen.jpg',
+      src:      'assets/images/history-modal/st-annen.jpg',
       alt:      this.t.translate('modal_history.img_title'),
       title:    this.t.translate('modal_history.img_title'),
       subtitle: this.t.translate('modal_history.img_subtitle'),
