@@ -46,7 +46,7 @@ describe('CalendarLogicService', () => {
 
     expect(result.error).toBeUndefined();
     expect(result.usedSB).toBe('D');
-    expect(result.ruleText).toContain('vor dem 1. März');
+    expect(result.ruleText).toContain('<strong>luebeck_rule.applied</strong><br>luebeck_rule.uses_letters<br>luebeck_rule.because_before');
   });
 
   it('should apply Lübecker Regel FROM March onwards', async () => {
@@ -54,7 +54,7 @@ describe('CalendarLogicService', () => {
 
     expect(result.error).toBeUndefined();
     expect(result.usedSB).toBe('E');
-    expect(result.ruleText).toContain('nach dem 28. Februar');
+    expect(result.ruleText).toContain('<strong>luebeck_rule.applied</strong><br>luebeck_rule.uses_letters<br>luebeck_rule.because_after');
   });
 
   it('should use single Sunday letter for standard years', async () => {
@@ -62,7 +62,7 @@ describe('CalendarLogicService', () => {
 
     expect(result.error).toBeUndefined();
     expect(result.usedSB).toBe('A');
-    expect(result.ruleText).toContain('gilt ein einheitlicher Sonntagsbuchstabe');
+    expect(result.ruleText).toContain('luebeck_rule.uniform');
   });
 
   // --- 2. ERROR HANDLING PATHS ---
@@ -75,13 +75,13 @@ describe('CalendarLogicService', () => {
     };
 
     const result = await service.calculate(new Date(2099, 0, 1));
-    expect(result.error).toBe('Keine Daten für Jahr 2099');
+    expect(result.error).toBe('calendar.no_year_data 2099');
   });
 
   it('should return error if day-key is missing in daily-calendar.json', async () => {
     // Ein Datum wählen, das garantiert nicht im mockDaily existiert (31. Dezember)
     const result = await service.calculate(new Date(2026, 11, 31));
-    expect(result.error).toContain('Keine Tagesdaten für');
+    expect(result.error).toContain('calendar.no_day_data 31. Dez');
   });
 
   // --- 3. LOGIC / HTML GENERATION ---
