@@ -1,6 +1,9 @@
 <!-- src/app/features/canvas/canvas.component.html -->
 <div class="canvas-wrapper">
-  <div class="canvas-container">
+  <div
+    class="canvas-container"
+    [class.canvas-container--interactive]="showCalendarControls()"
+  >
     <canvas
       #canvasElement
       id="canvas"
@@ -20,9 +23,11 @@
       class="calendar-controls-bar"
       [class.calendar-controls-bar--visible]="showCalendarControls()"
     >
-      <button class="cc-btn" (click)="zoomOut()"     [title]="'calendar_disk.zoom_out'    | translate">🔍−</button>
-      <button class="cc-btn" (click)="zoomIn()"      [title]="'calendar_disk.zoom_in'     | translate">🔍+</button>
-      <div class="cc-separator"></div>
+      <!-- Zoom-Buttons: auf Mobile ausgeblendet, da natives Pinch-to-Zoom
+           genutzt wird (siehe canvas-container--interactive / touch-action) -->
+      <button class="cc-btn cc-zoom-btn" (click)="zoomOut()"     [title]="'calendar_disk.zoom_out'    | translate">🔍−</button>
+      <button class="cc-btn cc-zoom-btn" (click)="zoomIn()"      [title]="'calendar_disk.zoom_in'     | translate">🔍+</button>
+      <div class="cc-separator cc-zoom-separator"></div>
       <button class="cc-btn" (click)="rotateLeft()"  [title]="'calendar_disk.rotate_left' | translate">↺</button>
       <button class="cc-btn" (click)="rotateRight()" [title]="'calendar_disk.rotate_right'| translate">↻</button>
       <div class="cc-separator"></div>

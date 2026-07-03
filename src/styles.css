@@ -1,5 +1,5 @@
 /* ======================================================== */
-/* === 1. BASIS                                         === */
+/* === 1. BASIS (Mobile-First)                          === */
 /* ======================================================== */
 html, body {
   margin: 0;
@@ -14,37 +14,83 @@ html, body {
 body {
   display: flex;
   justify-content: center;
-  align-items: center;
+  /* Mobile: oben ausgerichtet + scrollbar statt vertikal zentriert,
+     damit sich die Seite beim Auf-/Zuklappen der Panels nicht "neu einrastet" */
+  align-items: flex-start;
+  overflow-y: auto;
   min-height: 100vh;
 }
 
+@media (min-width: 851px) {
+  body {
+    align-items: center;
+  }
+}
+
 /* ======================================================== */
-/* === 2. CONTAINER                                     === */
+/* === 2. CONTAINER (Mobile-First)                      === */
 /* ======================================================== */
 .container {
   display: flex;
-  align-items: stretch;
-  gap: 30px;
-  padding: 20px;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  padding: 10px;
+  width: 95%;
+  box-sizing: border-box;
+  margin: 10px auto;
   background: rgba(10, 28, 40, 0.85);
   border-radius: 16px;
   backdrop-filter: blur(4px);
   box-shadow: 0 0 30px rgba(0, 0, 0, 0.4);
 }
 
+/* Mobile: Uhr (app-canvas) erscheint zuerst, Controls darunter.
+   order wirkt hier korrekt, weil app-canvas/app-controls die direkten
+   Flex-Kinder von .container sind. */
+.container > app-canvas {
+  order: -1;
+}
+
+@media (min-width: 851px) {
+  .container {
+    flex-direction: row;
+    align-items: stretch;
+    gap: 30px;
+    padding: 20px;
+    width: auto;
+    margin: 0;
+  }
+
+  .container > app-canvas {
+    order: 0;
+  }
+}
+
 /* ======================================================== */
-/* === 3. SIDEBAR / CONTROLS                            === */
+/* === 3. SIDEBAR / CONTROLS (Mobile-First)             === */
 /* ======================================================== */
 .controls {
   display: flex;
   flex-direction: column;
-  width: 250px;
+  width: 100%;
+  height: auto;
+  overflow: visible;
   padding: 0;
   background-color: #0e2030;
   border-radius: 8px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
   color: #ffcc33;
-  overflow: hidden;
+}
+
+@media (min-width: 851px) {
+  .controls {
+    width: 250px;
+    /* Verhindert, dass die Sidebar höher wird als das Uhr-Canvas und
+       dadurch der ganze Container beim Auf-/Zuklappen "springt" */
+    max-height: 80vh;
+    overflow-y: auto;
+  }
 }
 
 /* ── Titel-Zeile mit Sprach-Button ───────────────────────
@@ -74,12 +120,13 @@ body {
 .lang-btn {
   flex-shrink: 0;
   width: auto !important;
+  min-height: 36px;
   background: #123b57;
   color: #ffcc33;
   border: 1px solid #ffcc33;
   border-radius: 4px;
-  padding: 3px 9px;
-  font-size: 11px;
+  padding: 6px 12px;
+  font-size: 12px;
   font-weight: 700;
   cursor: pointer;
   white-space: nowrap;
@@ -92,7 +139,7 @@ body {
 }
 
 .controls-header {
-  padding: 9px 14px;
+  padding: 12px 14px;
   background-color: #123b57;
   color: #ffcc33;
   font-weight: bold;
@@ -102,28 +149,39 @@ body {
   border-radius: 0;
   border-bottom: none !important;
   font-size: 13px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .controls > #infoButtonHeader {
   border-radius: 8px 8px 0 0;
 }
 
+/* Bottom-Radius für den zuletzt sichtbaren Inhalt der Sidebar */
+.controls-content {
+  border-bottom: none !important;
+  border-radius: 0 0 8px 8px !important;
+}
+
+/*
+ * Fix "Springen": Panels werden über max-height/opacity ein-/ausgeblendet
+ * statt über display:none, damit die vorhandene CSS-Transition wirklich
+ * greift und der Wechsel weich statt abrupt passiert.
+ */
 .controls-content {
   display: flex;
   flex-direction: column;
   gap: 6px;
   padding: 10px 12px;
-  padding-top: 7px;
-  padding-bottom: 7px;
   transition: max-height 0.4s ease-out, opacity 0.4s ease-out,
               padding-top 0.4s ease-out, padding-bottom 0.4s ease-out,
               border-top-color 0.4s ease-out;
   overflow: hidden;
   max-height: 1000px;
   border-top: 1px solid transparent;
-  border-radius: 0;
   position: relative;
-  border-bottom: none;
 }
 
 .controls-content:not(.controls-content--hidden) {
@@ -131,7 +189,12 @@ body {
 }
 
 .controls-content--hidden {
-  display: none;
+  max-height: 0;
+  opacity: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  pointer-events: none;
+  border-top-color: transparent;
 }
 
 /* ======================================================== */
@@ -154,19 +217,22 @@ body {
 }
 
 /* ======================================================== */
-/* === 5. BUTTONS (Sidebar-Standardbuttons)             === */
+/* === 5. BUTTONS (Sidebar-Standardbuttons, Mobile-First)=== */
 /* ======================================================== */
 button {
   background-color: #184a6b;
   color: #ffcc33;
   border: 1px solid #00aaff;
   border-radius: 6px;
-  padding: 7px 12px;
+  padding: 11px 14px;
+  /* Touch-Ziel ≥44px (Apple HIG / WCAG 2.5.5) */
+  min-height: 44px;
   cursor: pointer;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   transition: background-color 0.3s;
   width: 100%;
+  box-sizing: border-box;
 }
 
 button:hover {
@@ -174,20 +240,36 @@ button:hover {
 }
 
 .controls-content button {
-  padding: 5px 10px;
-  font-size: 12px;
+  padding: 9px 12px;
+  min-height: 44px;
+  font-size: 13px;
+}
+
+@media (min-width: 601px) {
+  button {
+    padding: 7px 12px;
+    min-height: auto;
+    font-size: 13px;
+  }
+
+  .controls-content button {
+    padding: 5px 10px;
+    min-height: auto;
+    font-size: 12px;
+  }
 }
 
 /* ======================================================== */
-/* === 6. INPUTS                                        === */
+/* === 6. INPUTS (Mobile-First)                         === */
 /* ======================================================== */
 input, select {
   background-color: #12283b;
   color: #f0f0f0;
   border: 1px solid #00aaff;
   border-radius: 4px;
-  padding: 3px 8px;
-  font-size: 13px;
+  padding: 9px 10px;
+  /* Fix: <16px lässt iOS Safari beim Fokussieren automatisch reinzoomen */
+  font-size: 16px;
   transition: border-color 0.3s;
   width: 100%;
   box-sizing: border-box;
@@ -198,13 +280,20 @@ input:focus, select:focus {
   outline: none;
 }
 
+@media (min-width: 601px) {
+  input, select {
+    font-size: 13px;
+    padding: 3px 8px;
+  }
+}
+
 input[type="range"] {
   -webkit-appearance: none;
   width: 100%;
-  height: 6px;
+  height: 8px;
   background: #123b57;
   border-radius: 4px;
-  margin-top: 4px;
+  margin-top: 6px;
   border: none;
   padding: 0;
 }
@@ -212,38 +301,78 @@ input[type="range"] {
 input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  width: 14px;
-  height: 14px;
+  /* Touch-freundlicher Slider-Thumb auf Mobile */
+  width: 22px;
+  height: 22px;
   background: #ffcc33;
   border-radius: 50%;
   cursor: pointer;
-  margin-top: -4px;
+  margin-top: -7px;
 }
 
 input[type="range"]::-webkit-slider-runnable-track {
   width: 100%;
-  height: 6px;
+  height: 8px;
   background: #123b57;
   border-radius: 4px;
 }
 
 input[type="range"]::-moz-range-track {
   width: 100%;
-  height: 6px;
+  height: 8px;
   background: #123b57;
   border-radius: 4px;
 }
 
+input[type="range"]::-moz-range-thumb {
+  width: 22px;
+  height: 22px;
+  background: #ffcc33;
+  border-radius: 50%;
+  cursor: pointer;
+  border: none;
+}
+
+@media (min-width: 601px) {
+  input[type="range"] {
+    height: 6px;
+    margin-top: 4px;
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    width: 14px;
+    height: 14px;
+    margin-top: -4px;
+  }
+  input[type="range"]::-webkit-slider-runnable-track {
+    height: 6px;
+  }
+  input[type="range"]::-moz-range-track {
+    height: 6px;
+  }
+  input[type="range"]::-moz-range-thumb {
+    width: 14px;
+    height: 14px;
+  }
+}
+
 /* ======================================================== */
-/* === 7. CANVAS                                        === */
+/* === 7. CANVAS (Mobile-First)                         === */
 /* ======================================================== */
 #canvas {
   border: 4px solid #00aaff;
   border-radius: 12px;
   background-color: #0a1c28;
-  flex: 1;
+  width: 100%;
+  max-width: 100%;
   aspect-ratio: 1 / 1;
-  max-height: 80vh;
+}
+
+@media (min-width: 851px) {
+  #canvas {
+    flex: 1;
+    width: auto;
+    max-height: 80vh;
+  }
 }
 
 /* ======================================================== */
@@ -265,14 +394,22 @@ input[type="range"]::-moz-range-track {
 
 .modal-content {
   background-color: #0e2030;
-  padding: 25px;
+  padding: 20px;
   border-radius: 10px;
-  width: 90%;
+  width: 92%;
   max-width: 600px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
   animation: slideIn 0.3s ease-out;
   max-height: 90vh;
   overflow-y: auto;
+  box-sizing: border-box;
+}
+
+@media (min-width: 601px) {
+  .modal-content {
+    padding: 25px;
+    width: 90%;
+  }
 }
 
 .modal-content h3 {
@@ -315,6 +452,7 @@ input[type="range"]::-moz-range-track {
   cursor: pointer;
   color: #aaa;
   transition: color 0.2s;
+  padding: 4px 8px; /* größere Trefferfläche zum Schließen */
 }
 
 .modal-close:hover { color: #fff; }
@@ -330,58 +468,8 @@ input[type="range"]::-moz-range-track {
 }
 
 /* ======================================================== */
-/* === 9. MOBILE OPTIMIERUNG                            === */
+/* === 9. KALENDER-PANEL: Einheitliches Daten-Layout    === */
 /* ======================================================== */
-@media (max-width: 850px) {
-  body {
-    align-items: flex-start;
-    overflow-y: auto;
-  }
-
-  .container {
-    flex-direction: column;
-    align-items: center;
-    padding: 10px;
-    width: 95%;
-    box-sizing: border-box;
-    margin: 10px auto;
-  }
-
-  .controls {
-    height: auto;
-    overflow: visible;
-    width: 100%;
-  }
-
-  #canvas {
-    order: 1;
-    max-width: 100%;
-    margin-bottom: 20px;
-  }
-
-  .controls > div > .controls-header {
-    border-radius: 0;
-    margin: 0;
-  }
-
-  .controls > #infoButtonHeader {
-    border-radius: 8px 8px 0 0 !important;
-  }
-
-  .controls-content:not(.controls-content--hidden) {
-    border-top-color: #1a4261;
-  }
-
-  .controls-content {
-    border-bottom: none !important;
-    border-radius: 0 0 8px 8px !important;
-  }
-}
-
-/* ======================================================== */
-/* === 10. KALENDER-PANEL: Einheitliches Daten-Layout  === */
-/* ======================================================== */
-
 .cal-panel-wrapper {
   display: flex;
   flex-direction: column;

@@ -35,7 +35,14 @@
     "no_year_data": "Jahresdaten nicht vorhanden.",
     "no_day_data": "Tagesdaten nicht vorhanden.",
     "explain_btn": "ℹ️ Erläuterungen",
-    "for_date": "für"
+    "for_date": "für",
+    "eclipse_date_format": "{date} Uhr {time}"
+  },
+  "eclipse_types": {
+    "Totale Mondfinsternis": "Totale Mondfinsternis",
+    "Partielle Mondfinsternis": "Partielle Mondfinsternis",
+    "Totale Sonnenfinsternis": "Totale Sonnenfinsternis",
+    "Partielle Sonnenfinsternis": "Partielle Sonnenfinsternis"
   },
   "calendar_disk": {
     "zoom_out": "Verkleinern",

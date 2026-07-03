@@ -1,11 +1,12 @@
 /* ======================================================== */
-/* === CANVAS WRAPPER                                   === */
+/* === CANVAS WRAPPER (Mobile-First)                    === */
 /* ======================================================== */
 
 .canvas-wrapper {
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 100%;
 }
 
 .canvas-container {
@@ -13,6 +14,14 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  width: 100%;
+  /* touch-action:none NICHT global setzen – sonst blockiert das
+     native Pinch-to-Zoom der Seite auf Mobile dauerhaft.
+     Nur aktiv, während die Kalenderscheiben-Steuerung offen ist
+     (siehe .canvas-container--interactive). */
+}
+
+.canvas-container--interactive {
   touch-action: none;
 }
 
@@ -22,29 +31,24 @@
 .canvas-pan:active { cursor: grabbing; }
 
 /* ======================================================== */
-/* === SCHWEBENDE STEUERLEISTE                          === */
+/* === SCHWEBENDE STEUERLEISTE (Mobile-First)           === */
 /* ======================================================== */
 
-/*
- * position: absolute → kein Einfluss auf das Layout, kein Springen.
- * Die Leiste bleibt immer im DOM, wird nur über opacity/pointer-events
- * ein- und ausgeblendet.
- */
 .calendar-controls-bar {
   position: absolute;
-  bottom: 12px;
+  bottom: 6px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 10;
 
   display: flex;
   align-items: center;
-  /* Kleiner sichtbarer Abstand zwischen den Buttons */
-  gap: 3px;
+  gap: 4px;
   flex-wrap: wrap;
   justify-content: center;
+  max-width: 94vw;
 
-  padding: 4px 6px;
+  padding: 4px;
   background-color: rgba(14, 32, 48, 0.92);
   border: 1px solid #1a4261;
   border-radius: 8px;
@@ -60,19 +64,53 @@
   pointer-events: auto;
 }
 
-/* Dünner Trenner zwischen Button-Gruppen — gibt zusätzliche optische Struktur */
+@media (min-width: 601px) {
+  .calendar-controls-bar {
+    bottom: 12px;
+    gap: 3px;
+    padding: 4px 6px;
+    max-width: none;
+  }
+}
+
+/* Trenner zwischen Button-Gruppen: auf Mobile ausgeblendet (Platzgründe),
+   ab Tablet/Desktop sichtbar */
 .cc-separator {
-  width: 1px;
-  height: 18px;
-  background: #2a4f72;
-  margin: 0 2px;
-  flex-shrink: 0;
+  display: none;
+}
+
+@media (min-width: 601px) {
+  .cc-separator {
+    display: block;
+    width: 1px;
+    height: 18px;
+    background: #2a4f72;
+    margin: 0 2px;
+    flex-shrink: 0;
+  }
+}
+
+/* Zoom-Buttons: auf Mobile ausgeblendet, da natives Pinch-to-Zoom
+   die übliche Lösung ist (siehe touch-action-Handling oben) */
+.cc-zoom-btn,
+.cc-zoom-separator {
+  display: none;
+}
+
+@media (min-width: 601px) {
+  .cc-zoom-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .cc-zoom-separator {
+    display: block;
+  }
 }
 
 /*
- * Buttons: feste Maße + Schatten + Border sorgen dafür, dass sie klar
- * als anklickbare Buttons erkennbar sind, ohne dabei zu wachsen.
- * box-sizing: border-box verhindert, dass Border/Padding die
+ * Buttons: Basis = Mobile, Touch-Ziel ≥44px (Apple HIG / WCAG 2.5.5).
+ * box-sizing:border-box verhindert, dass Border/Padding die
  * Gesamtgröße verändern.
  */
 .cc-btn {
@@ -81,15 +119,15 @@
   color: #ffcc33;
   border: 1px solid #2f8fc4;
   border-radius: 5px;
-  padding: 4px 8px;
-  font-size: 0.76rem;
+  padding: 8px 10px;
+  font-size: 0.78rem;
   font-weight: 600;
   cursor: pointer;
   transition: background 0.15s, border-color 0.15s, transform 0.1s;
   width: auto;
-  min-width: 30px;
+  min-width: 44px;
+  min-height: 44px;
   white-space: nowrap;
-  /* leichter Schatten macht den Button "greifbarer" ohne Größenänderung */
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
 }
 
@@ -102,6 +140,16 @@
   transform: scale(0.94);
 }
 
+/* Ab Tablet/Desktop: kompakter, da Maus statt Finger */
+@media (min-width: 601px) {
+  .cc-btn {
+    padding: 4px 8px;
+    font-size: 0.76rem;
+    min-width: 30px;
+    min-height: auto;
+  }
+}
+
 /* Modus-Button: aktiver Zustand leuchtet auf */
 .cc-mode-btn {
   border-color: #336688;
@@ -112,23 +160,4 @@
   background: #0a3d5c;
   border-color: #ffcc33;
   color: #ffcc33;
-}
-
-/* ── Mobile ───────────────────────────────────────────── */
-@media (max-width: 600px) {
-  .cc-btn {
-    padding: 4px 6px;
-    font-size: 0.7rem;
-    min-width: 26px;
-  }
-
-  .calendar-controls-bar {
-    bottom: 6px;
-    gap: 2px;
-    padding: 3px 4px;
-  }
-
-  .cc-separator {
-    display: none;
-  }
 }

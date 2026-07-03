@@ -71,8 +71,8 @@ export class CalendarPanelComponent implements OnInit, OnDestroy {
       eclipses.forEach((e: Record<string, string>) => {
         html += `
           <div class="cal-eclipse">
-            <span class="cal-eclipse-type">${e['type']}</span>
-            <span class="cal-eclipse-date">${e['date']}</span>
+            <span class="cal-eclipse-type">${this._translateEclipseType(e['type'])}</span>
+            <span class="cal-eclipse-date">${this._formatEclipseDate(e['date'])}</span>
           </div>`;
       });
     } else {
@@ -105,5 +105,29 @@ export class CalendarPanelComponent implements OnInit, OnDestroy {
         <span class="cal-label">${label}</span>
         <span class="cal-value">${value}</span>
       </div>`;
+  }
+
+  /**
+   * Übersetzt den Finsternis-Typ aus eclipse.json (immer Deutsch) über
+   * i18n-Key "eclipse_types.<Rohwert>". Fällt auf den Rohwert zurück,
+   * falls kein passender Key existiert.
+   */
+  private _translateEclipseType(type: string): string {
+    const key = `eclipse_types.${type}`;
+    const translated = this.t.translate(key);
+    return translated === key ? type : translated;
+  }
+
+  /**
+   * Formatiert Datum/Uhrzeit aus eclipse.json. Die Rohdaten kommen in
+   * zwei Varianten vor: "21.01.00 Uhr 05:45" und "21.02.08 Uhr: 04:26".
+   * "Uhr" wird gemäß aktueller Sprache übersetzt, Datum/Uhrzeit bleiben
+   * unverändert.
+   */
+  private _formatEclipseDate(raw: string): string {
+    const match = raw.match(/^(\d{2}\.\d{2}\.\d{2})\s*Uhr:?\s*(\d{2}:\d{2})$/);
+    if (!match) return raw;
+    const [, datePart, timePart] = match;
+    return this.t.translate('calendar.eclipse_date_format', { date: datePart, time: timePart });
   }
 }
