@@ -102,28 +102,25 @@ export function calculateMoonAngle(sunAngle: number, moonDiffRad: number): numbe
  */
 
 // ↓↓↓ HIER NACHJUSTIEREN, falls die Kalenderscheibe versetzt erscheint ↓↓↓
-const CALENDAR_DISK_OFFSET = Math.PI; // 180°-Korrektur für das Bild-Koordinatensystem
-// ↑↑↑ Mögliche Werte: 0, Math.PI/2, Math.PI, 3*Math.PI/2 (= 0°, 90°, 180°, 270°) ↑↑↑
+// Entweder PI/6 (30 Grad) hinzufügen oder abziehen
+const CALENDAR_DISK_OFFSET = Math.PI / 6;
 
 export function calculateCalendarDiskAngle(simDate: Date): number {
     ensureConfig();
+
     const year = simDate.getFullYear();
     const isLeap = isLeapYear(year);
     const daysInYear = isLeap ? 366 : 365;
-    const dayOfYear = getDayOfYear(simDate);
+    const dayOfYear = getDayOfYear(simDate); // 1-basiert (1. Jan = 1)
 
-    // Tag des Jahres für den 2. Juni (1-basiert):
-    // Jan 31 + Feb 28/29 + Mär 31 + Apr 30 + Mai 31 = 151/152 Tage → 1. Jun = 152/153 → 2. Jun = 153/154
-    const june2DayOfYear = isLeap ? 154 : 153;
+    // Wir wollen den 1. Januar als Tag 0 für die Drehung.
+    // dayOfYear - 1: 1. Jan = 0 Tage vergangen, 2. Jan = 1 Tag vergangen, etc.
+    const daysSinceJan1st = dayOfYear - 1;
 
-    // Wie viele Tage sind seit dem 2. Juni vergangen (kann negativ sein)?
-    const daysSinceRef = dayOfYear - june2DayOfYear;
+    // Winkelberechnung:
+    // Start bei -Math.PI (9 Uhr)
+    // Addition des Anteils am Jahr sorgt für Uhrzeigersinn-Drehung
+    const angle = -Math.PI + (daysSinceJan1st / daysInYear) * CONFIG.TWO_PI + CALENDAR_DISK_OFFSET;
 
-    // Als Bruchteil des Jahres
-    const fracSinceRef = daysSinceRef / daysInYear;
-
-    // 2. Juni soll bei -π/2 (9 Uhr) sein.
-    // Mit wachsenden Tagen dreht die Scheibe sich gegen den Uhrzeigersinn (Winkel wird kleiner).
-    // CALENDAR_DISK_OFFSET korrigiert den 180°-Versatz des Bildes.
-    return -CONFIG.HALF_PI - fracSinceRef * CONFIG.TWO_PI + CALENDAR_DISK_OFFSET;
+    return angle;
 }
