@@ -20,26 +20,31 @@
     ></canvas>
 
     <!--
-      Steuerleiste bewusst minimal gehalten:
-      - Keine ↺/↻ Schritt-Buttons mehr: freies Drehen per Drag (Maus UND
-        Touch) deckt das bereits vollständig ab, ein diskreter Schritt-
-        Button wäre redundant und würde nur unnötig Platz kosten.
-      - Nur Icons, keine Textlabel: die Symbole sind selbsterklärend
-        (Lupe = Zoom, Kreispfeil = Drehen, Kreuzpfeile = Verschieben,
-        Rückwärtspfeil = Reset), der volle Begriff steht als Tooltip.
-      - Zoom-Buttons bleiben nur ab Tablet/Desktop sichtbar, da Mobile
-        natives Pinch-to-Zoom nutzt (siehe canvas.component.css).
-      Ergebnis: auf Mobile bleiben nur 3 schmale Icon-Buttons übrig,
-      die Kalenderscheibe wird kaum noch verdeckt.
+      Fix "Mobile Optimierung": Auf Mobile ist dieser dezente Reset-Button
+      unten rechts die EINZIGE sichtbare Kalenderscheiben-Steuerung. Drehen
+      geschieht per Ein-Finger-Drag direkt auf der Scheibe, Zoom+Verschieben
+      per Zwei-Finger-Pinch - beides war schon vorher implementiert, macht
+      dedizierte Dreh-/Verschiebe-Buttons also überflüssig.
+    -->
+    <button
+      class="cc-reset-corner"
+      [class.cc-reset-corner--visible]="showCalendarControls()"
+      (click)="resetView()"
+      [title]="'calendar_disk.reset' | translate"
+    >⟲</button>
+
+    <!--
+      Erweiterte Steuerung (Zoom-Buttons, Dreh-/Verschiebe-Modus):
+      nur ab Tablet/Desktop sichtbar (siehe CSS) - dort fehlen Touch-Gesten,
+      daher bleiben diese Buttons dort die einzige Zoom-/Modus-Möglichkeit.
     -->
     <div
       class="calendar-controls-bar"
       [class.calendar-controls-bar--visible]="showCalendarControls()"
     >
-      <button class="cc-btn cc-zoom-btn" (click)="zoomOut()" [title]="'calendar_disk.zoom_out' | translate">🔍−</button>
-      <button class="cc-btn cc-zoom-btn" (click)="zoomIn()"  [title]="'calendar_disk.zoom_in'  | translate">🔍+</button>
-      <div class="cc-separator cc-zoom-separator"></div>
-
+      <button class="cc-btn" (click)="zoomOut()" [title]="'calendar_disk.zoom_out' | translate">🔍−</button>
+      <button class="cc-btn" (click)="zoomIn()"  [title]="'calendar_disk.zoom_in'  | translate">🔍+</button>
+      <div class="cc-separator"></div>
       <button
         class="cc-btn cc-mode-btn"
         [class.cc-mode-btn--active]="interactionMode() === 'rotate'"
@@ -52,9 +57,6 @@
         [title]="'calendar_disk.mode_pan' | translate"
         (click)="setMode('pan')"
       >✥</button>
-      <div class="cc-separator"></div>
-
-      <button class="cc-btn" (click)="resetView()" [title]="'calendar_disk.reset' | translate">⟲</button>
     </div>
   </div>
 </div>

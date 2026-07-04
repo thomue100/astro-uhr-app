@@ -37,7 +37,7 @@ export class CanvasComponent implements OnInit, AfterViewInit, OnDestroy {
   private currentZoom    = 1.5;
   private readonly zoomStep = 0.25;
   private readonly minZoom  = 0.5;
-  private readonly maxZoom  = 4.0;
+  private readonly maxZoom  = 8.0;
 
   private rotationOffset    = 0;
   private readonly rotationStep = Math.PI / 24;

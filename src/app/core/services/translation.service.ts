@@ -7,8 +7,13 @@ export type Language = 'de' | 'en';
 
 @Injectable({ providedIn: 'root' })
 export class TranslationService {
-  // Das aktuelle Sprach-Signal — alle Komponenten reagieren automatisch darauf
-  readonly currentLang = signal<Language>('de');
+  /**
+   * Das aktuelle Sprach-Signal — wird sofort mit der erkannten
+   * Browsersprache initialisiert (Fix "Sprache automatisch erkennen"),
+   * damit auch ohne gespeicherte Präferenz schon die erste gerenderte
+   * Ansicht in der richtigen Sprache erscheint.
+   */
+  readonly currentLang = signal<Language>(this._detectBrowserLanguage());
 
   // Die geladenen Übersetzungs-Objekte
   private translations: Record<Language, Record<string, any>> = {
@@ -35,7 +40,9 @@ export class TranslationService {
     this.translations['en'] = en;
     this.loaded = true;
 
-    // Gespeicherte Sprache aus localStorage wiederherstellen
+    // Eine explizite frühere Nutzerwahl hat Vorrang vor der automatischen
+    // Browser-Spracherkennung. Ohne gespeicherte Wahl bleibt die bereits
+    // im Konstruktor erkannte Browsersprache aktiv.
     const saved = localStorage.getItem('lang') as Language | null;
     if (saved === 'de' || saved === 'en') {
       this.currentLang.set(saved);
@@ -77,5 +84,27 @@ export class TranslationService {
     }
 
     return result;
+  }
+
+  /**
+   * Erkennt die bevorzugte Sprache des Browsers.
+   * Anforderung: Deutsch -> Deutsch als Start, Englisch ODER jede andere
+   * Sprache -> Englisch als Standard (kein weiteres Sprachen-Mapping nötig,
+   * da die App ohnehin nur de/en anbietet).
+   */
+  private _detectBrowserLanguage(): Language {
+    if (typeof navigator === 'undefined') return 'en';
+
+    const candidates: readonly string[] =
+      (navigator.languages && navigator.languages.length
+        ? navigator.languages
+        : [navigator.language]) ?? [];
+
+    for (const lang of candidates) {
+      if (lang && lang.toLowerCase().startsWith('de')) {
+        return 'de';
+      }
+    }
+    return 'en';
   }
 }

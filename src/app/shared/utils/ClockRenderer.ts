@@ -5,6 +5,16 @@ export class ClockRenderer {
   private images: any;
   private config: any;
 
+  /**
+   * "Logische" Canvas-Größe in CSS-Pixeln — unabhängig von der tatsächlichen
+   * Backing-Store-Auflösung (canvas.width/height), die jetzt zusätzlich mit
+   * devicePixelRatio skaliert wird (siehe calculateResponsiveSize). Alle
+   * proportionalen Zeichen-Berechnungen (Radien, Schriftgrößen, ...) nutzen
+   * weiterhin diese logische Größe, damit sich an der bestehenden Geometrie
+   * nichts ändert — nur die tatsächliche Bildschärfe wird verbessert.
+   */
+  private logicalSize: number;
+
   constructor(
     canvas: HTMLCanvasElement,
     ctx: CanvasRenderingContext2D,
@@ -15,6 +25,7 @@ export class ClockRenderer {
     this.ctx     = ctx;
     this.images  = imageManager?.images ?? imageManager;
     this.config  = config ?? imageManager?.config ?? (window as any)['AstroConfig'] ?? {};
+    this.logicalSize = canvas.width || 0;
   }
 
   withContext(fn: () => void): void {
@@ -25,13 +36,12 @@ export class ClockRenderer {
 
   drawClock(state: any): void {
     const ctx = this.ctx;
-    const c   = this.canvas;
-    ctx.clearRect(0, 0, c.width, c.height);
+    ctx.clearRect(0, 0, this.logicalSize, this.logicalSize);
 
-    const center = { x: c.width / 2, y: c.height / 2 };
-    const rLarge = c.width * 0.37;
-    const rOuter = c.width * 0.37 * 1.12;
-    const rSmall = c.width * 0.32;
+    const center = { x: this.logicalSize / 2, y: this.logicalSize / 2 };
+    const rLarge = this.logicalSize * 0.37;
+    const rOuter = this.logicalSize * 0.37 * 1.12;
+    const rSmall = this.logicalSize * 0.32;
     const rMoon  = (rLarge + rSmall) / 2;
 
     const parseAngle = (val: any): number =>
@@ -135,7 +145,7 @@ export class ClockRenderer {
           ctx.save();
           ctx.translate(x, y);
           ctx.rotate(a + HALF_PI);
-          ctx.font = `${Math.floor(this.canvas.width * 0.035)}px sans-serif`;
+          ctx.font = `${Math.floor(this.logicalSize * 0.035)}px sans-serif`;
           ctx.fillText(numerals[(h - 1) % 12], 0, 0);
           ctx.restore();
         }
@@ -196,7 +206,7 @@ export class ClockRenderer {
     const ctx    = this.ctx;
     const TWO_PI = this.config?.TWO_PI ?? Math.PI * 2;
     ctx.save();
-    ctx.translate(this.canvas.width / 2, this.canvas.height / 2);
+    ctx.translate(this.logicalSize / 2, this.logicalSize / 2);
     ctx.rotate(rotationAngle);
     const numStars  = 96;
     const starOuter = radius * 0.015;
@@ -216,6 +226,10 @@ export class ClockRenderer {
    * Die Scheibe dreht sich immer um ihren eigenen Mittelpunkt (center + offset),
    * nicht um den Canvas-Mittelpunkt. Das erlaubt sauberes Verschieben + Drehen
    * unabhängig voneinander.
+   *
+   * canvasHalf basiert jetzt auf logicalSize statt canvas.width, damit die
+   * Geometrie unabhängig von der (jetzt höheren) Backing-Store-Auflösung
+   * exakt gleich bleibt wie zuvor - nur schärfer gerendert.
    */
   drawCalendarDisk(
     center: { x: number; y: number },
@@ -228,7 +242,7 @@ export class ClockRenderer {
     const TWO_PI = this.config?.TWO_PI ?? Math.PI * 2;
 
     const CALENDAR_DISK_FIT_FACTOR = 0.93;
-    const canvasHalf = this.canvas.width / 2;
+    const canvasHalf = this.logicalSize / 2;
     const zoomFactor = state.calendarZoom || 1.5;
     const radius     = canvasHalf * CALENDAR_DISK_FIT_FACTOR * (zoomFactor / 1.5);
 
@@ -269,7 +283,7 @@ export class ClockRenderer {
       const length = end - start;
       const img = this.images?.pointer;
       if (img && img.complete && img.naturalWidth > 0) {
-        const imgH = this.canvas.width * 0.06;
+        const imgH = this.logicalSize * 0.06;
         ctx.drawImage(img, start, -imgH / 2, length, imgH);
       } else {
         ctx.beginPath();
@@ -283,7 +297,7 @@ export class ClockRenderer {
   }
 
   drawSun(radius: number, angle: number, center: { x: number; y: number }): void {
-    const size = this.canvas.width * 0.05;
+    const size = this.logicalSize * 0.05;
     this._drawRadialAsset(
       center, angle, radius - size / 2,
       this.images?.sun, size,
@@ -298,7 +312,7 @@ export class ClockRenderer {
 
   drawMoon(radius: number, angle: number, days: number, center: { x: number; y: number }): void {
     const ctx      = this.ctx;
-    const dynamicH = this.canvas.width * 0.04;
+    const dynamicH = this.logicalSize * 0.04;
     const dynamicW = dynamicH * (this.config?.moonDimensions?.aspectRatio ?? 1);
     const HALF_PI  = this.config?.HALF_PI ?? Math.PI / 2;
 
@@ -333,7 +347,7 @@ export class ClockRenderer {
   }
 
   drawHeilandImage(center: { x: number; y: number }): void {
-    const size = this.canvas.width * 0.29;
+    const size = this.logicalSize * 0.29;
     this._drawRadialAsset(
       center, 0, 0,
       this.images?.heiland, size,
@@ -349,7 +363,7 @@ export class ClockRenderer {
   drawZodiacSigns(radius: number, rotationAngle: number, center: { x: number; y: number }): void {
     const ctx        = this.ctx;
     const zodiacData = this.config?.zodiacData ?? this._fallbackZodiacData();
-    const fontSize   = this.canvas.width * 0.02;
+    const fontSize   = this.logicalSize * 0.02;
     const rBase      = radius - radius * 0.2;
 
     this.withContext(() => {
@@ -386,11 +400,33 @@ export class ClockRenderer {
     });
   }
 
+  /**
+   * Fix "Zoom-Problematik" (höchste Priorität), Teil 2: Die Backing-Store-
+   * Auflösung des Canvas wird jetzt an devicePixelRatio angepasst (auf max.
+   * 3x gedeckelt, um Speicher-/Performance-Probleme auf extrem hochauf-
+   * lösenden Geräten zu vermeiden). Ohne das war die Darstellung auf
+   * Retina-/High-DPI-Mobilgeräten unscharf, egal wie weit man zoomte.
+   *
+   * Wichtig: `logicalSize` bleibt die CSS-Pixel-Größe, mit der alle
+   * bestehenden Zeichen-Berechnungen weiterrechnen. ctx.setTransform
+   * skaliert nur die tatsächliche Ausgabe, ändert aber nichts an der
+   * bestehenden Interaktions-/Zeichenlogik (Pan-Offsets aus Maus-/Touch-
+   * Events sind bereits in CSS-Pixeln und bleiben dadurch exakt korrekt).
+   */
   calculateResponsiveSize(availableWidth: number, availableHeight: number): number {
-    const size = Math.max(Math.min(availableWidth, availableHeight), 200);
-    this.canvas.width  = size;
-    this.canvas.height = size;
-    return size;
+    const cssSize = Math.max(Math.min(availableWidth, availableHeight), 200);
+    const dpr = Math.min(window.devicePixelRatio || 1, 3);
+    const backingSize = Math.round(cssSize * dpr);
+
+    this.logicalSize = cssSize;
+    this.canvas.width  = backingSize;
+    this.canvas.height = backingSize;
+    this.canvas.style.width  = `${cssSize}px`;
+    this.canvas.style.height = `${cssSize}px`;
+
+    this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    return cssSize;
   }
 
   private _fallbackZodiacData(): any {

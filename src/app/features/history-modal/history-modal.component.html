@@ -52,6 +52,10 @@
     </li>
   </ul>
 
+  <!-- Neu: Getriebe und Uhrwerk passend zum Technik-Abschnitt -->
+  <app-image-viewer [config]="getriebeImage" />
+  <app-image-viewer [config]="uhrwerkImage" />
+
   <hr style="border-top: 1px solid #1a4261; margin-top: 20px; margin-bottom: 20px;"/>
 
   <h3 style="color: #ffcc33; font-size: 1.1em; margin-top: 15px;">
@@ -97,6 +101,10 @@
       <strong>{{ 'modal_history.fig1_label' | translate }}</strong>
       {{ 'modal_history.fig1_text' | translate }}
     </li>
+  </ul>
+  <!-- Neu: Figurenumlauf passend zum Abschnitt über den Figurenumgang -->
+  <app-image-viewer [config]="figurenumlaufImage" />
+  <ul style="font-size: 0.9em; margin-top: 5px; padding-left: 20px;">
     <li style="margin-bottom: 5px;">
       <strong>{{ 'modal_history.fig2_label' | translate }}</strong>
       {{ 'modal_history.fig2_text' | translate }}
@@ -106,5 +114,6 @@
       {{ 'modal_history.fig3_text' | translate }}
     </li>
   </ul>
-
+  <!-- Neu: Hero-Bild des Figurenaufsatzes/Giebels als visueller Einstieg -->
+  <app-image-viewer [config]="giebelImage" />
 </div>

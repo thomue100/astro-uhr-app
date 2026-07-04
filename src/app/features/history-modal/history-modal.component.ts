@@ -14,14 +14,52 @@ import { ImageViewerComponent, ImageViewerConfig } from '../../shared/image-view
 export class HistoryModalComponent {
   readonly t = inject(TranslationService);
 
-  // Das Bild-Konfig-Objekt wird als computed property gebaut,
-  // damit Titel und Untertitel bei Sprachwechsel automatisch aktualisiert werden.
   get stAnnenImage(): ImageViewerConfig {
     return {
       src:      'assets/images/history-modal/st-annen.jpg',
       alt:      this.t.translate('modal_history.img_title'),
       title:    this.t.translate('modal_history.img_title'),
       subtitle: this.t.translate('modal_history.img_subtitle'),
+    };
+  }
+
+  /** Hero-Bild oben: Figurenaufsatz/Giebel der Uhr im Gesamteindruck. */
+  get giebelImage(): ImageViewerConfig {
+    return {
+      src:      'assets/images/history-modal/giebel.jpg',
+      alt:      this.t.translate('modal_history.img_giebel_title'),
+      title:    this.t.translate('modal_history.img_giebel_title'),
+      subtitle: this.t.translate('modal_history.img_giebel_subtitle'),
+    };
+  }
+
+  /** Passend zum Technik-Abschnitt (Zeigerwerk/Mechanismen). */
+  get getriebeImage(): ImageViewerConfig {
+    return {
+      src:      'assets/images/history-modal/getriebe.jpg',
+      alt:      this.t.translate('modal_history.img_getriebe_title'),
+      title:    this.t.translate('modal_history.img_getriebe_title'),
+      subtitle: this.t.translate('modal_history.img_getriebe_subtitle'),
+    };
+  }
+
+  /** Passend zum Technik-Abschnitt (fertiggestelltes Uhrwerk). */
+  get uhrwerkImage(): ImageViewerConfig {
+    return {
+      src:      'assets/images/history-modal/uhrwerk.jpg',
+      alt:      this.t.translate('modal_history.img_uhrwerk_title'),
+      title:    this.t.translate('modal_history.img_uhrwerk_title'),
+      subtitle: this.t.translate('modal_history.img_uhrwerk_subtitle'),
+    };
+  }
+
+  /** Passend zum Figurenumgang-Abschnitt. */
+  get figurenumlaufImage(): ImageViewerConfig {
+    return {
+      src:      'assets/images/history-modal/figurenumlauf.jpg',
+      alt:      this.t.translate('modal_history.img_figurenumlauf_title'),
+      title:    this.t.translate('modal_history.img_figurenumlauf_title'),
+      subtitle: this.t.translate('modal_history.img_figurenumlauf_subtitle'),
     };
   }
 }

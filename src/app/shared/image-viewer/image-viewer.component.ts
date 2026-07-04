@@ -44,9 +44,11 @@ export interface ImageViewerConfig {
           [src]="config.src"
           [alt]="config.alt"
           draggable="false"
+          loading="lazy"
           (load)="onImageLoad()"
           (error)="onImageError()"
         />
+
         @if (loadError) {
           <div class="iv-error">
             ⚠️ {{ 'image_viewer.error' | translate }}<br>

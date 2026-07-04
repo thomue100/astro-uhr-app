@@ -17,10 +17,10 @@
   },
   "simulation": {
     "date_label": "Datum und Uhrzeit:",
-    "current_time": "⏱️ Aktuelle Zeit",
     "speed_label": "Geschwindigkeit:",
-    "anim_start": "▶️ Animation starten",
-    "anim_stop": "⏸️ Animation stoppen"
+    "anim_start": "▶️ Start",
+    "anim_stop": "⏸️ Stop",
+    "reset": "Reset"
   },
   "calendar": {
     "weekday": "Wochentag",
@@ -137,7 +137,8 @@
     "step3_text": "Der Wochentag ergibt sich aus der Position in der Zählung (Position 0 = Sonntag, Position 6 = Samstag).",
     "result_prefix": "Der",
     "result_is": "ist ein",
-    "weekday_title": "Wochentags-Rechengang für den"
+    "weekday_title": "Wochentags-Rechengang für den",
+    "golden_number_info": "Nach 19 Jahren wiederholen sich die Mondphasen nahezu an denselben Kalendertagen. Die goldene Zahl spielt eine wichtige Rolle bei der Berechnung des Osterdatums und anderer beweglicher kirchlicher Feiertage. Zusammen mit weiteren Kalenderregeln hilft sie dabei, den ersten Vollmond nach dem Frühlingsanfang zu bestimmen, auf dessen folgenden Sonntag Ostern gefeiert wird."
   },
   "modal_history": {
     "title": "Kunst & Geschichte der Astronomischen Uhr 📜",
@@ -178,7 +179,15 @@
     "fig2_label": "Zeremonie:",
     "fig2_text": "Sie treten aus der linken Tür, verneigen sich vor Christus und werden von ihm gesegnet.",
     "fig3_label": "Glockenfiguren:",
-    "fig3_text": "Von Fritz Block geschnitzt. Die Stundenglocke wird von einem alten Mann mit Sanduhr angeschlagen. Die Janusfigur (alter Mann / junge Frau) deutet Vergangenheit und Zukunft an."
+    "fig3_text": "Von Fritz Block geschnitzt. Die Stundenglocke wird von einem alten Mann mit Sanduhr angeschlagen. Die Janusfigur (alter Mann / junge Frau) deutet Vergangenheit und Zukunft an.",
+    "img_giebel_title": "📷 Der Figurenaufsatz und Giebel der Astronomischen Uhr",
+    "img_giebel_subtitle": "Der bekrönende Giebel mit dem Figurenumgang, wie er sich heute in St. Marien präsentiert.",
+    "img_getriebe_title": "📷 Das Getriebe der Astronomischen Uhr",
+    "img_getriebe_subtitle": "Blick auf das Räderwerk, das Zeigerwerk und Figurenumgang synchron antreibt.",
+    "img_uhrwerk_title": "📷 Das moderne Uhrwerk",
+    "img_uhrwerk_subtitle": "Das seit 1967 laufende, von Paul Behrens aufgearbeitete Turmuhrenwerk.",
+    "img_figurenumlauf_title": "📷 Der Figurenumlauf zur Mittagsstunde",
+    "img_figurenumlauf_subtitle": "Die Gläubigen der Welt ziehen vor der zentralen Christusfigur vorbei."
   },
   "image_viewer": {
     "zoom_out": "Verkleinern",

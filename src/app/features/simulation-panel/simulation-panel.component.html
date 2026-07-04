@@ -13,13 +13,6 @@
   {{ currentDate() | date: 'dd.MM.yyyy HH:mm:ss' }}
 </div>
 
-<!-- Fix "Buttons schmaler": btn-auto macht den Button inhaltsbreit statt
-     100% breit und verhindert per white-space:nowrap gleichzeitig, dass
-     unterschiedlich lange DE/EN-Texte umbrechen (kein Höhensprung). -->
-<button class="btn-auto" (click)="setToCurrentTime()">
-  {{ 'simulation.current_time' | translate }}
-</button>
-
 <label for="speedSlider">
   {{ 'simulation.speed_label' | translate }}
   {{ animationSpeed() | number: '1.1-1' }}x
@@ -34,8 +27,15 @@
   (ngModelChange)="animationSpeed.set(+$event); onSpeedChange()"
 />
 
-<button class="btn-auto" (click)="toggleAnimation()">
-  {{ isAnimationRunning()
-  ? ('simulation.anim_stop'  | translate)
-  : ('simulation.anim_start' | translate) }}
-</button>
+<!-- Fix "Platz unter dem Slider": Start/Stop und Reset (ersetzt die
+     vorherige "Aktuelle Zeit"-Funktion) platzsparend nebeneinander. -->
+<div class="btn-row">
+  <button (click)="toggleAnimation()">
+    {{ isAnimationRunning()
+    ? ('simulation.anim_stop'  | translate)
+    : ('simulation.anim_start' | translate) }}
+  </button>
+  <button (click)="setToCurrentTime()">
+    {{ 'simulation.reset' | translate }}
+  </button>
+</div>

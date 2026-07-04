@@ -17,10 +17,10 @@
   },
   "simulation": {
     "date_label": "Date and time:",
-    "current_time": "⏱️ Current time",
     "speed_label": "Speed:",
-    "anim_start": "▶️ Start animation",
-    "anim_stop": "⏸️ Stop animation"
+    "anim_start": "▶️ Start",
+    "anim_stop": "⏸️ Stop",
+    "reset": "Reset"
   },
   "calendar": {
     "weekday": "Weekday",
@@ -137,7 +137,8 @@
     "step3_text": "The day of the week results from the position in the count (position 0 = Sunday, position 6 = Saturday).",
     "result_prefix": "The",
     "result_is": "is a",
-    "weekday_title": "Weekday calculation for"
+    "weekday_title": "Weekday calculation for",
+    "golden_number_info": "After 19 years, the phases of the moon repeat on nearly the same calendar days. The Golden Number plays an important role in calculating the date of Easter and other movable church holidays. Together with other calendrical rules, it helps determine the first full moon after the beginning of spring, on the Sunday following which Easter is celebrated."
   },
   "modal_history": {
     "title": "Art & History of the Astronomical Clock 📜",
@@ -178,7 +179,15 @@
     "fig2_label": "Ceremony:",
     "fig2_text": "They emerge from the left door, bow before Christ and are blessed by him.",
     "fig3_label": "Bell figures:",
-    "fig3_text": "Carved by Fritz Block. The hour bell is struck by an old man with an hourglass. The Janus figure (old man / young woman) alludes to the past and the future."
+    "fig3_text": "Carved by Fritz Block. The hour bell is struck by an old man with an hourglass. The Janus figure (old man / young woman) alludes to the past and the future.",
+    "img_giebel_title": "📷 The Figure Superstructure and Gable of the Astronomical Clock",
+    "img_giebel_subtitle": "The crowning gable with the figure procession, as it appears today in St. Mary's Church.",
+    "img_getriebe_title": "📷 The Gearing of the Astronomical Clock",
+    "img_getriebe_subtitle": "View of the gear train that drives the pointer mechanism and figure procession in sync.",
+    "img_uhrwerk_title": "📷 The Modern Clockwork",
+    "img_uhrwerk_subtitle": "The tower clock mechanism, restored by Paul Behrens, running since 1967.",
+    "img_figurenumlauf_title": "📷 The Procession of Figures at Noon",
+    "img_figurenumlauf_subtitle": "The 'Believers of the World' pass in front of the central figure of Christ."
   },
   "image_viewer": {
     "zoom_out": "Zoom out",

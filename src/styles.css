@@ -1,6 +1,18 @@
 /* ======================================================== */
 /* === 1. BASIS (Mobile-First)                          === */
 /* ======================================================== */
+html {
+  /*
+   * Fix "Springendes Layout": reserviert dauerhaft Platz für die vertikale
+   * Scrollbar, damit sie beim Auf-/Zuklappen eines Panels oder bei
+   * unterschiedlich langen DE/EN-Übersetzungen nicht plötzlich erscheint/
+   * verschwindet und dadurch die verfügbare Breite (und damit das
+   * zentrierte Layout) verschiebt.
+   */
+  scrollbar-gutter: stable;
+  overflow-y: scroll; /* Fallback für Browser ohne scrollbar-gutter-Support */
+}
+
 html, body {
   margin: 0;
   padding: 0;
@@ -297,6 +309,25 @@ button.btn-auto {
   max-width: 100%;
   white-space: nowrap;
   margin: 2px auto 0;
+}
+
+/*
+ * Fix "Simulationsansicht: Start/Reset nebeneinander": zwei Buttons in
+ * einer Reihe, platzsparend, gleich breit, kein Umbruch bei DE/EN-Texten
+ * unterschiedlicher Länge (verhindert zusätzlich Höhensprünge).
+ */
+.btn-row {
+  display: flex;
+  gap: 8px;
+  width: 100%;
+  margin-top: 4px;
+}
+
+.btn-row button {
+  flex: 1 1 0;
+  min-width: 0;
+  width: auto;
+  white-space: nowrap;
 }
 
 @media (min-width: 601px) {
