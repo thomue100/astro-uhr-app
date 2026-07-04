@@ -1,16 +1,17 @@
 /* ======================================================== */
 /* === 1. BASIS (Mobile-First)                          === */
 /* ======================================================== */
-html {
-  /*
-   * Fix "Springendes Layout": reserviert dauerhaft Platz für die vertikale
-   * Scrollbar, damit sie beim Auf-/Zuklappen eines Panels oder bei
-   * unterschiedlich langen DE/EN-Übersetzungen nicht plötzlich erscheint/
-   * verschwindet und dadurch die verfügbare Breite (und damit das
-   * zentrierte Layout) verschiebt.
-   */
-  scrollbar-gutter: stable;
-  overflow-y: scroll; /* Fallback für Browser ohne scrollbar-gutter-Support */
+/* Fix "Springendes Layout" (Desktop): reserviert Platz für die vertikale
+   Scrollbar, damit sie beim Auf-/Zuklappen eines Panels oder bei
+   unterschiedlich langen DE/EN-Texten nicht plötzlich erscheint/verschwindet
+   und dadurch die verfügbare Breite verschiebt. Nur ab Tablet/Desktop aktiv:
+   mobile Browser nutzen ohnehin platzsparende Overlay-Scrollbars, dort würde
+   die Regel nur unnötig etwas Breite kosten. */
+@media (min-width: 851px) {
+  html {
+    scrollbar-gutter: stable;
+    overflow-y: scroll;
+  }
 }
 
 html, body {

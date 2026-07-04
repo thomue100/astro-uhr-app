@@ -1,3 +1,11 @@
+@media (max-width: 767px) {
+  :host {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+  }
+}
+
 /* ======================================================== */
 /* === CANVAS WRAPPER                                   === */
 /* ======================================================== */
@@ -74,12 +82,6 @@
 /* === ERWEITERTE STEUERLEISTE (nur Tablet/Desktop)     === */
 /* ======================================================== */
 
-/*
- * Fix "Mobile Optimierung": komplette Leiste (Zoom, Drehen/Verschieben)
- * ist auf Mobile ausgeblendet - siehe Anforderung "Alle Controls zum
- * Drehen und Verschieben können [mobil] entfallen". Der Reset-Eck-Button
- * oben bleibt als einzige mobile Steuerung erhalten.
- */
 .calendar-controls-bar {
   display: none;
 }
