@@ -15,10 +15,9 @@
   justify-content: center;
   align-items: center;
   width: 100%;
-  /* touch-action:none NICHT global setzen – sonst blockiert das
-     native Pinch-to-Zoom der Seite auf Mobile dauerhaft.
-     Nur aktiv, während die Kalenderscheiben-Steuerung offen ist
-     (siehe .canvas-container--interactive). */
+  /* touch-action:none NICHT global setzen – sonst blockiert das native
+     Pinch-to-Zoom der Seite auf Mobile dauerhaft. Nur aktiv, während die
+     Kalenderscheiben-Steuerung offen ist. */
 }
 
 .canvas-container--interactive {
@@ -73,8 +72,7 @@
   }
 }
 
-/* Trenner zwischen Button-Gruppen: auf Mobile ausgeblendet (Platzgründe),
-   ab Tablet/Desktop sichtbar */
+/* Trenner zwischen Button-Gruppen: auf Mobile ausgeblendet (Platzgründe) */
 .cc-separator {
   display: none;
 }
@@ -90,8 +88,7 @@
   }
 }
 
-/* Zoom-Buttons: auf Mobile ausgeblendet, da natives Pinch-to-Zoom
-   die übliche Lösung ist (siehe touch-action-Handling oben) */
+/* Zoom-Buttons: auf Mobile ausgeblendet (natives Pinch-to-Zoom) */
 .cc-zoom-btn,
 .cc-zoom-separator {
   display: none;
@@ -109,9 +106,8 @@
 }
 
 /*
- * Buttons: Basis = Mobile, Touch-Ziel ≥44px (Apple HIG / WCAG 2.5.5).
- * box-sizing:border-box verhindert, dass Border/Padding die
- * Gesamtgröße verändern.
+ * Buttons: reine Icon-Buttons (kein Textlabel mehr), Mobile-First,
+ * Touch-Ziel ≥44px (Apple HIG / WCAG 2.5.5).
  */
 .cc-btn {
   box-sizing: border-box;
@@ -120,7 +116,8 @@
   border: 1px solid #2f8fc4;
   border-radius: 5px;
   padding: 8px 10px;
-  font-size: 0.78rem;
+  font-size: 1.05rem;
+  line-height: 1;
   font-weight: 600;
   cursor: pointer;
   transition: background 0.15s, border-color 0.15s, transform 0.1s;
@@ -140,11 +137,10 @@
   transform: scale(0.94);
 }
 
-/* Ab Tablet/Desktop: kompakter, da Maus statt Finger */
 @media (min-width: 601px) {
   .cc-btn {
-    padding: 4px 8px;
-    font-size: 0.76rem;
+    padding: 4px 9px;
+    font-size: 0.95rem;
     min-width: 30px;
     min-height: auto;
   }

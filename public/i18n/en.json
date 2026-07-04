@@ -109,7 +109,17 @@
     "tech_title": "III. Technical Notes",
     "tech_data": "Calendar data and eclipses are limited to the period 1911 to 2080.",
     "tech_browser": "The simulation was developed for modern browsers and uses the Canvas API.",
-    "tech_mobile": "On smaller screens, the controls are collapsed by default."
+    "tech_mobile": "On smaller screens, the controls are collapsed by default.",
+    "symbols_title": "Symbols in the Calendar Overview 🔣",
+    "symbols_intro": "To save space, the compact calendar overview uses symbols instead of spelled-out terms (details appear as a tooltip on tap/hover):",
+    "symbols_date": "Date (weekday, day.month.year)",
+    "symbols_easter": "Easter date",
+    "symbols_golden": "Golden Number",
+    "symbols_sunday_letter": "Sunday letter",
+    "symbols_day_letter": "Day letter",
+    "symbols_saint": "Feast day",
+    "symbols_solar_eclipse": "Solar eclipse (partial or total)",
+    "symbols_lunar_eclipse": "Lunar eclipse (partial or total)"
   },
   "modal_calendar": {
     "title": "The Calendar Disc",
@@ -185,6 +195,15 @@
     "Donnerstag": "Thursday",
     "Freitag": "Friday",
     "Samstag": "Saturday"
+  },
+  "weekdays_short": {
+    "Sonntag": "Sun",
+    "Montag": "Mon",
+    "Dienstag": "Tue",
+    "Mittwoch": "Wed",
+    "Donnerstag": "Thu",
+    "Freitag": "Fri",
+    "Samstag": "Sat"
   },
   "luebeck_rule": {
     "before_march": "before March 1st",

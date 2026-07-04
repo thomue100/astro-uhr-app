@@ -13,7 +13,10 @@
   {{ currentDate() | date: 'dd.MM.yyyy HH:mm:ss' }}
 </div>
 
-<button (click)="setToCurrentTime()">
+<!-- Fix "Buttons schmaler": btn-auto macht den Button inhaltsbreit statt
+     100% breit und verhindert per white-space:nowrap gleichzeitig, dass
+     unterschiedlich lange DE/EN-Texte umbrechen (kein Höhensprung). -->
+<button class="btn-auto" (click)="setToCurrentTime()">
   {{ 'simulation.current_time' | translate }}
 </button>
 
@@ -31,8 +34,8 @@
   (ngModelChange)="animationSpeed.set(+$event); onSpeedChange()"
 />
 
-<button (click)="toggleAnimation()">
+<button class="btn-auto" (click)="toggleAnimation()">
   {{ isAnimationRunning()
-      ? ('simulation.anim_stop'  | translate)
-      : ('simulation.anim_start' | translate) }}
+  ? ('simulation.anim_stop'  | translate)
+  : ('simulation.anim_start' | translate) }}
 </button>

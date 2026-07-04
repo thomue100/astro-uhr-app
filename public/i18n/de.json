@@ -109,7 +109,17 @@
     "tech_title": "III. Technische Hinweise",
     "tech_data": "Kalenderdaten und Finsternisse sind auf den Zeitraum 1911 bis 2080 beschränkt.",
     "tech_browser": "Die Simulation wurde für moderne Browser entwickelt und verwendet die Canvas-API.",
-    "tech_mobile": "Auf kleineren Bildschirmen sind die Steuerungen standardmäßig eingeklappt."
+    "tech_mobile": "Auf kleineren Bildschirmen sind die Steuerungen standardmäßig eingeklappt.",
+    "symbols_title": "Symbole in der Kalenderübersicht 🔣",
+    "symbols_intro": "Um Platz zu sparen, verwendet die kompakte Kalenderübersicht Symbole statt ausgeschriebener Begriffe (Details erscheinen als Tooltip beim Antippen/Hovern):",
+    "symbols_date": "Datum (Wochentag, Tag.Monat.Jahr)",
+    "symbols_easter": "Osterdatum",
+    "symbols_golden": "Goldene Zahl",
+    "symbols_sunday_letter": "Sonntagsbuchstabe",
+    "symbols_day_letter": "Tagesbuchstabe",
+    "symbols_saint": "Tagesheilige(r)",
+    "symbols_solar_eclipse": "Sonnenfinsternis (partiell oder total)",
+    "symbols_lunar_eclipse": "Mondfinsternis (partiell oder total)"
   },
   "modal_calendar": {
     "title": "Die Kalenderscheibe",
@@ -185,6 +195,15 @@
     "Donnerstag": "Donnerstag",
     "Freitag": "Freitag",
     "Samstag": "Samstag"
+  },
+  "weekdays_short": {
+    "Sonntag": "So",
+    "Montag": "Mo",
+    "Dienstag": "Di",
+    "Mittwoch": "Mi",
+    "Donnerstag": "Do",
+    "Freitag": "Fr",
+    "Samstag": "Sa"
   },
   "luebeck_rule": {
     "before_march": "vor dem 1. März",

@@ -2,12 +2,12 @@
 
 <div class="cal-panel-wrapper">
   <!--
-    Das 'computed'-Signal calendarInfoHtml() sorgt nun automatisch dafür,
+    Das 'computed'-Signal calendarInfoHtml() sorgt automatisch dafür,
     dass sich der Inhalt aktualisiert, wenn sich Datum oder Sprache ändern.
   -->
-  <div [innerHTML]="calendarInfoHtml()"></div>
+  <div style="width:100%" [innerHTML]="calendarInfoHtml()"></div>
 
-  <button (click)="openCalendarModal.emit()">
+  <button class="btn-auto" (click)="openCalendarModal.emit()">
     {{ 'calendar.explain_btn' | translate }}
   </button>
 </div>

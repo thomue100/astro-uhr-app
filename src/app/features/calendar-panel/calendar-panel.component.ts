@@ -23,7 +23,11 @@ export class CalendarPanelComponent implements OnInit, OnDestroy {
 
   readonly openCalendarModal = output<void>();
 
-  // Die Berechnung erfolgt nun in einem computed-Signal
+  /**
+   * Kompakte Kalenderübersicht mit Symbolen statt ausgeschriebener Begriffe.
+   * Alle Begriffe bleiben über title-Tooltips zugänglich; eine Legende
+   * dazu befindet sich im Einführungs-Modal.
+   */
   readonly calendarInfoHtml = computed(() => {
     // Abhängigkeit registrieren
     this.refreshTrigger();
@@ -37,50 +41,51 @@ export class CalendarPanelComponent implements OnInit, OnDestroy {
 
     const yearInfo = TimeUtility.getCalendarInfo(year);
     const dailyInfo = TimeUtility.getDailyCalendarInfo(date);
-    const dateStr = date.toLocaleDateString('de-DE');
     const eclipses = TimeUtility.getEclipseInfo(year);
 
     const weekdayDE = TimeUtility.getDayOfWeekString(date);
-    const weekday = this.t.translate(`weekdays.${weekdayDE}`);
+    const weekdayFull = this.t.translate(`weekdays.${weekdayDE}`);
+    const weekdayShort = this.t.translate(`weekdays_short.${weekdayDE}`);
+    const dateCompact = this._formatDateCompact(date);
 
-    let html = '<div class="cal-block">';
+    let html = '<div class="cal-compact">';
 
-    html += `<div class="cal-section-title">📅 ${dateStr}</div>`;
-    html += this._row(this.t.translate('calendar.weekday'), weekday);
+    // Datum
+    html += `<div class="cal-line cal-date" title="${weekdayFull}">📅 ${weekdayShort}, ${dateCompact}</div>`;
 
+    // Jahresdaten als Chips
     if (yearInfo) {
-      html += `<div class="cal-divider"></div>`;
-      html += `<div class="cal-section-title">📆 ${year}</div>`;
-      html += this._row(this.t.translate('calendar.easter'), yearInfo['easterDate'] ?? '--');
-      html += this._row(this.t.translate('calendar.golden_number'), yearInfo['goldenNumber'] ?? '--');
-      html += this._row(this.t.translate('calendar.sunday_letter'), yearInfo['dayLetter'] ?? '--');
+      html += '<div class="cal-line cal-year-row">';
+      html += `<span class="cal-chip" title="${this.t.translate('calendar.easter')}">📆 ${yearInfo['easterDate'] ?? '--'}</span>`;
+      html += `<span class="cal-chip" title="${this.t.translate('calendar.golden_number')}">🔢${yearInfo['goldenNumber'] ?? '--'}</span>`;
+      html += `<span class="cal-chip" title="${this.t.translate('calendar.sunday_letter')}">🔠${yearInfo['dayLetter'] ?? '--'}</span>`;
+
+      if (dailyInfo?.['letter'] && dailyInfo['letter'] !== 'N/A') {
+        html += `<span class="cal-chip" title="${this.t.translate('calendar.day_letter')}">🔤${dailyInfo['letter']}</span>`;
+      }
+      html += '</div>';
     } else {
-      html += `<div class="cal-divider"></div>`;
       html += `<p class="cal-error">${this.t.translate('calendar.no_year_data')} ${year}</p>`;
     }
 
-    if (dailyInfo?.['letter'] !== 'N/A') {
-      html += this._row(this.t.translate('calendar.day_letter'), dailyInfo?.['letter'] ?? '--');
-      html += this._row(this.t.translate('calendar.saint'), dailyInfo?.['saint'] ?? '--');
+    // Tagesheilige(r)
+    if (dailyInfo?.['letter'] !== 'N/A' && dailyInfo?.['saint']) {
+      html += `<div class="cal-line cal-saint" title="${this.t.translate('calendar.saint')}">🙏 ${dailyInfo['saint']}</div>`;
     }
 
-    html += `<div class="cal-divider"></div>`;
-    html += `<div class="cal-section-title">🌑 ${this.t.translate('calendar.eclipses')} ${year}</div>`;
+    // Finsternisse
+    html += '<div class="cal-divider"></div>';
+    html += `<div class="cal-line cal-eclipse-title">🌑 ${year}</div>`;
 
     if (eclipses.length > 0) {
       eclipses.forEach((e: Record<string, string>) => {
-        html += `
-          <div class="cal-eclipse">
-            <span class="cal-eclipse-type">${this._translateEclipseType(e['type'])}</span>
-            <span class="cal-eclipse-date">${this._formatEclipseDate(e['date'])}</span>
-          </div>`;
+        const icon = this._eclipseIcon(e['type']);
+        const fullType = this._translateEclipseType(e['type']);
+        const compactDate = this._formatEclipseCompact(e['date']);
+        html += `<div class="cal-line cal-eclipse-compact" title="${fullType}">${icon} ${compactDate}</div>`;
       });
     } else {
-      html += `<div class="cal-row">
-        <span class="cal-value cal-muted">
-          ${this.t.translate('calendar.no_eclipses')} ${year}
-        </span>
-      </div>`;
+      html += `<div class="cal-line cal-muted">${this.t.translate('calendar.no_eclipses')} ${year}</div>`;
     }
 
     html += '</div>';
@@ -98,19 +103,26 @@ export class CalendarPanelComponent implements OnInit, OnDestroy {
     this.dateSubscription?.unsubscribe();
   }
 
-  // Hilfsmethode für die HTML-Struktur
-  private _row(label: string, value: string): string {
-    return `
-      <div class="cal-row">
-        <span class="cal-label">${label}</span>
-        <span class="cal-value">${value}</span>
-      </div>`;
+  /** dd.MM.yyyy, unabhängig von Locale-Eigenheiten der Browser. */
+  private _formatDateCompact(date: Date): string {
+    const dd = String(date.getDate()).padStart(2, '0');
+    const mm = String(date.getMonth() + 1).padStart(2, '0');
+    const yyyy = date.getFullYear();
+    return `${dd}.${mm}.${yyyy}`;
   }
 
   /**
-   * Übersetzt den Finsternis-Typ aus eclipse.json (immer Deutsch) über
-   * i18n-Key "eclipse_types.<Rohwert>". Fällt auf den Rohwert zurück,
-   * falls kein passender Key existiert.
+   * Symbol basierend auf dem (immer deutschen) Rohwert aus eclipse.json.
+   * Analog zur Kalenderscheibe: Sonne = Sonnenfinsternis, Mond = Mondfinsternis.
+   * Unterscheidet bewusst nicht zwischen partiell/total (siehe Tooltip dafür).
+   */
+  private _eclipseIcon(type: string): string {
+    return type.includes('Sonnenfinsternis') ? '☀️' : '🌕';
+  }
+
+  /**
+   * Übersetzt den vollen Finsternis-Typ für den Tooltip
+   * (z.B. "Partielle Sonnenfinsternis" / "Partial Solar Eclipse").
    */
   private _translateEclipseType(type: string): string {
     const key = `eclipse_types.${type}`;
@@ -119,15 +131,13 @@ export class CalendarPanelComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Formatiert Datum/Uhrzeit aus eclipse.json. Die Rohdaten kommen in
-   * zwei Varianten vor: "21.01.00 Uhr 05:45" und "21.02.08 Uhr: 04:26".
-   * "Uhr" wird gemäß aktueller Sprache übersetzt, Datum/Uhrzeit bleiben
-   * unverändert.
+   * Kompaktes Datum/Uhrzeit ohne Jahr (steht bereits in der Überschrift)
+   * und ohne "Uhr"/"at" - reine Zahlen, durch Tooltip weiterhin erklärt.
    */
-  private _formatEclipseDate(raw: string): string {
-    const match = raw.match(/^(\d{2}\.\d{2}\.\d{2})\s*Uhr:?\s*(\d{2}:\d{2})$/);
+  private _formatEclipseCompact(raw: string): string {
+    const match = raw.match(/^(\d{2})\.(\d{2})\.\d{2}\s*Uhr:?\s*(\d{2}:\d{2})$/);
     if (!match) return raw;
-    const [, datePart, timePart] = match;
-    return this.t.translate('calendar.eclipse_date_format', { date: datePart, time: timePart });
+    const [, day, month, time] = match;
+    return `${day}.${month}. ${time}`;
   }
 }

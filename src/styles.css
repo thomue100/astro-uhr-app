@@ -14,17 +14,17 @@ html, body {
 body {
   display: flex;
   justify-content: center;
-  /* Mobile: oben ausgerichtet + scrollbar statt vertikal zentriert,
-     damit sich die Seite beim Auf-/Zuklappen der Panels nicht "neu einrastet" */
+  /*
+   * Fix "Springen" (Sprachwechsel UND Panel-Umschalten), Fix "Scrollbalken am PC":
+   * Immer oben verankern statt vertikal zentrieren – auf ALLEN Bildschirmgrößen.
+   * Ändert sich die Höhe des Containers (Panel auf/zu, andere Textlänge durch
+   * Sprachwechsel), verschiebt sich dadurch nie mehr das ganze Layout. Dadurch
+   * muss die Sidebar-Höhe auch nicht künstlich per max-height/overflow gedeckelt
+   * werden -> kein Scrollbalken mehr nötig.
+   */
   align-items: flex-start;
   overflow-y: auto;
   min-height: 100vh;
-}
-
-@media (min-width: 851px) {
-  body {
-    align-items: center;
-  }
 }
 
 /* ======================================================== */
@@ -59,7 +59,7 @@ body {
     gap: 30px;
     padding: 20px;
     width: auto;
-    margin: 0;
+    margin: 24px auto;
   }
 
   .container > app-canvas {
@@ -86,10 +86,11 @@ body {
 @media (min-width: 851px) {
   .controls {
     width: 250px;
-    /* Verhindert, dass die Sidebar höher wird als das Uhr-Canvas und
-       dadurch der ganze Container beim Auf-/Zuklappen "springt" */
-    max-height: 80vh;
-    overflow-y: auto;
+    /* Fix "Scrollbalken am PC": keine max-height / kein overflow-y mehr.
+       Die Sidebar darf natürlich wachsen; dank body{align-items:flex-start}
+       verursacht das kein Springen mehr. */
+    height: auto;
+    overflow: visible;
   }
 }
 
@@ -103,17 +104,35 @@ body {
   justify-content: space-between;
   gap: 8px;
   padding: 10px 14px 8px 14px;
+  /*
+   * Fix "Springen bei Sprachwechsel": reserviert Platz für Titel + bis zu
+   * 2-zeiligen Untertitel, egal ob DE oder EN nur 1 oder 2 Zeilen braucht.
+   */
+  min-height: 58px;
+  box-sizing: border-box;
 }
 
-.app-title,
-.app-subtitle {
+.app-title {
   margin: 0;
   flex: 1;
   min-width: 0;
   color: #ffcc33;
-  font-size: 1.05rem;
+  font-size: 1.0rem;
   font-weight: bold;
   line-height: 1.3;
+}
+
+.app-subtitle {
+  margin-top: 3px;
+  color: #ffcc33;
+  /* kleinere, eigene Schriftgröße statt geerbter Titel-Größe:
+     verhindert, dass der längere englische Text ("St. Mary's Church, Lübeck")
+     eher umbricht als der deutsche und dadurch die Zeilenzahl (=Höhe) je
+     nach Sprache unterschiedlich ausfällt */
+  font-size: 0.72rem;
+  font-weight: 600;
+  line-height: 1.35;
+  opacity: 0.9;
 }
 
 /* Sprach-Button: explizite Breite überschreibt globales button{width:100%} */
@@ -147,54 +166,68 @@ body {
   text-align: center;
   margin: 0;
   border-radius: 0;
-  border-bottom: none !important;
   font-size: 13px;
   min-height: 44px;
   display: flex;
   align-items: center;
   justify-content: center;
+  box-sizing: border-box;
+  /*
+   * Fix "Einführung/Simulation nicht getrennt": jeder Header bekommt
+   * einheitlich eine dünne Trennlinie nach unten - egal ob direkt ein
+   * weiterer Header folgt (Einführung -> Simulation) oder eigener Inhalt
+   * (Simulation-Header -> Simulation-Inhalt). Dadurch sind ALLE Abschnitte
+   * gleich "leicht getrennt".
+   */
+  border-bottom: 1px solid #1a4261;
+  /*
+   * Fix "Springen bei Sprachwechsel": Text bricht nie um (fixe Breite der
+   * Sidebar + kurze Übersetzungen passen ohnehin problemlos), damit die
+   * Header-Höhe zwischen DE/EN garantiert identisch bleibt.
+   */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .controls > #infoButtonHeader {
   border-radius: 8px 8px 0 0;
 }
 
-/* Bottom-Radius für den zuletzt sichtbaren Inhalt der Sidebar */
-.controls-content {
-  border-bottom: none !important;
-  border-radius: 0 0 8px 8px !important;
+/* Fix "Kunst & Geschichte ohne runde Ecken unten": History ist immer der
+   letzte Abschnitt in der Sidebar (kein Content-Div danach) -> bekommt
+   die untere Abrundung, analog zu Einführung oben. Keine zusätzliche
+   Trennlinie mehr nötig, da danach nichts mehr folgt. */
+#historyPanel > .controls-header {
+  border-bottom: none;
+  border-radius: 0 0 8px 8px;
 }
 
-/*
- * Fix "Springen": Panels werden über max-height/opacity ein-/ausgeblendet
- * statt über display:none, damit die vorhandene CSS-Transition wirklich
- * greift und der Wechsel weich statt abrupt passiert.
- */
 .controls-content {
   display: flex;
   flex-direction: column;
   gap: 6px;
   padding: 10px 12px;
   transition: max-height 0.4s ease-out, opacity 0.4s ease-out,
-              padding-top 0.4s ease-out, padding-bottom 0.4s ease-out,
-              border-top-color 0.4s ease-out;
+              padding-top 0.4s ease-out, padding-bottom 0.4s ease-out;
   overflow: hidden;
   max-height: 1000px;
-  border-top: 1px solid transparent;
   position: relative;
+  border-bottom: none;
+  border-radius: 0 0 8px 8px;
 }
 
-.controls-content:not(.controls-content--hidden) {
-  border-top-color: #1a4261;
-}
-
+/*
+ * Fix "Springen": Panels werden über max-height/opacity ein-/ausgeblendet
+ * statt über display:none, damit die Transition wirklich greift und der
+ * Wechsel weich statt abrupt passiert.
+ */
 .controls-content--hidden {
   max-height: 0;
   opacity: 0;
   padding-top: 0;
   padding-bottom: 0;
   pointer-events: none;
-  border-top-color: transparent;
 }
 
 /* ======================================================== */
@@ -209,15 +242,17 @@ body {
 
 #liveDateTime {
   background: rgba(255, 255, 255, 0.05);
-  padding: 5px 8px;
+  padding: 4px 8px;
   border-radius: 6px;
-  font-size: 12px;
+  font-size: 11.5px;
   color: #f4f4f4;
   line-height: 1.3;
+  /* Format ist fest an 'de-DE' gebunden (TimeUtility.formatDateTime) und
+     damit unabhängig von der UI-Sprache -> kein Sprung bei Sprachwechsel */
 }
 
 /* ======================================================== */
-/* === 5. BUTTONS (Sidebar-Standardbuttons, Mobile-First)=== */
+/* === 5. BUTTONS (Mobile-First)                        === */
 /* ======================================================== */
 button {
   background-color: #184a6b;
@@ -245,6 +280,25 @@ button:hover {
   font-size: 13px;
 }
 
+/*
+ * Fix "Buttons schmaler, Slider nicht verdeckt": Aktionsbuttons in den
+ * Panels (Aktuelle Zeit, Animation starten/stoppen, Erläuterungen) werden
+ * inhaltsbreit statt 100% breit UND brechen nie um (white-space: nowrap).
+ * Das macht sie schmaler als den Slider darüber/darunter und garantiert
+ * gleichzeitig, dass unterschiedlich lange DE/EN-Texte nie zu einer
+ * anderen Zeilenzahl (= anderer Höhe) führen -> kein Sprung.
+ */
+button.btn-auto {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: auto;
+  min-width: 150px;
+  max-width: 100%;
+  white-space: nowrap;
+  margin: 2px auto 0;
+}
+
 @media (min-width: 601px) {
   button {
     padding: 7px 12px;
@@ -256,6 +310,10 @@ button:hover {
     padding: 5px 10px;
     min-height: auto;
     font-size: 12px;
+  }
+
+  button.btn-auto {
+    min-width: 130px;
   }
 }
 
@@ -301,7 +359,6 @@ input[type="range"] {
 input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  /* Touch-freundlicher Slider-Thumb auf Mobile */
   width: 22px;
   height: 22px;
   background: #ffcc33;
@@ -452,7 +509,7 @@ input[type="range"]::-moz-range-thumb {
   cursor: pointer;
   color: #aaa;
   transition: color 0.2s;
-  padding: 4px 8px; /* größere Trefferfläche zum Schließen */
+  padding: 4px 8px;
 }
 
 .modal-close:hover { color: #fff; }
@@ -468,80 +525,84 @@ input[type="range"]::-moz-range-thumb {
 }
 
 /* ======================================================== */
-/* === 9. KALENDER-PANEL: Einheitliches Daten-Layout    === */
+/* === 9. KALENDER-PANEL: Kompakte Symbol-Ansicht       === */
 /* ======================================================== */
 .cal-panel-wrapper {
   display: flex;
   flex-direction: column;
   gap: 6px;
+  align-items: center;
+  width: 100%;
 }
 
-.cal-block {
+.cal-compact {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid #1a4261;
   border-radius: 6px;
-  padding: 6px 9px;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
+  padding: 8px 10px;
+  box-sizing: border-box;
 }
 
-.cal-section-title {
-  color: #ffcc33;
-  font-size: 11.5px;
+.cal-line {
+  font-size: 12px;
+  line-height: 1.4;
+  color: #f4f4f4;
+}
+
+.cal-date {
   font-weight: 700;
-  margin-top: 2px;
-  margin-bottom: 1px;
+  color: #ffcc33;
+  font-size: 12.5px;
+}
+
+/* Chips für Osterdatum/Goldene Zahl/Sonntags-/Tagesbuchstabe:
+   umbrechen bei Bedarf, statt die Sidebar zu verbreitern */
+.cal-year-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.cal-chip {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid #1a4261;
+  border-radius: 4px;
+  padding: 2px 6px;
+  font-size: 11px;
+  white-space: nowrap;
+  cursor: default;
+}
+
+.cal-saint {
+  font-size: 11.5px;
+  color: #cddcee;
+  cursor: default;
 }
 
 .cal-divider {
   border-top: 1px solid #1a4261;
-  margin: 4px 0 3px 0;
+  margin: 2px 0;
 }
 
-.cal-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: 6px;
+.cal-eclipse-title {
+  font-weight: 700;
+  color: #ffcc33;
   font-size: 11.5px;
-  line-height: 1.45;
 }
 
-.cal-label {
-  color: #88aacc;
-  white-space: nowrap;
-  flex-shrink: 0;
-}
-
-.cal-value {
-  color: #f4f4f4;
-  text-align: right;
-  word-break: break-word;
+.cal-eclipse-compact {
+  font-size: 11.5px;
+  cursor: default;
 }
 
 .cal-muted {
   color: #6688aa;
   font-style: italic;
-}
-
-.cal-eclipse {
-  display: flex;
-  flex-direction: column;
-  padding: 2px 0 2px 7px;
-  border-left: 2px solid #1a4261;
-  margin: 1px 0;
-  font-size: 11px;
-}
-
-.cal-eclipse-type {
-  color: #f4f4f4;
-  font-weight: 600;
-}
-
-.cal-eclipse-date {
-  color: #88aacc;
-  font-size: 10.5px;
+  font-size: 11.5px;
 }
 
 .cal-error {

@@ -19,32 +19,42 @@
       (touchend)="onCanvasTouchEnd($event)"
     ></canvas>
 
+    <!--
+      Steuerleiste bewusst minimal gehalten:
+      - Keine ↺/↻ Schritt-Buttons mehr: freies Drehen per Drag (Maus UND
+        Touch) deckt das bereits vollständig ab, ein diskreter Schritt-
+        Button wäre redundant und würde nur unnötig Platz kosten.
+      - Nur Icons, keine Textlabel: die Symbole sind selbsterklärend
+        (Lupe = Zoom, Kreispfeil = Drehen, Kreuzpfeile = Verschieben,
+        Rückwärtspfeil = Reset), der volle Begriff steht als Tooltip.
+      - Zoom-Buttons bleiben nur ab Tablet/Desktop sichtbar, da Mobile
+        natives Pinch-to-Zoom nutzt (siehe canvas.component.css).
+      Ergebnis: auf Mobile bleiben nur 3 schmale Icon-Buttons übrig,
+      die Kalenderscheibe wird kaum noch verdeckt.
+    -->
     <div
       class="calendar-controls-bar"
       [class.calendar-controls-bar--visible]="showCalendarControls()"
     >
-      <!-- Zoom-Buttons: auf Mobile ausgeblendet, da natives Pinch-to-Zoom
-           genutzt wird (siehe canvas-container--interactive / touch-action) -->
-      <button class="cc-btn cc-zoom-btn" (click)="zoomOut()"     [title]="'calendar_disk.zoom_out'    | translate">🔍−</button>
-      <button class="cc-btn cc-zoom-btn" (click)="zoomIn()"      [title]="'calendar_disk.zoom_in'     | translate">🔍+</button>
+      <button class="cc-btn cc-zoom-btn" (click)="zoomOut()" [title]="'calendar_disk.zoom_out' | translate">🔍−</button>
+      <button class="cc-btn cc-zoom-btn" (click)="zoomIn()"  [title]="'calendar_disk.zoom_in'  | translate">🔍+</button>
       <div class="cc-separator cc-zoom-separator"></div>
-      <button class="cc-btn" (click)="rotateLeft()"  [title]="'calendar_disk.rotate_left' | translate">↺</button>
-      <button class="cc-btn" (click)="rotateRight()" [title]="'calendar_disk.rotate_right'| translate">↻</button>
-      <div class="cc-separator"></div>
+
       <button
         class="cc-btn cc-mode-btn"
         [class.cc-mode-btn--active]="interactionMode() === 'rotate'"
+        [title]="'calendar_disk.mode_rotate' | translate"
         (click)="setMode('rotate')"
-      >{{ 'calendar_disk.mode_rotate' | translate }}</button>
+      >⟳</button>
       <button
         class="cc-btn cc-mode-btn"
         [class.cc-mode-btn--active]="interactionMode() === 'pan'"
+        [title]="'calendar_disk.mode_pan' | translate"
         (click)="setMode('pan')"
-      >{{ 'calendar_disk.mode_pan' | translate }}</button>
+      >✥</button>
       <div class="cc-separator"></div>
-      <button class="cc-btn" (click)="resetView()" [title]="'calendar_disk.reset' | translate">
-        {{ 'calendar_disk.reset' | translate }}
-      </button>
+
+      <button class="cc-btn" (click)="resetView()" [title]="'calendar_disk.reset' | translate">⟲</button>
     </div>
   </div>
 </div>
