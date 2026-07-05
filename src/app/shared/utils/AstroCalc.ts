@@ -69,10 +69,36 @@ export function calculateZodiacOffsetAngle(simDate: Date, angleSun: number): num
     return zodiacDayOffset + angleSun + CONFIG.HALF_PI;
 }
 
+// Wiederverwendbarer Formatter: EINMAL erstellt, nicht bei jedem Funktionsaufruf.
+// Wichtig für die Zeitraffer-Animation, die diese Funktion viele Male pro
+// Sekunde aufruft - ein neu erzeugter Intl.DateTimeFormat pro Aufruf wäre
+// unnötig teuer.
+const luebeckTimeFormatter = new Intl.DateTimeFormat('de-DE', {
+    timeZone: 'Europe/Berlin',
+    hour: '2-digit',
+    minute: '2-digit',
+    hourCycle: 'h23', // erzwingt "00".."23", nie "24:00"
+});
+
 export function calculateSunAngle(simDate: Date): number {
     ensureConfig();
-    const h = simDate.getHours();
-    const m = simDate.getMinutes();
+
+    // Fix: Die Uhrzeit wird fest für "Europe/Berlin" (Standort der echten
+    // Uhr in Lübeck) ausgelesen - unabhängig von der Zeitzone, die auf dem
+    // Gerät der/des Betrachtenden eingestellt ist.
+    //
+    // Das gilt bewusst SOWOHL für die "aktuelle Zeit" (live) als auch für
+    // die manuelle Zeitreise-Simulation: Im Simulationsmodus ändert sich
+    // dadurch nichts Sichtbares (niemand vergleicht mit einer externen
+    // Referenz), im Live-Modus verhindert es aber genau den Fall, dass
+    // jemand direkt vor der echten Uhr in Lübeck steht, sein Handy auf
+    // einer fremden Zeitzone hat, und dadurch eine Abweichung zwischen
+    // Simulation und echter Uhr sieht.
+    const parts = luebeckTimeFormatter.formatToParts(simDate);
+
+    const h = Number(parts.find(p => p.type === 'hour')?.value ?? 0);
+    const m = Number(parts.find(p => p.type === 'minute')?.value ?? 0);
+
     const frac = (h + m / 60) / 24;
     return frac * CONFIG.TWO_PI - CONFIG.THREE_QUARTERS_PI;
 }

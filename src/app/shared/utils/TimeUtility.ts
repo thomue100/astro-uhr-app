@@ -93,30 +93,6 @@ export class TimeUtility {
      * @returns {object|null} { letter: string, saint: string }
      */
     static getDailyCalendarInfo(date: Date): any {
-        // Wenn Daten als Array vorliegen: älteres Format (Index-basierte Zugriffe)
-        if (Array.isArray(TimeUtility.DailyCalendarData)) {
-            const dayOfYear = TimeUtility.getDayOfYear(date);
-            const isLeap = TimeUtility.isLeapYear(date.getFullYear());
-            let index = dayOfYear - 1;
-
-            if (index < 0 || dayOfYear > 366) {
-                return { letter: 'N/A', saint: 'Ungültiges Datum' };
-            }
-
-            if (!isLeap && dayOfYear > 59) {
-                index = dayOfYear;
-            }
-
-            if (!TimeUtility.DailyCalendarData || index < 0 || index >= (TimeUtility.DailyCalendarData as any[]).length) {
-                if (dayOfYear === 60 && !isLeap) {
-                    return { letter: 'N/A', saint: 'Kein 29. Februar' };
-                }
-                return { letter: 'N/A', saint: 'Kalenderdaten nicht vorhanden' };
-            }
-
-            return (TimeUtility.DailyCalendarData as any[])[index];
-        }
-
         // Neues Format: keyed-Objekt mit deutschen Monatskürzeln wie "01. Jan"
         const day = String(date.getDate()).padStart(2, '0');
         const monthShortMap = ["Jan", "Feb", "Mär", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dez"];
