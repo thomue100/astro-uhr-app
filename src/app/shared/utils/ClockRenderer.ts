@@ -63,7 +63,15 @@ export class ClockRenderer {
       this.drawZodiacSigns(rSmall, combinedAngle, center);
       this.drawPointer(parseAngle(state.angleSun), 0, rLarge * 0.96, 'gold', center);
       this.drawSun(rLarge, parseAngle(state.angleSun), center);
-      this.drawMoon(rMoon, parseAngle(state.angleMoon), parseAngle(state.mondAlter), center);
+      // ⚠️ KORREKTUR: Vorher wurde hier "state.mondAlter" übergeben
+      // (der gerundete, für die Ziffernanzeige gedachte Wert, z. B.
+      // "Tag 17"). Für eine gleichmäßige Bildverteilung braucht
+      // drawMoon() aber den ungerundeten Bruchwert
+      // "state.mondAlterFractional" (z. B. 16,73) — der wird bereits
+      // vom ClockSimulationService berechnet und im AstroState
+      // mitgeliefert, wurde bisher nur nicht an drawMoon() weitergereicht.
+      this.drawMoon(rMoon, parseAngle(state.angleMoon), parseAngle(state.mondAlterFractional), center);
+
       this.drawPointer(parseAngle(state.angleMoon), 0, rMoon * 0.95, 'gold', center);
       this.drawHeilandImage(center);
     }
@@ -310,42 +318,84 @@ export class ClockRenderer {
     );
   }
 
-  drawMoon(radius: number, angle: number, days: number, center: { x: number; y: number }): void {
-    const ctx      = this.ctx;
-    const dynamicH = this.logicalSize * 0.04;
-    const dynamicW = dynamicH * (this.config?.moonDimensions?.aspectRatio ?? 1);
-    const HALF_PI  = this.config?.HALF_PI ?? Math.PI / 2;
+  /**
+     * ⚠️ KORREKTUR: Bildauswahl für die Mondphase.
+     *
+     * VORHER: idx = Math.floor(days) - 1
+     *   → "days" war ein ganzzahliger Tageszähler (1..30), passend zur
+     *     alten, falschen Zykluslänge von 30 Tagen. Jedes der 30 Bilder
+     *     deckte damit exakt "1 Tag" ab.
+     *
+     * JETZT: Die Zykluslänge ist auf Behrens' präziseren Wert
+     *   (≈29,530851 Tage) korrigiert (siehe config.ts). Ein einfaches
+     *   "Math.floor(days) - 1" würde jetzt nicht mehr sauber auf die
+     *   30 vorhandenen Bilder passen (29,53 ist kein Vielfaches von 30).
+     *
+     *   Deshalb wird der Bild-Index jetzt PROPORTIONAL berechnet:
+     *   "Wie weit bin ich (in Prozent) durch den aktuellen Zyklus
+     *   gewandert?" × "Anzahl vorhandener Bilder". So werden die
+     *   30 Bilder unabhängig von der genauen Zykluslänge immer
+     *   gleichmäßig über einen vollen Mondumlauf verteilt.
+     *
+     *   Wichtig: "days" muss hierfür der KONTINUIERLICHE Bruchwert sein
+     *   (astroState.mondAlterFractional, Bereich 0..MOON_CYCLE_DAYS),
+     *   nicht der gerundete Anzeige-Wert astroState.mondAlter.
+     *   → Aufrufer-Anpassung in drawClock() weiter unten!
+     */
+    drawMoon(radius: number, angle: number, days: number, center: { x: number; y: number }): void {
+      const ctx      = this.ctx;
+      const dynamicH = this.logicalSize * 0.04;
+      const dynamicW = dynamicH * (this.config?.moonDimensions?.aspectRatio ?? 1);
+      const HALF_PI  = this.config?.HALF_PI ?? Math.PI / 2;
 
-    const getMoonSymbol = (d: number): string => {
-      const symbols = ['🌘','🌗','🌖','🌕','🌔','🌓','🌒','🌑'];
-      const norm = ((d - 1 + 29.5) % 29.5);
-      return symbols[Math.floor(norm / (29.5 / 8))];
-    };
+      // Echte Zykluslänge aus der Konfiguration lesen (Fallback nur zur
+      // Sicherheit, falls config aus irgendeinem Grund fehlt).
+      const cycleLen = this.config?.MOON_CYCLE_DAYS ?? 29.530851063829787;
 
-    this.withContext(() => {
-      ctx.translate(center.x, center.y);
-      ctx.rotate(angle);
-      const x   = radius;
-      const idx = Math.max(0, Math.min(Math.floor(days) - 1, (this.images?.moonPhases?.length ?? 1) - 1));
-      const img = this.images?.moonPhases?.[idx];
+      // Emoji-Fallback (falls kein Bild geladen werden konnte): nutzt
+      // jetzt ebenfalls die echte Zykluslänge statt der alten,
+      // hart codierten "29.5".
+      const getMoonSymbol = (d: number): string => {
+        const symbols = ['🌘','🌗','🌖','🌕','🌔','🌓','🌒','🌑'];
+        const norm = ((d - 1 + cycleLen) % cycleLen);
+        return symbols[Math.floor(norm / (cycleLen / 8))];
+      };
 
-      ctx.save();
-      ctx.translate(x, 0);
-      ctx.rotate(HALF_PI);
-      if (img && img.complete && img.naturalWidth !== 0) {
-        ctx.drawImage(img, -dynamicW / 2, -dynamicH / 2, dynamicW, dynamicH);
-      } else {
-        const fontSize = dynamicH * 1.5;
-        ctx.font          = `${fontSize}px sans-serif`;
-        ctx.textAlign     = 'center';
-        ctx.textBaseline  = 'middle';
-        ctx.fillStyle     = 'silver';
-        ctx.fillText(getMoonSymbol(days), 0, 0);
-      }
-      ctx.restore();
-    });
-  }
+      this.withContext(() => {
+        ctx.translate(center.x, center.y);
+        ctx.rotate(angle);
+        const x = radius;
 
+        const phaseCount = this.images?.moonPhases?.length ?? 1;
+
+        // Anteil des Zyklus, der bereits "vergangen" ist (0.0 bis 1.0),
+        // multipliziert mit der Bilderanzahl → gleichmäßige Verteilung
+        // der 30 Bilder über die tatsächliche Zykluslänge.
+        const idx = Math.max(
+          0,
+          Math.min(
+            Math.floor((days / cycleLen) * phaseCount),
+            phaseCount - 1
+          )
+        );
+        const img = this.images?.moonPhases?.[idx];
+
+        ctx.save();
+        ctx.translate(x, 0);
+        ctx.rotate(HALF_PI);
+        if (img && img.complete && img.naturalWidth !== 0) {
+          ctx.drawImage(img, -dynamicW / 2, -dynamicH / 2, dynamicW, dynamicH);
+        } else {
+          const fontSize = dynamicH * 1.5;
+          ctx.font          = `${fontSize}px sans-serif`;
+          ctx.textAlign     = 'center';
+          ctx.textBaseline  = 'middle';
+          ctx.fillStyle     = 'silver';
+          ctx.fillText(getMoonSymbol(days), 0, 0);
+        }
+        ctx.restore();
+      });
+    }
   drawHeilandImage(center: { x: number; y: number }): void {
     const size = this.logicalSize * 0.29;
     this._drawRadialAsset(
