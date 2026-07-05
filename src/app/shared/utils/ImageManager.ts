@@ -52,13 +52,6 @@ export class ImageManager {
             });
         }
 
-        // 4. Ordner: mondphasen
-        this.images.moonPhases = Array.from({ length: moonCycleDays }, (_, i) => {
-            const img = new Image();
-            img.src = `assets/images/mondphasen/mond_${String(i + 1).padStart(2, '0')}.png`;
-            return img;
-        });
-
         // Alle Bilder für das Preloading sammeln
         this.allImagesArray = [
             this.images.sun,

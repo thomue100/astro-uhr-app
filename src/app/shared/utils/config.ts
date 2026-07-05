@@ -63,7 +63,8 @@ export const AstroConfig = {
     zodiacData: {
         names: ["widder", "stier", "zwilling", "krebs", "loewe", "jungfrau", "waage", "skorpion", "schlangentraeger", "schuetze", "steinbock", "wassermann", "fische"],
         angles: {
-            widder: -Math.PI / 2 - (36.7 / 2 + 27.9 + 20.1 + 35.7 + 44.1 + 23.0 + 6.7 + 18.6 + 33.4 + 27.9 + 24.2 + 37.2 / 2) * Math.PI / 180 + (-1.5 * Math.PI / 180),
+           // widder: -Math.PI / 2 - (36.7 / 2 + 27.9 + 20.1 + 35.7 + 44.1 + 23.0 + 6.7 + 18.6 + 33.4 + 27.9 + 24.2 + 37.2 / 2) * Math.PI / 180 + (-1.5 * Math.PI / 180),
+            widder: -Math.PI / 2 - (36.7 / 2 + 27.9 + 20.1 + 35.7 + 44.1 + 23.0 + 6.7 + 18.6 + 33.4 + 27.9 + 24.2 + 37.2 + 24.7 / 2) * Math.PI / 180 + (-1.5 * Math.PI / 180),
             stier: -Math.PI / 2 + (-1 * Math.PI / 180),
             zwilling: -Math.PI / 2 - (36.7 / 2 + 27.9 / 2) * Math.PI / 180 + (-3 * Math.PI / 180),
             krebs: -Math.PI / 2 - (36.7 / 2 + 27.9 + 20.1 / 2) * Math.PI / 180 + (-4.3 * Math.PI / 180),

@@ -342,60 +342,95 @@ export class ClockRenderer {
      *   nicht der gerundete Anzeige-Wert astroState.mondAlter.
      *   → Aufrufer-Anpassung in drawClock() weiter unten!
      */
-    drawMoon(radius: number, angle: number, days: number, center: { x: number; y: number }): void {
-      const ctx      = this.ctx;
-      const dynamicH = this.logicalSize * 0.04;
-      const dynamicW = dynamicH * (this.config?.moonDimensions?.aspectRatio ?? 1);
-      const HALF_PI  = this.config?.HALF_PI ?? Math.PI / 2;
+    /**
+     * Ersetzt die 30 Bild-Assets durch eine prozedurale, golden schimmernde
+     * Mondkugel. Vorteile gegenüber den Bildern:
+     *  - keine Diskretisierung mehr nötig (kein Math.floor/Index-Mapping,
+     *    siehe unsere vorherige Korrektur) — der volle Bruchwert
+     *    "mondAlterFractional" fließt direkt und stufenlos ein.
+     *  - keine 30 Bilddateien zu laden/pflegen.
+     *
+     */
+  /**
+   * Mondkugel in der Kugelschale am Mondzeiger — golden/3D gerendert,
+   * ohne die 30 Bild-Assets.
+   *
+   * Die Kugel sitzt fest in einer Halbkugelschale am Zeiger und dreht sich
+   * daher zwangsläufig MIT dem Zeiger mit ("lokal unten" zeigt immer zur
+   * Erde in der Mitte) — das ist keine Vereinfachung, sondern die
+   * mechanische Realität der Lagerung, wie in der Originalzeichnung zu
+   * sehen. Diese Rotation war schon in der ursprünglichen Vorlage korrekt
+   * so vorgesehen.
+   *
+   * WICHTIG für später: Diese Zeiger-Rotation allein reicht nicht aus, um
+   * die Phase korrekt relativ zur SONNE zu zeigen — dafür ist zusätzlich
+   * die von Behrens berechnete Differenzrotation Mond:Sonne
+   * (MOON_TO_SUN_RATIO, siehe config.ts) nötig, die die Kugel INNERHALB
+   * der Schale noch einmal unabhängig weiterdreht. Sobald ein echter
+   * Sonnen-Zeiger/-winkel in der App vorhanden ist, müsste hier zusätzlich
+   * um den Winkel zwischen Sonnen- und Mondzeiger nachgedreht werden
+   * (ctx.rotate(angle + Math.PI/2 + differenzWinkel)). Für dieses isolierte
+   * Mond-Demo ohne Sonnenzeiger bilden wir zunächst nur die reine
+   * Schalen-Mechanik nach.
+   */
+  drawMoon(radius: number, angle: number, days: number, center: { x: number; y: number }): void {
+    const ctx = this.ctx;
+    const r = this.logicalSize * 0.022;
+    const cycleLen = this.config?.MOON_CYCLE_DAYS ?? 29.530851063829787;
+    const phase = days / cycleLen;
+    const waxing = phase < 0.5;
 
-      // Echte Zykluslänge aus der Konfiguration lesen (Fallback nur zur
-      // Sicherheit, falls config aus irgendeinem Grund fehlt).
-      const cycleLen = this.config?.MOON_CYCLE_DAYS ?? 29.530851063829787;
+    const x = center.x + Math.cos(angle) * radius;
+    const y = center.y + Math.sin(angle) * radius;
 
-      // Emoji-Fallback (falls kein Bild geladen werden konnte): nutzt
-      // jetzt ebenfalls die echte Zykluslänge statt der alten,
-      // hart codierten "29.5".
-      const getMoonSymbol = (d: number): string => {
-        const symbols = ['🌘','🌗','🌖','🌕','🌔','🌓','🌒','🌑'];
-        const norm = ((d - 1 + cycleLen) % cycleLen);
-        return symbols[Math.floor(norm / (cycleLen / 8))];
-      };
+    // Highlight-Versatz in LOKALEN Kugelkoordinaten -> dreht sich mit der
+    // Kugel in der Schale mit, wie ein echter Lichtreflex auf der
+    // rotierenden, polierten Oberfläche.
+    const hlx = -r * 0.35, hly = -r * 0.35;
 
-      this.withContext(() => {
-        ctx.translate(center.x, center.y);
-        ctx.rotate(angle);
-        const x = radius;
+    const gold = ctx.createRadialGradient(hlx, hly, r * 0.05, 0, 0, r * 1.05);
+    gold.addColorStop(0, '#FFF3C4');
+    gold.addColorStop(0.35, '#FFD866');
+    gold.addColorStop(0.7, '#D4A017');
+    gold.addColorStop(1, '#8A6A14');
 
-        const phaseCount = this.images?.moonPhases?.length ?? 1;
+    const dark = ctx.createRadialGradient(hlx * 0.5, hly * 0.5, r * 0.05, 0, 0, r * 1.05);
+    dark.addColorStop(0, '#3A3D44');
+    dark.addColorStop(0.6, '#22242A');
+    dark.addColorStop(1, '#131418');
 
-        // Anteil des Zyklus, der bereits "vergangen" ist (0.0 bis 1.0),
-        // multipliziert mit der Bilderanzahl → gleichmäßige Verteilung
-        // der 30 Bilder über die tatsächliche Zykluslänge.
-        const idx = Math.max(
-          0,
-          Math.min(
-            Math.floor((days / cycleLen) * phaseCount),
-            phaseCount - 1
-          )
-        );
-        const img = this.images?.moonPhases?.[idx];
-
-        ctx.save();
-        ctx.translate(x, 0);
-        ctx.rotate(HALF_PI);
-        if (img && img.complete && img.naturalWidth !== 0) {
-          ctx.drawImage(img, -dynamicW / 2, -dynamicH / 2, dynamicW, dynamicH);
-        } else {
-          const fontSize = dynamicH * 1.5;
-          ctx.font          = `${fontSize}px sans-serif`;
-          ctx.textAlign     = 'center';
-          ctx.textBaseline  = 'middle';
-          ctx.fillStyle     = 'silver';
-          ctx.fillText(getMoonSymbol(days), 0, 0);
-        }
-        ctx.restore();
-      });
+    let leftFill, rightFill, ellipseFill;
+    if (waxing) {
+      leftFill = dark; rightFill = gold;
+      ellipseFill = phase < 0.25 ? dark : gold;
+    } else {
+      leftFill = gold; rightFill = dark;
+      ellipseFill = phase < 0.75 ? gold : dark;
     }
+
+    this.withContext(() => {
+      ctx.translate(x, y);
+      // Kugelschale am Zeiger: "lokal unten" zeigt immer zur Erde (Mitte) —
+      // wiederhergestellt wie im Original.
+      ctx.rotate(angle + Math.PI / 2);
+
+      ctx.beginPath(); ctx.arc(0, 0, r, Math.PI / 2, Math.PI * 1.5);
+      ctx.fillStyle = leftFill; ctx.fill();
+
+      ctx.beginPath(); ctx.arc(0, 0, r, Math.PI * 1.5, Math.PI / 2);
+      ctx.fillStyle = rightFill; ctx.fill();
+
+      const termAngle = phase * 2 * Math.PI;
+      const rx = r * Math.abs(Math.cos(termAngle));
+      ctx.beginPath(); ctx.ellipse(0, 0, rx, r, 0, 0, 2 * Math.PI);
+      ctx.fillStyle = ellipseFill; ctx.fill();
+
+      ctx.beginPath(); ctx.arc(0, 0, r, 0, 2 * Math.PI);
+      ctx.strokeStyle = 'rgba(255,216,102,0.55)';
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+    });
+  }
   drawHeilandImage(center: { x: number; y: number }): void {
     const size = this.logicalSize * 0.29;
     this._drawRadialAsset(
