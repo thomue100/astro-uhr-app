@@ -1,4 +1,3 @@
-<!-- src/app/features/info-modal/info-modal.component.html -->
 <div class="modal-step">
   <strong style="color: #ffcc33; font-size: 1.2em;">
     {{ 'modal_intro.headline' | translate }}
@@ -15,8 +14,14 @@
   <p style="font-size: 0.9em; margin-top: 5px;">
     {{ 'modal_intro.overview_text' | translate }}
   </p>
+  <ul style="font-size: 0.9em; margin-top: 5px; padding-left: 20px; color: white;">
+    <li>{{ 'modal_intro.function_time' | translate }}</li>
+    <li>{{ 'modal_intro.function_astro' | translate }}</li>
+    <li>{{ 'modal_intro.function_calendar' | translate }}</li>
+    <li>{{ 'modal_intro.function_faith' | translate }}</li>
+    <li>{{ 'modal_intro.function_art' | translate }}</li>
+  </ul>
 
-  <!-- 1. Uhrscheibe -->
   <div style="margin-top: 15px;">
     <strong style="color: #ffcc33; font-size: 1.1em;">
       {{ 'modal_intro.dial_title' | translate }}
@@ -42,9 +47,11 @@
         {{ 'modal_intro.dial_moonphase' | translate }}
       </li>
     </ul>
+    <p style="font-size: 0.9em; margin-top: 8px;">
+      {{ 'modal_intro.dial_center' | translate }}
+    </p>
   </div>
 
-  <!-- 2. Kalenderraum -->
   <div style="margin-top: 15px;">
     <strong style="color: #ffcc33; font-size: 1.1em;">
       {{ 'modal_intro.calendar_title' | translate }}
@@ -58,29 +65,12 @@
       <li>{{ 'modal_intro.calendar_leap' | translate }}</li>
       <li>{{ 'modal_intro.calendar_eclipse' | translate }}</li>
     </ul>
-  </div>
-
-  <!-- Neu: Legende für die Symbole der kompakten Kalenderübersicht -->
-  <div style="margin-top: 15px;">
-    <strong style="color: #ffcc33; font-size: 1.1em;">
-      {{ 'modal_intro.symbols_title' | translate }}
-    </strong>
-    <p style="font-size: 0.9em; margin-top: 5px;">
-      {{ 'modal_intro.symbols_intro' | translate }}
+    <p style="font-size: 0.9em; margin-top: 8px;">
+      {{ 'modal_intro.calendar_corners' | translate }}
+      {{ 'modal_intro.calendar_center' | translate }}
     </p>
-    <ul style="font-size: 0.9em; margin-top: 5px; padding-left: 20px; color: white;">
-      <li>📅 — {{ 'modal_intro.symbols_date' | translate }}</li>
-      <li>📆 — {{ 'modal_intro.symbols_easter' | translate }}</li>
-      <li>🔢 — {{ 'modal_intro.symbols_golden' | translate }}</li>
-      <li>🔠 — {{ 'modal_intro.symbols_sunday_letter' | translate }}</li>
-      <li>🔤 — {{ 'modal_intro.symbols_day_letter' | translate }}</li>
-      <li>🙏 — {{ 'modal_intro.symbols_saint' | translate }}</li>
-      <li>☀️ — {{ 'modal_intro.symbols_solar_eclipse' | translate }}</li>
-      <li>🌕 — {{ 'modal_intro.symbols_lunar_eclipse' | translate }}</li>
-    </ul>
   </div>
 
-  <!-- 3. Figurenaufsatz -->
   <div style="margin-top: 15px;">
     <strong style="color: #ffcc33; font-size: 1.1em;">
       {{ 'modal_intro.figure_title' | translate }}
@@ -97,7 +87,6 @@
 
   <hr style="border-top: 1px solid #1a4261; margin-top: 20px; margin-bottom: 20px;"/>
 
-  <!-- II. Bedienelemente -->
   <strong style="color: #ffcc33; font-size: 1.2em;">
     {{ 'modal_intro.controls_title' | translate }}
   </strong>
@@ -133,11 +122,27 @@
     <strong style="color: #ffcc33; font-size: 1.1em;">
       {{ 'modal_intro.ctrl_cal_title' | translate }}
     </strong>
-    <ul style="font-size: 0.9em; margin-top: 5px; padding-left: 20px; color: white;">
+    <ul style="margin-top: 5px; padding-left: 20px; color: white;">
       <li>{{ 'modal_intro.ctrl_cal_show' | translate }}</li>
       <li>{{ 'modal_intro.ctrl_cal_data' | translate }}</li>
       <li>{{ 'modal_intro.ctrl_cal_eclipse' | translate }}</li>
     </ul>
+
+    <div style="margin-top: 10px; padding-left: 5px;">
+      <strong style="color: #ffcc33; font-size: 1.0em;">
+        {{ 'modal_intro.symbols_title' | translate }}
+      </strong>
+      <ul style="font-size: 0.9em; margin-top: 5px; padding-left: 0; color: white; list-style-type: none;">
+        <li>📅 — {{ 'modal_intro.symbols_date' | translate }}</li>
+        <li>📆 — {{ 'modal_intro.symbols_easter' | translate }}</li>
+        <li>🔢 — {{ 'modal_intro.symbols_golden' | translate }}</li>
+        <li>🔠 — {{ 'modal_intro.symbols_sunday_letter' | translate }}</li>
+        <li>🔤 — {{ 'modal_intro.symbols_day_letter' | translate }}</li>
+        <li>🙏 — {{ 'modal_intro.symbols_saint' | translate }}</li>
+        <li>☀️ — {{ 'modal_intro.symbols_solar_eclipse' | translate }}</li>
+        <li>🌕 — {{ 'modal_intro.symbols_lunar_eclipse' | translate }}</li>
+      </ul>
+    </div>
   </div>
 
   <div style="margin-top: 15px;">
@@ -162,13 +167,8 @@
 
   <hr style="border-top: 1px solid #1a4261; margin-top: 20px; margin-bottom: 20px;"/>
 
-  <!-- III. Technische Hinweise -->
-  <strong style="color: #ffcc33; font-size: 1.2em;">
-    {{ 'modal_intro.tech_title' | translate }}
-  </strong>
-  <ul style="font-size: 0.9em; margin-top: 5px; padding-left: 20px; color: white;">
-    <li>{{ 'modal_intro.tech_data' | translate }}</li>
-    <li>{{ 'modal_intro.tech_browser' | translate }}</li>
-    <li>{{ 'modal_intro.tech_mobile' | translate }}</li>
-  </ul>
+  <p style="font-size: 0.78em; color: #6688aa; margin-top: 10px; line-height: 1.5;">
+    <strong>{{ 'modal_intro.sources_title' | translate }}</strong><br>
+    {{ 'modal_intro.sources_text' | translate }}
+  </p>
 </div>

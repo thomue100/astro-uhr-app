@@ -20,6 +20,7 @@ export class HistoryModalComponent {
       alt:      this.t.translate('modal_history.img_title'),
       title:    this.t.translate('modal_history.img_title'),
       subtitle: this.t.translate('modal_history.img_subtitle'),
+      credit:   '© Müller',
     };
   }
 
@@ -30,6 +31,7 @@ export class HistoryModalComponent {
       alt:      this.t.translate('modal_history.img_giebel_title'),
       title:    this.t.translate('modal_history.img_giebel_title'),
       subtitle: this.t.translate('modal_history.img_giebel_subtitle'),
+      credit:   '© Müller',
     };
   }
 
@@ -40,6 +42,7 @@ export class HistoryModalComponent {
       alt:      this.t.translate('modal_history.img_getriebe_title'),
       title:    this.t.translate('modal_history.img_getriebe_title'),
       subtitle: this.t.translate('modal_history.img_getriebe_subtitle'),
+      credit:   '© Müller',
     };
   }
 
@@ -50,6 +53,7 @@ export class HistoryModalComponent {
       alt:      this.t.translate('modal_history.img_uhrwerk_title'),
       title:    this.t.translate('modal_history.img_uhrwerk_title'),
       subtitle: this.t.translate('modal_history.img_uhrwerk_subtitle'),
+      credit:   '© Müller',
     };
   }
 
@@ -60,6 +64,7 @@ export class HistoryModalComponent {
       alt:      this.t.translate('modal_history.img_figurenumlauf_title'),
       title:    this.t.translate('modal_history.img_figurenumlauf_title'),
       subtitle: this.t.translate('modal_history.img_figurenumlauf_subtitle'),
+      credit:   '© Müller',
     };
   }
 }

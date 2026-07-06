@@ -8,10 +8,15 @@
     {{ 'modal_history.intro' | translate }}
   </p>
 
+  <!-- ═══ VORGESCHICHTE ═══ -->
   <h3 style="color: #ffcc33; font-size: 1.1em; margin-top: 15px;">
     {{ 'modal_history.predecessors_title' | translate }}
   </h3>
   <ul style="font-size: 0.9em; margin-top: 5px; padding-left: 20px;">
+    <li style="margin-bottom: 5px;">
+      <strong>{{ 'modal_history.clock0_label' | translate }}</strong>
+      {{ 'modal_history.clock0_text' | translate }}
+    </li>
     <li style="margin-bottom: 5px;">
       <strong>{{ 'modal_history.clock1_label' | translate }}</strong>
       {{ 'modal_history.clock1_text' | translate }}
@@ -30,10 +35,16 @@
     </li>
   </ul>
 
+  <p style="font-size: 0.9em; margin-top: 10px; padding: 8px 10px; background-color: #1a4261; border-left: 4px solid #00aaff;">
+    <strong style="color: #ffcc33;">{{ 'modal_history.predecessors_special_title' | translate }}</strong><br>
+    {{ 'modal_history.predecessors_special_text' | translate }}
+  </p>
+
   <app-image-viewer [config]="stAnnenImage" />
 
   <hr style="border-top: 1px solid #1a4261; margin-top: 20px; margin-bottom: 20px;"/>
 
+  <!-- ═══ NEUBAU ═══ -->
   <h3 style="color: #ffcc33; font-size: 1.1em; margin-top: 15px;">
     {{ 'modal_history.rebuild_title' | translate }}
   </h3>
@@ -50,14 +61,18 @@
       <strong>{{ 'modal_history.rebuild3_label' | translate }}</strong>
       {{ 'modal_history.rebuild3_text' | translate }}
     </li>
+    <li style="margin-bottom: 5px;">
+      <strong>{{ 'modal_history.rebuild4_label' | translate }}</strong>
+      {{ 'modal_history.rebuild4_text' | translate }}
+    </li>
   </ul>
 
-  <!-- Neu: Getriebe und Uhrwerk passend zum Technik-Abschnitt -->
   <app-image-viewer [config]="getriebeImage" />
   <app-image-viewer [config]="uhrwerkImage" />
 
   <hr style="border-top: 1px solid #1a4261; margin-top: 20px; margin-bottom: 20px;"/>
 
+  <!-- ═══ KUNST: ASTROLOGIE VS. ASTRONOMIE ═══ -->
   <h3 style="color: #ffcc33; font-size: 1.1em; margin-top: 15px;">
     {{ 'modal_history.art_title' | translate }}
   </h3>
@@ -81,6 +96,14 @@
       <strong>{{ 'modal_history.art_craft_label' | translate }}</strong>
       {{ 'modal_history.art_craft_text' | translate }}
     </li>
+    <li style="margin-bottom: 5px;">
+      <strong>{{ 'modal_history.art_precession_label' | translate }}</strong>
+      {{ 'modal_history.art_precession_text' | translate }}
+    </li>
+    <li style="margin-bottom: 5px;">
+      <strong>{{ 'modal_history.art_names_label' | translate }}</strong>
+      {{ 'modal_history.art_names_text' | translate }}
+    </li>
   </ul>
 
   <blockquote style="font-size: 0.9em; margin-top: 15px; margin-bottom: 10px;
@@ -93,6 +116,9 @@
     </p>
   </blockquote>
 
+  <hr style="border-top: 1px solid #1a4261; margin-top: 20px; margin-bottom: 20px;"/>
+
+  <!-- ═══ FIGURENUMGANG ═══ -->
   <h4 style="color: #ffcc33; font-size: 1.0em; margin-top: 15px;">
     {{ 'modal_history.figures_title' | translate }}
   </h4>
@@ -102,8 +128,9 @@
       {{ 'modal_history.fig1_text' | translate }}
     </li>
   </ul>
-  <!-- Neu: Figurenumlauf passend zum Abschnitt über den Figurenumgang -->
+
   <app-image-viewer [config]="figurenumlaufImage" />
+
   <ul style="font-size: 0.9em; margin-top: 5px; padding-left: 20px;">
     <li style="margin-bottom: 5px;">
       <strong>{{ 'modal_history.fig2_label' | translate }}</strong>
@@ -113,7 +140,23 @@
       <strong>{{ 'modal_history.fig3_label' | translate }}</strong>
       {{ 'modal_history.fig3_text' | translate }}
     </li>
+    <li style="margin-bottom: 5px;">
+      <strong>{{ 'modal_history.fig4_label' | translate }}</strong>
+      {{ 'modal_history.fig4_text' | translate }}
+    </li>
+    <li style="margin-bottom: 5px;">
+      <strong>{{ 'modal_history.fig5_label' | translate }}</strong>
+      {{ 'modal_history.fig5_text' | translate }}
+    </li>
   </ul>
-  <!-- Neu: Hero-Bild des Figurenaufsatzes/Giebels als visueller Einstieg -->
+
   <app-image-viewer [config]="giebelImage" />
+
+  <hr style="border-top: 1px solid #1a4261; margin-top: 20px; margin-bottom: 20px;"/>
+
+  <!-- ═══ QUELLEN ═══ -->
+  <p style="font-size: 0.78em; color: #6688aa; margin-top: 10px; line-height: 1.5;">
+    <strong>{{ 'modal_history.sources_title' | translate }}</strong><br>
+    {{ 'modal_history.sources_text' | translate }}
+  </p>
 </div>

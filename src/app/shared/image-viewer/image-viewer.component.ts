@@ -10,6 +10,11 @@ export interface ImageViewerConfig {
   alt: string;
   title: string;
   subtitle?: string;
+  /**
+   * Optionaler, dezenter Bildnachweis (z.B. "© Müller").
+   * Wird unterhalb von Titel/Untertitel eingeblendet, sofern gesetzt.
+   */
+  credit?: string;
 }
 
 @Component({
@@ -23,6 +28,9 @@ export interface ImageViewerConfig {
         <span class="iv-caption-title">{{ config.title }}</span>
         @if (config.subtitle) {
           <span class="iv-caption-sub">{{ config.subtitle }}</span>
+        }
+        @if (config.credit) {
+          <span class="iv-caption-credit">{{ config.credit }}</span>
         }
       </div>
 
@@ -88,6 +96,13 @@ export interface ImageViewerConfig {
     }
     .iv-caption-title { color: #ffcc33; font-size: 0.85em; font-weight: 700; }
     .iv-caption-sub   { color: #88aacc; font-size: 0.78em; line-height: 1.4; }
+    /* Dezenter Bildnachweis: bewusst kleiner/unauffälliger als Titel/Untertitel */
+    .iv-caption-credit {
+      color: #5a7592;
+      font-size: 0.68em;
+      font-style: italic;
+      margin-top: 2px;
+    }
     .iv-stage {
       position: relative;
       width: 100%;
