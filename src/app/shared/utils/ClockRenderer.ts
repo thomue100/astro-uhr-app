@@ -305,7 +305,7 @@ export class ClockRenderer {
   }
 
   drawSun(radius: number, angle: number, center: { x: number; y: number }): void {
-    const size = this.logicalSize * 0.05;
+    const size = this.logicalSize * 0.1;
     this._drawRadialAsset(
       center, angle, radius - size / 2,
       this.images?.sun, size,
