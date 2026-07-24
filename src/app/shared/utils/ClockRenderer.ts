@@ -62,7 +62,7 @@ export class ClockRenderer {
       this.drawBackgroundImage(rLarge, combinedAngle, center);
       this.drawZodiacSigns(rSmall, combinedAngle, center);
       this.drawPointer(parseAngle(state.angleSun), 0, rLarge * 0.96, 'gold', center);
-      this.drawSun(rLarge, parseAngle(state.angleSun), center);
+      this.drawSun(rLarge * 1.13, parseAngle(state.angleSun), center);
       // ⚠️ KORREKTUR: Vorher wurde hier "state.mondAlter" übergeben
       // (der gerundete, für die Ziffernanzeige gedachte Wert, z. B.
       // "Tag 17"). Für eine gleichmäßige Bildverteilung braucht
