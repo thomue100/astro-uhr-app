@@ -13,7 +13,8 @@
     "intro": "ℹ️ Introduction",
     "simulation": "Simulation",
     "calendar": "Calendar",
-    "history": "ℹ️ Art & History"
+    "history": "ℹ️ Art & History",
+    "model3d": "⚙️ 3D working model"
   },
   "simulation": {
     "date_label": "Date and time:",
@@ -245,5 +246,107 @@
     "because_before": "Since {day}. {month} is before March 1st, the letter {sb} applies.",
     "because_after": "Since {day}. {month} is after February 28th, the letter {sb} applies.",
     "uniform": "For the year {year} a uniform Sunday letter applies: {sb}."
+  },
+  "model3d": {
+    "loading": "Loading 3D model …",
+    "title": "Astronomical Clock of St. Mary's, Lübeck",
+    "subtitle": "Working model of the planetarium, based on the gear calculation by Paul Behrens",
+    "display": "Clock reading",
+    "time_cet": "Time (CET)",
+    "date": "Date",
+    "sun_in": "Sun is in",
+    "constellation": "",
+    "moon": "Moon",
+    "moon_age": "{age} days old",
+    "time": "Time",
+    "running": "Running",
+    "paused": "Paused",
+    "speed": "Speed",
+    "speeds": {
+      "s1": "Real time",
+      "s60": "1 minute per second",
+      "s600": "10 minutes per second",
+      "s3600": "1 hour per second",
+      "s21600": "6 hours per second",
+      "s86400": "1 day per second"
+    },
+    "jump": {
+      "hour": "+1 hour",
+      "day": "+1 day",
+      "month": "+1 lunar month",
+      "year": "+1 year"
+    },
+    "set_clock": "Set the clock (CET)",
+    "now": "Now",
+    "view": "View",
+    "views": {
+      "start": "Oblique view",
+      "front": "Dial",
+      "side": "Side as in sketch",
+      "back": "Gear train"
+    },
+    "glass": "Transparent discs",
+    "christ": "Figure of Christ",
+    "labels": "Labels",
+    "gearing": "Gear train",
+    "shaft_teeth": "Shaft and tooth counts",
+    "rev_day": "Rev./day",
+    "trains": {
+      "drv": "Drive shaft",
+      "sun": "Sun tube with sun hand",
+      "csa": "Zodiac countershaft",
+      "zod": "Zodiac tube with star disc",
+      "csb": "Moon countershaft",
+      "moon": "Moon shaft with moon hand"
+    },
+    "teeth": {
+      "drv": "Pinion {z}",
+      "sun": "{z}",
+      "csa": "{z} fixed together",
+      "zod": "{z}",
+      "csb": "{z} fixed together",
+      "moon": "{z}"
+    },
+    "note_zodiac": "<b>Zodiac:</b> 293/36 × 60/487 = 1465 : 1461. In 365¼ days the star disc turns 366¼ times.",
+    "note_moon": "<b>Moon:</b> 298/40 × 45/347 = 6705 : 6940. In 19 years the moon falls behind the sun 235 times, so a lunar month lasts 29.532 days.",
+    "note_ball": "<b>Moon ball:</b> A bevel gear at the front of the sun tube meshes at a right angle with an equal bevel gear on the shaft that runs inside the tubular moon hand. Because the moon falls behind the sun, the gear rolls along and turns the ball once per lunar month.",
+    "canvas_label": "Three-dimensional model of the gear train",
+    "hint": "Drag to rotate · mouse wheel or two fingers to zoom · Shift + drag to pan",
+    "no_webgl": "The 3D model needs WebGL, which this browser does not currently provide.",
+    "signs": {
+      "stier": "Taurus",
+      "zwillinge": "Gemini",
+      "krebs": "Cancer",
+      "loewe": "Leo",
+      "jungfrau": "Virgo",
+      "waage": "Libra",
+      "skorpion": "Scorpius",
+      "schlangentraeger": "Ophiuchus",
+      "schuetze": "Sagittarius",
+      "steinbock": "Capricornus",
+      "wassermann": "Aquarius",
+      "fische": "Pisces",
+      "widder": "Aries"
+    },
+    "phases": {
+      "new": "New moon",
+      "waxing_crescent": "Waxing crescent",
+      "first_quarter": "First quarter",
+      "waxing_gibbous": "Waxing gibbous",
+      "full": "Full moon",
+      "waning_gibbous": "Waning gibbous",
+      "last_quarter": "Last quarter",
+      "waning_crescent": "Waning crescent"
+    },
+    "tags": {
+      "drive": "Drive · 1 revolution per hour",
+      "bearing": "Ball bearing",
+      "plates": "Plates",
+      "dial": "Dial",
+      "bevel": "Bevel gears 1 : 1",
+      "star_disc": "Star disc with zodiac",
+      "sun": "Sun",
+      "moon": "Moon"
+    }
   }
 }

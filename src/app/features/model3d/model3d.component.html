@@ -1,0 +1,96 @@
+<!-- src/app/features/model3d/model3d.component.html -->
+<div class="m3d" role="dialog" aria-modal="true" [attr.aria-label]="'model3d.title' | translate">
+  <aside class="board">
+    <header class="head">
+      <div>
+        <h2>{{ 'model3d.title' | translate }}</h2>
+        <p class="sub">{{ 'model3d.subtitle' | translate }}</p>
+      </div>
+      <button type="button" class="x" (click)="close.emit()" [title]="'modal.close' | translate"
+              [attr.aria-label]="'modal.close' | translate">×</button>
+    </header>
+
+    <section>
+      <h3>{{ 'model3d.display' | translate }}</h3>
+      <dl class="read">
+        <dt>{{ 'model3d.time_cet' | translate }}</dt><dd class="clock">{{ clockText() }}</dd>
+        <dt>{{ 'model3d.date' | translate }}</dt><dd>{{ dateText() }}</dd>
+        <dt>{{ 'model3d.sun_in' | translate }}</dt>
+        <dd>{{ 'model3d.constellation' | translate }} {{ ('model3d.signs.' + signKey()) | translate }}</dd>
+        <dt>{{ 'model3d.moon' | translate }}</dt>
+        <dd>{{ ('model3d.phases.' + phaseKey()) | translate }} · {{ 'model3d.moon_age' | translate: { age: moonAgeText() } }}</dd>
+      </dl>
+    </section>
+
+    <section>
+      <h3>{{ 'model3d.time' | translate }}</h3>
+      <div class="row">
+        <button type="button" [attr.aria-pressed]="playing()" (click)="togglePlay()">
+          {{ (playing() ? 'model3d.running' : 'model3d.paused') | translate }}
+        </button>
+        <select [attr.aria-label]="'model3d.speed' | translate" (change)="setSpeed($any($event.target).value)">
+          @for (s of speeds; track s) {
+            <option [value]="s" [selected]="s === speed()">{{ ('model3d.speeds.s' + s) | translate }}</option>
+          }
+        </select>
+      </div>
+      <div class="row">
+        @for (j of jumps; track j[0]) {
+          <button type="button" (click)="jump(j[1])">{{ ('model3d.jump.' + j[0]) | translate }}</button>
+        }
+      </div>
+      <label class="f" for="m3d-when">{{ 'model3d.set_clock' | translate }}</label>
+      <div class="row">
+        <input #when id="m3d-when" type="datetime-local" (change)="setWhen($any($event.target).value)">
+        <button type="button" (click)="now()">{{ 'model3d.now' | translate }}</button>
+      </div>
+    </section>
+
+    <section>
+      <h3>{{ 'model3d.view' | translate }}</h3>
+      <div class="row">
+        @for (v of views; track v) {
+          <button type="button" (click)="setView(v)">{{ ('model3d.views.' + v) | translate }}</button>
+        }
+      </div>
+      <div class="row">
+        <button type="button" [attr.aria-pressed]="glass()" (click)="toggleGlass()">{{ 'model3d.glass' | translate }}</button>
+        <button type="button" [attr.aria-pressed]="heil()" (click)="toggleHeil()">{{ 'model3d.christ' | translate }}</button>
+        <button type="button" [attr.aria-pressed]="tags()" (click)="toggleTags()">{{ 'model3d.labels' | translate }}</button>
+      </div>
+    </section>
+
+    <section>
+      <h3>{{ 'model3d.gearing' | translate }}</h3>
+      <table>
+        <thead>
+          <tr><th>{{ 'model3d.shaft_teeth' | translate }}</th><th class="n">{{ 'model3d.rev_day' | translate }}</th></tr>
+        </thead>
+        <tbody>
+          @for (r of trains; track r.k) {
+            <tr tabindex="0" (mouseenter)="highlight(r.k)" (focus)="highlight(r.k)"
+                (mouseleave)="highlight(null)" (blur)="highlight(null)">
+              <td>
+                <span class="chip" [style.background]="colors[r.k]"></span>{{ ('model3d.trains.' + r.k) | translate }}
+                <span class="teeth">{{ ('model3d.teeth.' + r.k) | translate: { z: r.teeth } }}</span>
+              </td>
+              <td class="n">{{ rate(r) }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+      <p class="note" [innerHTML]="'model3d.note_zodiac' | translate"></p>
+      <p class="note" [innerHTML]="'model3d.note_moon' | translate"></p>
+      <p class="note" [innerHTML]="'model3d.note_ball' | translate"></p>
+    </section>
+  </aside>
+
+  <main class="stage" #stage>
+    <canvas #gl [attr.aria-label]="'model3d.canvas_label' | translate"></canvas>
+    <div #tagLayer></div>
+    <div class="hint">{{ 'model3d.hint' | translate }}</div>
+    @if (webglError()) {
+      <div class="err">{{ 'model3d.no_webgl' | translate }}</div>
+    }
+  </main>
+</div>

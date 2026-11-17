@@ -11,8 +11,9 @@ import { ClockSimulationService } from '../../core/services/clock-simulation.ser
 import { TranslationService } from '../../core/services/translation.service';
 import { TranslatePipe } from '../../shared/pipes/translate.pipe';
 import { TimeUtility } from '../../shared/utils/TimeUtility';
+import { Model3dComponent } from '../model3d/model3d.component';
 
-type ModalType = 'info' | 'history' | 'calendar' | null;
+type ModalType = 'info' | 'history' | 'calendar' | 'model3d' | null;
 type ActivePanel = 'simulation' | 'calendar' | 'none';
 
 @Component({
@@ -27,6 +28,7 @@ type ActivePanel = 'simulation' | 'calendar' | 'none';
     CalendarModalComponent,
     SimulationPanelComponent,
     CalendarPanelComponent,
+    Model3dComponent,
   ],
   templateUrl: './controls.component.html',
   styleUrls: ['./controls.component.css'],

@@ -41,6 +41,13 @@
     </div>
   </div>
 
+  <!-- 3D-Funktionsmodell des Räderwerks -->
+  <div id="model3dPanel">
+    <div class="controls-header" (click)="openModal('model3d')">
+      {{ 'nav.model3d' | translate }}
+    </div>
+  </div>
+
   <!-- Kunst & Geschichte -->
   <div id="historyPanel">
     <div class="controls-header" (click)="openModal('history')">
@@ -79,4 +86,13 @@
       <button (click)="closeModal()">{{ 'modal.close' | translate }}</button>
     </div>
   </app-modal>
+}
+
+<!-- 3D-Modell: eigener Chunk (three.js), wird erst beim Öffnen geladen -->
+@if (activeModal() === 'model3d') {
+  @defer (on immediate) {
+    <app-model3d (close)="closeModal()" />
+  } @loading (minimum 200ms) {
+    <div class="modal-overlay">{{ 'model3d.loading' | translate }}</div>
+  }
 }
