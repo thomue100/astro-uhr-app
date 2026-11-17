@@ -4,7 +4,6 @@ import { TranslatePipe } from '../../shared/pipes/translate.pipe';
 import { TranslationService } from '../../core/services/translation.service';
 import { Model3dStateService } from '../../core/services/model3d-state.service';
 import { ClockModel3D } from './clock-model-3d';
-import { HOUR, moonPhase, signOfSun } from './clock-math';
 
 /**
  * Das 3D-Bild im blauen Rahmen der Uhr. Enthält three.js und wird daher
@@ -84,18 +83,11 @@ export class Model3dStageComponent implements AfterViewInit, OnDestroy {
     this.last = now;
     if (s.playing()) s.simT += dt * s.speed() * 1000;
     const st = this.stage().nativeElement;
-    const a = this.model!.render(s.simT, st.clientWidth, st.clientHeight);
+    this.model!.render(s.simT, st.clientWidth, st.clientHeight);
 
-    if (now - this.lastUi > 120) {
+    // Feld „Uhr stellen“ mitlaufen lassen (nicht in jedem Frame)
+    if (now - this.lastUi > 500) {
       this.lastUi = now;
-      const d = new Date(s.simT + HOUR); // MEZ = UTC+1, wie an der Uhr
-      const pad = (n: number) => String(n).padStart(2, '0');
-      s.clockText.set(`${pad(d.getUTCHours())}:${pad(d.getUTCMinutes())}:${pad(d.getUTCSeconds())}`);
-      s.cetTime.set(d.getTime());
-      s.signKey.set(signOfSun(a));
-      const ph = moonPhase(a);
-      s.phaseKey.set(ph.key);
-      s.moonAge.set(ph.age);
       if (s.playing() && !s.editingWhen) s.syncWhen();
     }
     this.raf = requestAnimationFrame(this.frame);

@@ -27,12 +27,7 @@ export class Model3dStateService {
   /** Gewünschte Kameraansicht; seq sorgt dafür, dass auch dieselbe Ansicht erneut angefahren wird */
   readonly view = signal<{ key: ViewKey; seq: number }>({ key: 'start', seq: 0 });
 
-  // Anzeige (vom 3D-Bild alle ~120 ms gesetzt)
-  readonly clockText = signal('–');
-  readonly cetTime = signal(0);
-  readonly signKey = signal('stier');
-  readonly phaseKey = signal('full');
-  readonly moonAge = signal(0);
+  /** Wert des Feldes „Uhr stellen (MEZ)“ */
   readonly whenText = signal('');
 
   open(start: Date): void {

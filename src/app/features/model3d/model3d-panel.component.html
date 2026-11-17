@@ -1,17 +1,5 @@
 <!-- src/app/features/model3d/model3d-panel.component.html -->
 <div class="m3p">
-  <p class="sub">{{ 'model3d.subtitle' | translate }}</p>
-
-  <h4>{{ 'model3d.display' | translate }}</h4>
-  <dl class="read">
-    <dt>{{ 'model3d.time_cet' | translate }}</dt><dd class="clock">{{ s.clockText() }}</dd>
-    <dt>{{ 'model3d.date' | translate }}</dt><dd>{{ dateText() }}</dd>
-    <dt>{{ 'model3d.sun_in' | translate }}</dt>
-    <dd>{{ 'model3d.constellation' | translate }} {{ ('model3d.signs.' + s.signKey()) | translate }}</dd>
-    <dt>{{ 'model3d.moon' | translate }}</dt>
-    <dd>{{ ('model3d.phases.' + s.phaseKey()) | translate }} · {{ 'model3d.moon_age' | translate: { age: moonAgeText() } }}</dd>
-  </dl>
-
   <h4>{{ 'model3d.time' | translate }}</h4>
   <div class="row">
     <button type="button" class="play" [attr.aria-pressed]="s.playing()" (click)="togglePlay()">
