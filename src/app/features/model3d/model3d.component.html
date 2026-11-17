@@ -34,11 +34,6 @@
           }
         </select>
       </div>
-      <div class="row">
-        @for (j of jumps; track j[0]) {
-          <button type="button" (click)="jump(j[1])">{{ ('model3d.jump.' + j[0]) | translate }}</button>
-        }
-      </div>
       <label class="f" for="m3d-when">{{ 'model3d.set_clock' | translate }}</label>
       <div class="row">
         <input #when id="m3d-when" type="datetime-local" (change)="setWhen($any($event.target).value)">
@@ -58,30 +53,6 @@
         <button type="button" [attr.aria-pressed]="heil()" (click)="toggleHeil()">{{ 'model3d.christ' | translate }}</button>
         <button type="button" [attr.aria-pressed]="tags()" (click)="toggleTags()">{{ 'model3d.labels' | translate }}</button>
       </div>
-    </section>
-
-    <section>
-      <h3>{{ 'model3d.gearing' | translate }}</h3>
-      <table>
-        <thead>
-          <tr><th>{{ 'model3d.shaft_teeth' | translate }}</th><th class="n">{{ 'model3d.rev_day' | translate }}</th></tr>
-        </thead>
-        <tbody>
-          @for (r of trains; track r.k) {
-            <tr tabindex="0" (mouseenter)="highlight(r.k)" (focus)="highlight(r.k)"
-                (mouseleave)="highlight(null)" (blur)="highlight(null)">
-              <td>
-                <span class="chip" [style.background]="colors[r.k]"></span>{{ ('model3d.trains.' + r.k) | translate }}
-                <span class="teeth">{{ ('model3d.teeth.' + r.k) | translate: { z: r.teeth } }}</span>
-              </td>
-              <td class="n">{{ rate(r) }}</td>
-            </tr>
-          }
-        </tbody>
-      </table>
-      <p class="note" [innerHTML]="'model3d.note_zodiac' | translate"></p>
-      <p class="note" [innerHTML]="'model3d.note_moon' | translate"></p>
-      <p class="note" [innerHTML]="'model3d.note_ball' | translate"></p>
     </section>
   </aside>
 

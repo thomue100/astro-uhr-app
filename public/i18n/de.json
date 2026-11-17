@@ -270,46 +270,18 @@
       "s21600": "6 Stunden pro Sekunde",
       "s86400": "1 Tag pro Sekunde"
     },
-    "jump": {
-      "hour": "+1 Stunde",
-      "day": "+1 Tag",
-      "month": "+1 Mondmonat",
-      "year": "+1 Jahr"
-    },
     "set_clock": "Uhr stellen (MEZ)",
     "now": "Jetzt",
     "view": "Ansicht",
     "views": {
       "start": "Schrägansicht",
       "front": "Zifferblatt",
-      "side": "Seite wie Skizze",
+      "side": "Seitenansicht",
       "back": "Räderwerk"
     },
     "glass": "Scheiben durchsichtig",
     "christ": "Christusfigur",
     "labels": "Beschriftung",
-    "gearing": "Räderwerk",
-    "shaft_teeth": "Welle und Zähnezahlen",
-    "rev_day": "Umdr./Tag",
-    "trains": {
-      "drv": "Antriebswelle",
-      "sun": "Sonnenrohr mit Sonnenzeiger",
-      "csa": "Vorgelege Tierkreis",
-      "zod": "Tierkreisrohr mit Sternscheibe",
-      "csb": "Vorgelege Mond",
-      "moon": "Mondwelle mit Mondzeiger"
-    },
-    "teeth": {
-      "drv": "Trieb {z}",
-      "sun": "{z}",
-      "csa": "{z} fest verbunden",
-      "zod": "{z}",
-      "csb": "{z} fest verbunden",
-      "moon": "{z}"
-    },
-    "note_zodiac": "<b>Tierkreis:</b> 293/36 × 60/487 = 1465 : 1461. In 365¼ Tagen dreht sich die Sternscheibe 366¼-mal.",
-    "note_moon": "<b>Mond:</b> 298/40 × 45/347 = 6705 : 6940. In 19 Jahren bleibt der Mond 235-mal hinter der Sonne zurück, ein Mondmonat dauert so 29,532 Tage.",
-    "note_ball": "<b>Mondkugel:</b> Ein Kegelrad vorn auf dem Sonnenrohr greift im rechten Winkel in ein gleich großes Kegelrad auf der Welle, die im rohrförmigen Mondzeiger läuft. Weil der Mond hinter der Sonne zurückbleibt, wälzt sich das Rad ab und dreht die Kugel einmal je Mondmonat.",
     "canvas_label": "Dreidimensionales Modell des Räderwerks",
     "hint": "Ziehen dreht · Mausrad oder zwei Finger zoomen · Umschalt + Ziehen verschiebt",
     "no_webgl": "Das 3D-Modell braucht WebGL. Dieser Browser stellt es gerade nicht bereit.",

@@ -57,8 +57,8 @@ export function moonPhase(a: Angles): { key: string; age: number } {
 export type ViewKey = 'start' | 'front' | 'side' | 'back';
 export type TrainKey = 'drv' | 'sun' | 'csa' | 'zod' | 'csb' | 'moon';
 
-/** Farben der Wellen – auch in der Tabelle der Komponente als Farbpunkt verwendet */
-export const TRAIN_COLORS: Record<TrainKey, string> = {
+/** Farben der Wellen */
+const TRAIN_COLORS: Record<TrainKey, string> = {
   sun: '#e0b23c', zod: '#3fb0a6', moon: '#cdd6e2', csa: '#cf7a3c', csb: '#9d8be0', drv: '#dc5a50',
 };
 
@@ -639,18 +639,6 @@ export class ClockModel3D {
   setHeil(show: boolean): void { this.heil.visible = show; }
 
   setTags(show: boolean): void { this.showTags = show; }
-
-  /** Hebt eine Welle hervor (Tabelle „Räderwerk“), null hebt die Hervorhebung auf */
-  highlight(k: TrainKey | null): void {
-    const keys: TrainKey[] = ['sun', 'zod', 'moon', 'csa', 'csb', 'drv'];
-    for (const key of keys) {
-      const m = this.M[key];
-      m.emissive.setHex(k === key ? 0x664400 : 0);
-      m.transparent = k !== null;
-      m.opacity = k === null || k === key ? 1 : 0.28;
-      m.needsUpdate = true;
-    }
-  }
 
   /* ---------- Lauf ---------- */
   private pose(t: number): Angles {

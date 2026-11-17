@@ -5,11 +5,9 @@ import {
 import { TranslatePipe } from '../../shared/pipes/translate.pipe';
 import { TranslationService } from '../../core/services/translation.service';
 import { ClockSimulationService } from '../../core/services/clock-simulation.service';
-import { ClockModel3D, K_MOON, K_ZOD, TRAIN_COLORS, TrainKey, ViewKey, moonPhase, signOfSun } from './clock-model-3d';
+import { ClockModel3D, ViewKey, moonPhase, signOfSun } from './clock-model-3d';
 
 const HOUR = 3_600_000;
-
-interface TrainRow { k: TrainKey; teeth: string; rate: number; digits: number; }
 
 /**
  * Vollbild-Ansicht mit dem 3D-Funktionsmodell des Räderwerks.
@@ -40,7 +38,6 @@ export class Model3dComponent implements AfterViewInit, OnDestroy {
   private lastUi = 0;
   private simT = this.clock.getCurrentDate().getTime();
 
-  readonly colors = TRAIN_COLORS;
   readonly webglError = signal(false);
   readonly playing = signal(true);
   readonly speed = signal(
@@ -57,18 +54,7 @@ export class Model3dComponent implements AfterViewInit, OnDestroy {
   private readonly moonAge = signal(0);
 
   readonly speeds = [1, 60, 600, 3600, 21600, 86400];
-  readonly jumps: [string, number][] = [
-    ['hour', HOUR], ['day', 24 * HOUR], ['month', 2_551_465_532], ['year', 31_557_600_000],
-  ];
   readonly views: ViewKey[] = ['start', 'front', 'side', 'back'];
-  readonly trains: TrainRow[] = [
-    { k: 'drv', teeth: '15', rate: 24, digits: 0 },
-    { k: 'sun', teeth: '360 · 293 · 298', rate: 1, digits: 0 },
-    { k: 'csa', teeth: '36 + 60', rate: 293 / 36, digits: 4 },
-    { k: 'zod', teeth: '487', rate: K_ZOD, digits: 6 },
-    { k: 'csb', teeth: '40 + 45', rate: 298 / 40, digits: 4 },
-    { k: 'moon', teeth: '347', rate: K_MOON, digits: 6 },
-  ];
 
   private readonly locale = computed(() => (this.t.currentLang() === 'de' ? 'de-DE' : 'en-GB'));
   readonly dateText = computed(() =>
@@ -85,10 +71,6 @@ export class Model3dComponent implements AfterViewInit, OnDestroy {
       this.t.currentLang();
       this.model?.updateLabels();
     });
-  }
-
-  rate(r: TrainRow): string {
-    return r.rate.toLocaleString(this.locale(), { minimumFractionDigits: r.digits, maximumFractionDigits: r.digits });
   }
 
   ngAfterViewInit(): void {
@@ -141,8 +123,6 @@ export class Model3dComponent implements AfterViewInit, OnDestroy {
 
   setSpeed(v: string): void { this.speed.set(+v); }
 
-  jump(ms: number): void { this.simT += ms; this.syncInput(); }
-
   now(): void { this.simT = Date.now(); this.syncInput(); }
 
   setWhen(value: string): void {
@@ -167,6 +147,4 @@ export class Model3dComponent implements AfterViewInit, OnDestroy {
   toggleHeil(): void { this.heil.update((h) => !h); this.model?.setHeil(this.heil()); }
 
   toggleTags(): void { this.tags.update((s) => !s); this.model?.setTags(this.tags()); }
-
-  highlight(k: TrainKey | null): void { this.model?.highlight(k); }
 }

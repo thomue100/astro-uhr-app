@@ -19,16 +19,6 @@ section{display:flex;flex-direction:column}
 .m3d button.x{flex:none;width:36px;padding:0;font-size:20px;line-height:1}
 .m3d select,.m3d input{flex:1;min-width:0;width:auto}
 .f{font-size:12.5px;color:var(--muted);margin-top:10px}
-table{border-collapse:collapse;width:100%;font-size:12.5px}
-th{font-weight:500;color:var(--muted);text-align:left;padding:0 6px 6px 0;font-size:11.5px}
-td{padding:6px 6px 6px 0;border-top:1px solid var(--line);vertical-align:top}
-.n{text-align:right;font-family:Consolas,monospace;padding-right:0;white-space:nowrap}
-tbody tr:hover td,tbody tr:focus td{background:#123b57}
-tbody tr:focus{outline:none}
-.chip{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:7px}
-.teeth{font-family:Consolas,monospace;color:var(--muted);font-size:12px;display:block;margin-left:17px}
-.note{color:var(--muted);font-size:12.5px;margin:10px 0 0;line-height:1.45}
-.note ::ng-deep b{color:#f4f4f4;font-weight:600}
 .stage ::ng-deep .tag{position:absolute;left:0;top:0;font:500 11.5px/1 Consolas,monospace;background:rgba(7,21,34,.8);border:1px solid var(--line);border-radius:4px;padding:3px 5px;white-space:nowrap;pointer-events:none}
 .stage ::ng-deep .tag.t{font-family:inherit;color:var(--gold)}
 .hint{position:absolute;right:14px;bottom:12px;color:var(--muted);font-size:12px;pointer-events:none}
