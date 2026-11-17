@@ -248,8 +248,8 @@
     "uniform": "Für das Jahr {year} gilt ein einheitlicher Sonntagsbuchstabe: {sb}."
   },
   "model3d": {
+    "back": "◀ Zurück zur Uhr",
     "loading": "3D-Modell wird geladen …",
-    "title": "Astronomische Uhr St. Marien zu Lübeck",
     "subtitle": "Funktionsmodell des Planetariums nach der Räderberechnung von Paul Behrens",
     "display": "Anzeige der Uhr",
     "time_cet": "Zeit (MEZ)",
@@ -264,11 +264,11 @@
     "speed": "Geschwindigkeit",
     "speeds": {
       "s1": "Echtzeit",
-      "s60": "1 Minute pro Sekunde",
-      "s600": "10 Minuten pro Sekunde",
-      "s3600": "1 Stunde pro Sekunde",
-      "s21600": "6 Stunden pro Sekunde",
-      "s86400": "1 Tag pro Sekunde"
+      "s60": "1 Min. pro Sek.",
+      "s600": "10 Min. pro Sek.",
+      "s3600": "1 Std. pro Sek.",
+      "s21600": "6 Std. pro Sek.",
+      "s86400": "1 Tag pro Sek."
     },
     "set_clock": "Uhr stellen (MEZ)",
     "now": "Jetzt",

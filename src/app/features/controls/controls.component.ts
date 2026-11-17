@@ -11,9 +11,10 @@ import { ClockSimulationService } from '../../core/services/clock-simulation.ser
 import { TranslationService } from '../../core/services/translation.service';
 import { TranslatePipe } from '../../shared/pipes/translate.pipe';
 import { TimeUtility } from '../../shared/utils/TimeUtility';
-import { Model3dComponent } from '../model3d/model3d.component';
+import { Model3dPanelComponent } from '../model3d/model3d-panel.component';
+import { Model3dStateService } from '../../core/services/model3d-state.service';
 
-type ModalType = 'info' | 'history' | 'calendar' | 'model3d' | null;
+type ModalType = 'info' | 'history' | 'calendar' | null;
 type ActivePanel = 'simulation' | 'calendar' | 'none';
 
 @Component({
@@ -28,7 +29,7 @@ type ActivePanel = 'simulation' | 'calendar' | 'none';
     CalendarModalComponent,
     SimulationPanelComponent,
     CalendarPanelComponent,
-    Model3dComponent,
+    Model3dPanelComponent,
   ],
   templateUrl: './controls.component.html',
   styleUrls: ['./controls.component.css'],
@@ -39,6 +40,7 @@ type ActivePanel = 'simulation' | 'calendar' | 'none';
 export class ControlsComponent {
   private readonly clockService = inject(ClockSimulationService);
   readonly t = inject(TranslationService);
+  readonly m3d = inject(Model3dStateService);
 
   readonly activeModal  = signal<ModalType>(null);
   readonly activePanel  = signal<ActivePanel>('simulation');
@@ -87,7 +89,25 @@ export class ControlsComponent {
     document.body.style.overflow = '';
   }
 
+  /** 3D-Modell im Rahmen der Uhr zeigen; das Bedienfeld ersetzt das Menü */
+  open3d(): void {
+    if (this.clockService.isAnimationRunning()) this.clockService.stopAnimation();
+    this.clockService.setShowCalendarDisk(false);
+    this.clockService.triggerRedraw();
+    this.m3d.open(this.clockService.getCurrentDate());
+  }
+
+  /** Zurück zur Uhr – mit dem zuvor offenen Panel (ggf. wieder mit Kalenderscheibe) */
+  close3d(): void {
+    this.m3d.close();
+    if (this.activePanel() === 'calendar') {
+      this.clockService.setShowCalendarDisk(true);
+      this.clockService.triggerRedraw();
+    }
+  }
+
   handleEscape(): void {
     if (this.activeModal()) this.closeModal();
+    else if (this.m3d.active()) this.close3d();
   }
 }

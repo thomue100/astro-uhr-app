@@ -11,6 +11,8 @@ import { ImageManager } from '../../shared/utils/ImageManager';
 import { ClockRenderer } from '../../shared/utils/ClockRenderer';
 import { TimeUtility } from '../../shared/utils/TimeUtility';
 import { TranslatePipe } from '../../shared/pipes/translate.pipe';
+import { Model3dStateService } from '../../core/services/model3d-state.service';
+import { Model3dStageComponent } from '../model3d/model3d-stage.component';
 
 type InteractionMode = 'rotate' | 'pan';
 
@@ -19,12 +21,17 @@ type InteractionMode = 'rotate' | 'pan';
   templateUrl: './canvas.component.html',
   styleUrls: ['./canvas.component.css'],
   standalone: true,
-  imports: [TranslatePipe],
+  imports: [TranslatePipe, Model3dStageComponent],
 })
 export class CanvasComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('canvasElement') canvasRef!: ElementRef<HTMLCanvasElement>;
 
   private readonly clockService = inject(ClockSimulationService);
+  readonly m3d = inject(Model3dStateService);
+
+  /** Lage der Uhr-Canvas im Container: das 3D-Bild wird exakt darübergelegt (kein Springen) */
+  readonly frame = signal({ l: 0, t: 0, w: 0, h: 0 });
+  private canvasObserver?: ResizeObserver;
 
   private clockSubscription!: Subscription;
   private imageManager!: ImageManager;
@@ -82,6 +89,12 @@ export class CanvasComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): void {
     const canvas = this.canvasRef.nativeElement;
+    if (typeof ResizeObserver !== 'undefined') {
+      this.canvasObserver = new ResizeObserver(() => this.updateFrame());
+      this.canvasObserver.observe(canvas);
+    }
+    this.updateFrame();
+
     const ctx    = canvas.getContext('2d');
     if (!ctx) { console.error('Canvas 2D Kontext nicht verfügbar.'); return; }
 
@@ -106,6 +119,7 @@ export class CanvasComponent implements OnInit, AfterViewInit, OnDestroy {
             const { width, height } = entries[0].contentRect;
             this.renderer.calculateResponsiveSize(width, height);
             this.renderer.drawClock(this.clockService.astroState());
+            this.updateFrame();
           });
         });
         this.resizeObserver.observe(container);
@@ -116,6 +130,13 @@ export class CanvasComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnDestroy(): void {
     this.clockSubscription?.unsubscribe();
     this.resizeObserver?.disconnect();
+    this.canvasObserver?.disconnect();
+  }
+
+  private updateFrame(): void {
+    const c = this.canvasRef?.nativeElement;
+    if (!c) return;
+    this.frame.set({ l: c.offsetLeft, t: c.offsetTop, w: c.offsetWidth, h: c.offsetHeight });
   }
 
   setMode(mode: InteractionMode): void { this.interactionMode.set(mode); }

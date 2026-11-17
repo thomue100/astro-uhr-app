@@ -1,0 +1,19 @@
+/* Bedienfeld des 3D-Modells in der Sidebar (Breite wie das Menü) */
+.m3p{display:flex;flex-direction:column;gap:6px;padding:10px 12px 12px;color:#f4f4f4}
+.sub{margin:0;color:#88aacc;font-size:11.5px;line-height:1.35}
+h4{margin:8px 0 0;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:#88aacc}
+.read{display:grid;grid-template-columns:auto 1fr;gap:3px 10px;margin:0;font-size:12px}
+.read dt{color:#88aacc}
+.read dd{margin:0;font-variant-numeric:tabular-nums}
+.clock{font:600 15px/1.1 Consolas,monospace;color:#ffcc33}
+label{font-size:12px;color:#88aacc;margin-top:2px}
+.row{display:flex;gap:6px}
+.row select,.row input{flex:1;min-width:0;width:auto}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.stack{display:flex;flex-direction:column;gap:6px}
+.m3p button{width:auto;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.m3p .play,.m3p .now{flex:none}
+.m3p button[aria-pressed=true]{background:#ffcc33;color:#071522;border-color:#ffcc33}
+@media (min-width:601px){
+  .m3p button{padding:5px 8px;font-size:12px}
+}

@@ -248,8 +248,8 @@
     "uniform": "For the year {year} a uniform Sunday letter applies: {sb}."
   },
   "model3d": {
+    "back": "◀ Back to the clock",
     "loading": "Loading 3D model …",
-    "title": "Astronomical Clock of St. Mary's, Lübeck",
     "subtitle": "Working model of the planetarium, based on the gear calculation by Paul Behrens",
     "display": "Clock reading",
     "time_cet": "Time (CET)",
@@ -264,11 +264,11 @@
     "speed": "Speed",
     "speeds": {
       "s1": "Real time",
-      "s60": "1 minute per second",
-      "s600": "10 minutes per second",
-      "s3600": "1 hour per second",
-      "s21600": "6 hours per second",
-      "s86400": "1 day per second"
+      "s60": "1 min per sec.",
+      "s600": "10 min per sec.",
+      "s3600": "1 hour per sec.",
+      "s21600": "6 hours per sec.",
+      "s86400": "1 day per sec."
     },
     "set_clock": "Set the clock (CET)",
     "now": "Now",

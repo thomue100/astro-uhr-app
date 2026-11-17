@@ -156,3 +156,25 @@
     color: #ffcc33;
   }
 }
+
+/* ======================================================== */
+/* === 3D-MODELL IM RAHMEN DER UHR                      === */
+/* ======================================================== */
+
+.stage3d {
+  position: absolute;
+  z-index: 5;
+  box-sizing: border-box;
+  border: 4px solid #00aaff;
+  border-radius: 12px;
+  overflow: hidden;
+  background: radial-gradient(ellipse at 50% 40%, #123049 0%, #0a1c28 70%);
+}
+
+.stage3d-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #88aacc;
+}

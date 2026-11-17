@@ -17,6 +17,13 @@
     >{{ t.currentLang() === 'de' ? ('lang.en' | translate) : ('lang.de' | translate) }}</button>
   </div>
 
+  @if (m3d.active()) {
+  <!-- 3D-Modell offen: Bedienfeld ersetzt das Menü, Titelzeile bleibt stehen -->
+  <div class="controls-header m3d-back" (click)="close3d()">
+    {{ 'model3d.back' | translate }}
+  </div>
+  <app-model3d-panel />
+  } @else {
   <div class="controls-header" id="infoButtonHeader" (click)="openModal('info')">
     {{ 'nav.intro' | translate }}
   </div>
@@ -43,7 +50,7 @@
 
   <!-- 3D-Funktionsmodell des Räderwerks -->
   <div id="model3dPanel">
-    <div class="controls-header" (click)="openModal('model3d')">
+    <div class="controls-header" (click)="open3d()">
       {{ 'nav.model3d' | translate }}
     </div>
   </div>
@@ -54,6 +61,7 @@
       {{ 'nav.history' | translate }}
     </div>
   </div>
+  }
 
 </div>
 
@@ -86,13 +94,4 @@
       <button (click)="closeModal()">{{ 'modal.close' | translate }}</button>
     </div>
   </app-modal>
-}
-
-<!-- 3D-Modell: eigener Chunk (three.js), wird erst beim Öffnen geladen -->
-@if (activeModal() === 'model3d') {
-  @defer (on immediate) {
-    <app-model3d (close)="closeModal()" />
-  } @loading (minimum 200ms) {
-    <div class="modal-overlay">{{ 'model3d.loading' | translate }}</div>
-  }
 }

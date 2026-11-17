@@ -7,6 +7,7 @@
     <canvas
       #canvasElement
       id="canvas"
+      [style.visibility]="m3d.active() ? 'hidden' : null"
       [class.canvas-rotate]="showCalendarControls() && interactionMode() === 'rotate'"
       [class.canvas-pan]="showCalendarControls() && interactionMode() === 'pan'"
       (mousedown)="onCanvasMouseDown($event)"
@@ -18,6 +19,20 @@
       (touchmove)="onCanvasTouchMove($event)"
       (touchend)="onCanvasTouchEnd($event)"
     ></canvas>
+
+    <!-- 3D-Funktionsmodell: liegt deckungsgleich im blauen Rahmen der Uhr.
+         three.js steckt in einem eigenen Chunk und lädt erst beim Öffnen. -->
+    @if (m3d.active()) {
+      <div class="stage3d"
+           [style.left.px]="frame().l" [style.top.px]="frame().t"
+           [style.width.px]="frame().w" [style.height.px]="frame().h">
+        @defer (on immediate) {
+          <app-model3d-stage />
+        } @loading {
+          <div class="stage3d-loading">{{ 'model3d.loading' | translate }}</div>
+        }
+      </div>
+    }
 
     <!--
       Fix "Mobile Optimierung": Auf Mobile ist dieser dezente Reset-Button
