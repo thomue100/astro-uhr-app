@@ -48,14 +48,13 @@ export function calculateMoonRotationDifference(targetDate: Date): number {
 }
 
 export function getDayOfYear(date: Date): number {
-    const tmp = new Date(date.getTime());
-    tmp.setHours(12, 0, 0, 0);
-    const start = new Date(tmp.getFullYear(), 0, 1);
-    start.setHours(12, 0, 0, 0);
-    // ✅ In ts/js müssen Date-Objekt-Differenzen explizit gecastet werden
-    const diff = (tmp as any) - (start as any);
+    // Kalenderdatum (lokal) über UTC vergleichen: Mit lokalen Zeitstempeln
+    // fehlte ab der Sommerzeitumstellung eine Stunde, Math.floor lieferte dann
+    // vom 29. März bis Ende Oktober einen Tag zu wenig.
+    const day   = Date.UTC(date.getFullYear(), date.getMonth(), date.getDate());
+    const start = Date.UTC(date.getFullYear(), 0, 1);
     const oneDay = 1000 * 60 * 60 * 24;
-    return Math.floor(diff / oneDay) + 1;
+    return Math.round((day - start) / oneDay) + 1;
 }
 
 export function calculateZodiacOffsetAngle(simDate: Date, angleSun: number): number {
@@ -131,6 +130,35 @@ export function calculateMoonAngle(sunAngle: number, moonDiffRad: number): numbe
 // Entweder PI/6 (30 Grad) hinzufügen oder abziehen
 const CALENDAR_DISK_OFFSET = Math.PI / 6;
 
+/**
+ * Das Foto der Kalenderscheibe ist nicht perfekt: Die Scheibe sitzt minimal
+ * außermittig und ist leicht perspektivisch verzerrt, die Tage sind daher
+ * nicht exakt gleichmäßig verteilt. Ohne Korrektur zeigte der Zeiger je nach
+ * Jahreszeit bis zu 3 Tage zu früh.
+ *
+ * Gemessen am Zeiger (am 1. und 15. jedes Monats): [Tag des Jahres, Korrektur in Tagen].
+ * Dazwischen wird linear interpoliert (über den Jahreswechsel hinweg).
+ */
+const CALENDAR_DISK_CORRECTION: ReadonlyArray<readonly [number, number]> = [
+    [1, 2.7], [15, 2.5], [32, 2.0], [46, 1.5], [60, 1.0], [74, 1.4],
+    [82, 1.3], [91, 1.0], [105, 0.5], [121, 0.1], [135, 0.0], [152, 0.0],
+    [166, 0.0], [182, 0.4], [196, 0.8], [213, 1.1], [227, 1.5], [244, 2.0],
+    [258, 2.2], [274, 2.6], [288, 3.0], [305, 3.1], [319, 3.1], [335, 3.0], [349, 3.0],
+];
+
+function calendarDiskCorrection(dayOfYear: number): number {
+    const table = CALENDAR_DISK_CORRECTION;
+    const n = table.length;
+    for (let i = 0; i < n; i++) {
+        const [d0, c0] = table[i];
+        const [d1raw, c1] = table[(i + 1) % n];
+        const d1 = i + 1 < n ? d1raw : d1raw + 365;
+        const d = dayOfYear < table[0][0] ? dayOfYear + 365 : dayOfYear;
+        if (d >= d0 && d <= d1) return c0 + ((d - d0) / (d1 - d0)) * (c1 - c0);
+    }
+    return 0;
+}
+
 export function calculateCalendarDiskAngle(simDate: Date): number {
     ensureConfig();
 
@@ -141,7 +169,11 @@ export function calculateCalendarDiskAngle(simDate: Date): number {
 
     // Wir wollen den 1. Januar als Tag 0 für die Drehung.
     // dayOfYear - 1: 1. Jan = 0 Tage vergangen, 2. Jan = 1 Tag vergangen, etc.
-    const daysSinceJan1st = dayOfYear - 1;
+    // + 0.5: Der Zeiger soll mitten auf die Tageszeile zeigen, nicht auf die
+    // Grenze zwischen zwei Tagen (im Foto steht er zwischen 1. und 2. Juni).
+    // Korrekturtabelle gilt für 365 Tage; im Schaltjahr ab 1. März um einen Tag versetzt.
+    const tableDay = isLeap && dayOfYear > 59 ? dayOfYear - 1 : dayOfYear;
+    const daysSinceJan1st = dayOfYear - 1 + 0.5 + calendarDiskCorrection(tableDay);
 
     // Winkelberechnung:
     // Start bei -Math.PI (9 Uhr)

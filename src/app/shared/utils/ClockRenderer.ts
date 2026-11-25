@@ -259,13 +259,20 @@ export class ClockRenderer {
     const cy = center.y + (state.calendarOffsetY ?? 0);
 
     if (img && img.complete && img.naturalWidth > 0) {
+      const size = radius * 2;
       this.withContext(() => {
         // Zuerst zum (verschobenen) Mittelpunkt, dann drehen
         ctx.translate(cx, cy);
         ctx.rotate(rotationAngle);
-        const size = radius * 2;
         ctx.globalAlpha = 1.0;
-        ctx.drawImage(img, -size / 2, -size / 2, size, size);
+        ctx.drawImage(this.getCalendarDiskWithoutPointer(img), -size / 2, -size / 2, size, size);
+      });
+      // Der Datumszeiger gehört zum Gehäuse der Uhr: Er dreht sich NICHT mit.
+      this.withContext(() => {
+        ctx.translate(cx, cy);
+        ctx.scale(size / img.naturalWidth, size / img.naturalHeight);
+        ctx.translate(-img.naturalWidth / 2, -img.naturalHeight / 2);
+        this.drawCalendarDiskPointer(img.naturalWidth, img.naturalHeight);
       });
     } else {
       this.withContext(() => {
@@ -281,6 +288,101 @@ export class ClockRenderer {
         ctx.fillText('Kalenderscheibe nicht geladen', 0, 0);
       });
     }
+  }
+
+  /**
+   * Das Foto der Kalenderscheibe enthält auch den goldenen Stern-Zeiger
+   * (links, 9 Uhr, zeigt auf den 1./2. Juni). Würde das Foto unverändert
+   * gedreht, drehte sich der Zeiger mit und zeigte immer auf Anfang Juni.
+   *
+   * Daher wird einmalig eine Kopie ohne Zeiger erzeugt: Der Sektor um den
+   * Zeiger wird mit dem Bildinhalt von 14 Tagen weiter überdeckt – so passen
+   * die Sonntagsbuchstaben (7-Tage-Zyklus) nahtlos. Den Zeiger zeichnet
+   * drawCalendarDiskPointer() feststehend neu.
+   */
+  private calendarDiskCache: { src: HTMLImageElement; canvas: HTMLCanvasElement } | null = null;
+
+  private getCalendarDiskWithoutPointer(img: HTMLImageElement): CanvasImageSource {
+    if (this.calendarDiskCache?.src === img) return this.calendarDiskCache.canvas;
+
+    const w = img.naturalWidth;
+    const h = img.naturalHeight;
+    const off = document.createElement('canvas');
+    off.width  = w;
+    off.height = h;
+    const c = off.getContext('2d');
+    if (!c) return img;
+
+    c.drawImage(img, 0, 0);
+
+    const deg = Math.PI / 180;
+    const R   = w / 2;
+    // Zeiger liegt zwischen 2,5° unter und 6° über der 9-Uhr-Linie (Bildmitte)
+    const a0 = Math.PI - 2.5 * deg;
+    const a1 = Math.PI + 6 * deg;
+    const shift = (14 / 365) * 2 * Math.PI;
+
+    c.save();
+    c.beginPath();
+    c.arc(w / 2, h / 2, R * 1.02, a0, a1, false);
+    c.arc(w / 2, h / 2, R * 0.75, a1, a0, true);
+    c.closePath();
+    c.clip();
+    c.clearRect(0, 0, w, h);
+    c.translate(w / 2, h / 2);
+    c.rotate(shift);
+    c.drawImage(img, -w / 2, -h / 2);
+    c.restore();
+
+    this.calendarDiskCache = { src: img, canvas: off };
+    return off;
+  }
+
+  /**
+   * Feststehender Datumszeiger (Stab + achtzackiger Stern) an derselben
+   * Stelle wie im Foto. Koordinaten in Pixeln des Originalfotos (2732 × 2716),
+   * werden auf die tatsächliche Bildgröße umgerechnet.
+   */
+  private drawCalendarDiskPointer(w: number, h: number): void {
+    const ctx = this.ctx;
+    const sx = w / 2732;
+    const sy = h / 2716;
+    const starX = 255 * sx;
+    const starY = 1322 * sy;
+    const unit  = sx;
+
+    const gold = ctx.createLinearGradient(0, starY - 60 * unit, 0, starY + 60 * unit);
+    gold.addColorStop(0,   '#fff3c4');
+    gold.addColorStop(0.5, '#e6c66e');
+    gold.addColorStop(1,   '#a8832f');
+
+    ctx.fillStyle   = gold;
+    ctx.strokeStyle = 'rgba(60, 40, 0, 0.6)';
+    ctx.lineWidth   = 2 * unit;
+
+    // Stab vom Rand bis zum Stern
+    ctx.beginPath();
+    ctx.moveTo(-10 * sx, 1302 * sy);
+    ctx.lineTo(starX, starY - 6 * unit);
+    ctx.lineTo(starX, starY + 6 * unit);
+    ctx.lineTo(-10 * sx, 1348 * sy);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+
+    // Achtzackiger Stern; die lange Zacke zeigt auf das Datum
+    const tipAngle = Math.atan2(1330 - 1322, 322 - 255);
+    ctx.beginPath();
+    for (let i = 0; i < 16; i++) {
+      const a = tipAngle + (i * Math.PI) / 8;
+      const r = i === 0 ? 68 * unit : i % 2 === 0 ? 56 * unit : 16 * unit;
+      const x = starX + Math.cos(a) * r;
+      const y = starY + Math.sin(a) * r;
+      if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    }
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
   }
 
   drawPointer(angle: number, start: number, end: number, color: string, center: { x: number; y: number }): void {
