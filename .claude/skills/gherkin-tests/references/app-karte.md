@@ -79,6 +79,11 @@ Zustand über `uhr.zustand()`: `angleSun`, `angleMoon`, `angleZodiac`, `angleCal
 
 ## 5. Bekannte Stolperstellen
 
+- **Ausgeblendete Knöpfe sind für Playwright „sichtbar“:** Die Steuerung der Kalenderscheibe wird per `opacity: 0` + `pointer-events: none` versteckt. `toBeVisible()` meldet sie trotzdem als sichtbar → `uhr.istBedienbar(locator)` verwenden.
+- **Kalender-Panel-Angaben** über ihre Tooltips ansprechen: `uhr.kalenderAngabe('Osterdatum' | 'Goldene Zahl' | 'Sonntagsbuchstabe' | 'Tagesbuchstabe' | 'Tagesheilige(r)')`; im Gherkin per Datentabelle „Dann zeigt der Kalender diese Angaben:“.
+- **Kalenderdaten** (`public/data/*.json`) folgen der Scheibe: immer eine Zeile für den 29. Februar → Gemeinjahre zwei Sonntagsbuchstaben („C,D“), Schaltjahre einen („G“). Finsternisse nur 2000–2036 (wie auf der Scheibe „ab 21.1.2000“). Erwartungswerte unabhängig berechnen (Ostern nach Gauß, Goldene Zahl = Jahr mod 19 + 1), nicht aus den JSON-Dateien abschreiben – so wurden 2026 ein Kodierungsfehler („M�rz“) und vertauschte Osterdaten 2079/2080 gefunden.
+- **Zeitraffer** läuft über `requestAnimationFrame`; im Headless-Browser vergehen bei Geschwindigkeit 0,5 nur ~10 simulierte Minuten pro Sekunde. Fortschritt mit `expect.poll` und niedriger Schwelle prüfen.
+- **Vorher-nachher-Vergleiche** über die Fixture `ablage` (Map pro Szenario).
 - **Canvas wächst nach dem Öffnen des Kalenders** ~600 ms (CSS-Übergang); der Übergang setzt manchmal erst verzögert ein. Ausschnitte immer über das Seitenobjekt holen, das auf eine über ~1 s stabile Größe wartet.
 - **Bilder laden asynchron**; `uhr.oeffnen()` wartet, bis alle `<img>` fertig sind und der Canvas eine Größe hat.
 - **„Heute“ muss vor dem Laden feststehen** (`setzeHeute` vor `oeffnen`). Danach das Datum nur noch über das Datumsfeld ändern.

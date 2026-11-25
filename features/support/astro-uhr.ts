@@ -123,8 +123,113 @@ export class AstroUhr {
     await expect(this.kalenderPanel).toBeVisible();
   }
 
+  /** Klick auf den Menüpunkt „Kalender“ ohne Erwartung (öffnet bzw. schließt). */
+  async oeffneKalenderMenue(): Promise<void> {
+    await this.menuepunkt('calendarPanel').click();
+  }
+
   async wechsleSprache(): Promise<void> {
     await this.sprachButton.click();
+  }
+
+  /** Smartphone-Hochformat; vor oeffnen() aufrufen. */
+  async nutzeSmartphone(): Promise<void> {
+    await this.page.setViewportSize({ width: 390, height: 844 });
+  }
+
+  // ── Kalender-Panel ──────────────────────────────────────────────────
+  /** Angabe im Kalender-Panel über ihre Bezeichnung (Tooltip), z. B. "Osterdatum". */
+  kalenderAngabe(bezeichnung: string): Locator {
+    return this.kalenderPanel.getByTitle(bezeichnung, { exact: true });
+  }
+  /** Zeilen der Finsternis-Liste (je Zeile: Tooltip = Art, Text = Datum/Uhrzeit). */
+  get finsternisZeilen(): Locator { return this.kalenderPanel.locator('.cal-eclipse-compact'); }
+
+  async oeffneErlaeuterungen(): Promise<void> {
+    await this.kalenderPanel.getByRole('button', { name: /Erläuterungen|Explanation/ }).click();
+    await expect(this.modal).toBeVisible();
+  }
+  get modal(): Locator { return this.page.locator('app-modal .modal-content'); }
+
+  // ── Simulation ──────────────────────────────────────────────────────
+  get simulation(): Locator { return this.page.locator('app-simulation-panel'); }
+  get liveAnzeige(): Locator { return this.page.locator('#liveDateTime'); }
+  get startStopButton(): Locator { return this.simulation.getByRole('button', { name: /Start|Stop/ }); }
+  get geschwindigkeitsRegler(): Locator { return this.simulation.getByRole('slider'); }
+
+  async starteSimulation(): Promise<void> {
+    await expect(this.startStopButton).toContainText('Start');
+    await this.startStopButton.click();
+  }
+  async halteSimulationAn(): Promise<void> {
+    await expect(this.startStopButton).toContainText('Stop');
+    await this.startStopButton.click();
+  }
+  async setzeSimulationZurueck(): Promise<void> {
+    await this.simulation.getByRole('button', { name: 'Reset', exact: true }).click();
+  }
+  async stelleGeschwindigkeitEin(faktor: number): Promise<void> {
+    await this.geschwindigkeitsRegler.fill(String(faktor));
+  }
+  /**
+   * Beobachtet die Live-Anzeige über eine Zeitspanne. Ein festes Warten ist
+   * hier der Zweck: Geprüft wird, ob sich in dieser Zeit etwas ändert.
+   */
+  async beobachteZeitpunkt(ms: number): Promise<{ vorher: Date; nachher: Date }> {
+    const vorher = await this.angezeigterZeitpunkt();
+    await this.page.waitForTimeout(ms);
+    return { vorher, nachher: await this.angezeigterZeitpunkt() };
+  }
+
+  /** Angezeigter Zeitpunkt der Simulation (Live-Anzeige "TT.MM.JJJJ HH:mm:ss"). */
+  async angezeigterZeitpunkt(): Promise<Date> {
+    const text = (await this.liveAnzeige.innerText()).trim();
+    const m = /^(\d{2})\.(\d{2})\.(\d{4}) (\d{2}):(\d{2}):(\d{2})$/.exec(text);
+    if (!m) throw new Error(`Live-Anzeige "${text}" nicht lesbar`);
+    return new Date(berlinZeitpunkt(+m[3], +m[2], +m[1], +m[4], +m[5]).getTime() + +m[6] * 1000);
+  }
+
+  // ── Bedienung der Kalenderscheibe ───────────────────────────────────
+  scheibenButton(bezeichnung: string): Locator { return this.page.getByTitle(bezeichnung, { exact: true }); }
+  get scheibenReset(): Locator { return this.scheibenButton('⟲ Reset'); }
+
+  /**
+   * Bedienbar = sichtbar, nicht durchsichtig und klickbar. Die Steuerung wird
+   * per opacity/pointer-events ausgeblendet; toBeVisible() erkennt das nicht.
+   */
+  async istBedienbar(element: Locator): Promise<boolean> {
+    if ((await element.count()) === 0 || !(await element.isVisible())) return false;
+    return element.evaluate((el) => {
+      const s = getComputedStyle(el);
+      return s.display !== 'none' && s.visibility !== 'hidden' && parseFloat(s.opacity) > 0.1 && s.pointerEvents !== 'none';
+    });
+  }
+
+  /** Zieht mit der Maus auf einem Kreis um die Canvas-Mitte (positiv = im Uhrzeigersinn). */
+  async ziehe(vonGrad: number, bisGrad: number): Promise<void> {
+    const bb = await this.warteBisCanvasRuhig();
+    const cx = bb.x + bb.width / 2, cy = bb.y + bb.height / 2, r = bb.width * 0.3;
+    const punkt = (g: number) => [cx + r * Math.cos(g / GRAD), cy + r * Math.sin(g / GRAD)] as const;
+    await this.page.mouse.move(...punkt(vonGrad));
+    await this.page.mouse.down();
+    for (let i = 1; i <= 10; i++) await this.page.mouse.move(...punkt(vonGrad + ((bisGrad - vonGrad) * i) / 10));
+    await this.page.mouse.up();
+  }
+
+  /** Zieht mit der Maus geradlinig (für den Verschiebe-Modus). */
+  async ziehePixel(dx: number, dy: number): Promise<void> {
+    const bb = await this.warteBisCanvasRuhig();
+    const x = bb.x + bb.width / 2, y = bb.y + bb.height / 2;
+    await this.page.mouse.move(x, y);
+    await this.page.mouse.down();
+    await this.page.mouse.move(x + dx, y + dy, { steps: 10 });
+    await this.page.mouse.up();
+  }
+
+  async mausrad(schritte: number): Promise<void> {
+    const bb = await this.warteBisCanvasRuhig();
+    await this.page.mouse.move(bb.x + bb.width / 2, bb.y + bb.height / 2);
+    for (let i = 0; i < Math.abs(schritte); i++) await this.page.mouse.wheel(0, schritte < 0 ? -100 : 100);
   }
 
   // ── Visuelle Prüfungen (Canvas) ─────────────────────────────────────
@@ -205,6 +310,18 @@ export class AstroUhr {
   /** Mondalter in Tagen seit Neumond (0 … 29,5). */
   async mondalter(): Promise<number> {
     return (await this.zustand())['mondAlterFractional'] as number;
+  }
+
+  /** Ansicht der Kalenderscheibe: Drehung (Grad), Zoomstufe, Verschiebung (px). */
+  async scheibenAnsicht(): Promise<{ drehung: number; zoom: number; dx: number; dy: number; sichtbar: boolean }> {
+    const z = await this.zustand();
+    return {
+      drehung: (z['angleCalendarDisk'] as number) * GRAD,
+      zoom: z['calendarZoom'] as number,
+      dx: z['calendarOffsetX'] as number,
+      dy: z['calendarOffsetY'] as number,
+      sichtbar: z['showCalendarDisk'] as boolean,
+    };
   }
 
   /** Winkel zwischen Mond- und Sonnenzeiger in Grad (−180 … +180). */

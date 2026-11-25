@@ -7,7 +7,12 @@ import { CoverageReport } from 'monocart-coverage-reports';
 import { AstroUhr } from './astro-uhr';
 import { coverageAktiv, coverageOptionen } from './coverage';
 
-export const test = base.extend<{ uhr: AstroUhr; abdeckung: void }>({
+export const test = base.extend<{ uhr: AstroUhr; ablage: Map<string, unknown>; abdeckung: void }>({
+  /** Merkzettel pro Szenario, z. B. für Vorher-nachher-Vergleiche. */
+  ablage: async ({}, use) => {
+    await use(new Map());
+  },
+
   uhr: async ({ page, browser, baseURL }, use) => {
     const uhr = new AstroUhr(page, browser, baseURL);
     await use(uhr);
