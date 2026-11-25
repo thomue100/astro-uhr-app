@@ -1,4 +1,16 @@
 import { defineConfig, devices } from '@playwright/test';
+import { defineBddConfig } from 'playwright-bdd';
+
+/**
+ * Gherkin-Szenarien (deutsch) aus features/ – playwright-bdd erzeugt daraus
+ * Playwright-Tests in .features-gen/. Ausführen: npm run test:bdd
+ */
+const bddTestDir = defineBddConfig({
+  features: 'features/**/*.feature',
+  steps: ['features/support/fixtures.ts', 'features/steps/**/*.ts'],
+  language: 'de',
+  outputDir: '.features-gen',
+});
 
 /**
  * Read environment variables from file.
@@ -13,6 +25,9 @@ import { defineConfig, devices } from '@playwright/test';
  */
 export default defineConfig({
   testDir: './tests',
+  /* Codeabdeckung der Gherkin-Szenarien (nur mit COVERAGE=1 aktiv) */
+  globalSetup: './features/support/coverage-setup.ts',
+  globalTeardown: './features/support/coverage-teardown.ts',
   /* Run tests in files in parallel */
   fullyParallel: true,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
@@ -34,6 +49,21 @@ export default defineConfig({
 
   /* Configure projects for major browsers */
   projects: [
+    {
+      // Gherkin-Szenarien: feste Fenstergröße, Zeitzone und Sprache, damit
+      // Referenzbilder (features/referenzbilder/) reproduzierbar bleiben.
+      name: 'bdd',
+      testDir: bddTestDir,
+      snapshotPathTemplate: 'features/referenzbilder/{arg}{ext}',
+      use: {
+        ...devices['Desktop Chrome'],
+        baseURL: 'http://localhost:4200',
+        viewport: { width: 1400, height: 1000 },
+        deviceScaleFactor: 2,
+        timezoneId: 'Europe/Berlin',
+        locale: 'de-DE',
+      },
+    },
     {
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
@@ -71,9 +101,10 @@ export default defineConfig({
   ],
 
   /* Run your local dev server before starting the tests */
-  // webServer: {
-  //   command: 'npm run start',
-  //   url: 'http://localhost:3000',
-  //   reuseExistingServer: !process.env.CI,
-  // },
+  webServer: {
+    command: 'npm run start -- --port 4200',
+    url: 'http://localhost:4200',
+    reuseExistingServer: !process.env.CI,
+    timeout: 180_000,
+  },
 });
