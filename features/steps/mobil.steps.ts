@@ -27,6 +27,31 @@ Then('lässt sich die Seite nicht seitlich verschieben', async ({ uhr }) => {
 
 Then('sind alle Knöpfe und Menüpunkte mindestens {int} Pixel hoch', async ({ uhr }, min: number) => {
   expect(await uhr.zuKleineBedienelemente(min)).toEqual([]);
+  expect(await uhr.zuKleineBedienelemente(min, uhr.kopf), 'Titelzeile').toEqual([]);
+});
+
+Then('steht die Titelzeile über der Uhr', async ({ uhr }) => {
+  const kopf = await uhr.box(uhr.kopf), uhrBox = await uhr.box(uhr.canvas);
+  expect(kopf.y + kopf.height, 'Titelzeile endet unterhalb des Uhranfangs').toBeLessThanOrEqual(uhrBox.y + 1);
+});
+
+Then('folgt der Seitenaufbau der sichtbaren Reihenfolge Titelzeile, Uhr, Menü', async ({ uhr }) => {
+  // DOM-Reihenfolge = Reihenfolge für Tastatur und Screenreader
+  const reihenfolge = await uhr.page.evaluate(() => {
+    const teile = [['Titelzeile', 'header.app-kopf'], ['Uhr', '#canvas'], ['Menü', '#controls']] as const;
+    return teile.map(([name, sel]) => [name, document.querySelector(sel)] as const)
+      .sort((a, b) => (a[1]!.compareDocumentPosition(b[1]!) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1))
+      .map(([name]) => name);
+  });
+  expect(reihenfolge).toEqual(['Titelzeile', 'Uhr', 'Menü']);
+});
+
+Then('ist keine Schrift in Titelzeile und Menü kleiner als {int} Pixel', async ({ uhr }, min: number) => {
+  expect([...await uhr.zuKleineTexte(uhr.kopf, min), ...await uhr.zuKleineTexte(uhr.menue, min)]).toEqual([]);
+});
+
+Then('ist keine Schrift im Fenster kleiner als {int} Pixel', async ({ uhr }, min: number) => {
+  expect(await uhr.zuKleineTexte(uhr.modal, min)).toEqual([]);
 });
 
 When('ich die Einführung öffne', async ({ uhr }) => {

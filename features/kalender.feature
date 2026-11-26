@@ -13,7 +13,7 @@ Funktionalität: Kalenderangaben zum eingestellten Datum
   Szenario: Kalenderangaben für einen historischen Tag
     Wenn ich das Datum "22.05.1965 12:00" einstelle
     Und ich den Kalender öffne
-    Dann zeigt der Kalender "Sa, 22.05.1965"
+    Dann zeigt der Kalender "Samstag, 22.05.1965"
     Und zeigt der Kalender den Wochentag "Samstag"
     Und zeigt der Kalender "HELENA"
 

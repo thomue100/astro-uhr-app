@@ -73,3 +73,41 @@ Funktionalität: Mobile Ansicht
     Angenommen die Astro-Uhr ist geöffnet
     Wenn ich das 3D-Modell öffne
     Dann ist der Bedienhinweis des 3D-Modells zu sehen
+
+  # UX-Review: Auf dem Smartphone stand der App-Titel unter der Uhr, und die
+  # Reihenfolge für Tastatur/Screenreader (Menü zuerst) wich von der sichtbaren ab
+  Szenario: Titelzeile steht auf dem Smartphone oben
+    Angenommen ich nutze ein Smartphone
+    Und die Astro-Uhr ist geöffnet
+    Dann steht die Titelzeile über der Uhr
+    Und steht die Uhr über dem Menü
+    Und folgt der Seitenaufbau der sichtbaren Reihenfolge Titelzeile, Uhr, Menü
+
+  # UX-Review: Schrift war teils 10–12 px; Mindestgröße 13 px (Fließtext 14 px)
+  Szenario: Ausreichend große Schrift im Menü am Computer
+    Angenommen die Astro-Uhr ist geöffnet
+    Wenn ich den Kalender öffne
+    Dann ist keine Schrift in Titelzeile und Menü kleiner als 13 Pixel
+    Wenn ich die Sprache umschalte
+    Dann ist keine Schrift in Titelzeile und Menü kleiner als 13 Pixel
+
+  Szenario: Ausreichend große Schrift im Menü auf dem Smartphone
+    Angenommen ich nutze ein Smartphone
+    Und die Astro-Uhr ist geöffnet
+    Wenn ich den Kalender öffne
+    Dann ist keine Schrift in Titelzeile und Menü kleiner als 13 Pixel
+
+  Szenariogrundriss: Ausreichend große Schrift in den Fenstern
+    Angenommen die Astro-Uhr ist geöffnet
+    Wenn ich das Fenster "<fenster>" öffne
+    Dann ist keine Schrift im Fenster kleiner als 13 Pixel
+
+    Beispiele:
+      | fenster            |
+      | Einführung         |
+      | Kunst & Geschichte |
+
+  Szenario: Ausreichend große Schrift im 3D-Bedienfeld
+    Angenommen die Astro-Uhr ist geöffnet
+    Wenn ich das 3D-Modell öffne
+    Dann ist keine Schrift in Titelzeile und Menü kleiner als 13 Pixel

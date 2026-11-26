@@ -14,13 +14,13 @@ Then('zeigt der Kalender {string}', async ({ uhr }, text: string) => {
 });
 
 Then('zeigt der Kalender den Wochentag {string}', async ({ uhr }, wochentag: string) => {
-  await expect(uhr.kalenderAngabe(wochentag)).toBeVisible();
+  await expect(uhr.kalenderPanel.locator('.cal-date')).toContainText(wochentag);
 });
 
 /**
  * | Osterdatum   | 5. April |
  * | Goldene Zahl | 13       |
- * Bezeichnung = Tooltip der Angabe im Panel, Wert = Ende des angezeigten Texts.
+ * Bezeichnung = sichtbare Beschriftung der Angabe im Panel, Wert = deren Inhalt.
  */
 Then('zeigt der Kalender diese Angaben:', async ({ uhr }, tabelle: DataTable) => {
   for (const [bezeichnung, wert] of Object.entries(tabelle.rowsHash())) {
@@ -34,8 +34,8 @@ Then('listet der Kalender diese Finsternisse:', async ({ uhr }, tabelle: DataTab
   await expect(uhr.finsternisZeilen).toHaveCount(zeilen.length);
   for (const [i, z] of zeilen.entries()) {
     const zeile = uhr.finsternisZeilen.nth(i);
-    await expect(zeile).toHaveAttribute('title', z['Art']);
-    await expect(zeile).toHaveText(endetMit(z['Zeitpunkt']));
+    await expect(zeile.locator('.cal-finsternis-art')).toContainText(z['Art']);
+    await expect(zeile.locator('.cal-finsternis-zeit')).toHaveText(z['Zeitpunkt']);
   }
 });
 

@@ -202,11 +202,13 @@ export class AstroUhr {
   }
 
   // ── Kalender-Panel ──────────────────────────────────────────────────
-  /** Angabe im Kalender-Panel über ihre Bezeichnung (Tooltip), z. B. "Osterdatum". */
+  /** Wert einer Angabe im Kalender-Panel über ihre sichtbare Bezeichnung, z. B. "Osterdatum". */
   kalenderAngabe(bezeichnung: string): Locator {
-    return this.kalenderPanel.getByTitle(bezeichnung, { exact: true });
+    return this.kalenderPanel.locator('.cal-wert')
+      .filter({ has: this.page.locator('dt').getByText(bezeichnung, { exact: true }) })
+      .locator('dd');
   }
-  /** Zeilen der Finsternis-Liste (je Zeile: Tooltip = Art, Text = Datum/Uhrzeit). */
+  /** Zeilen der Finsternis-Liste (je Zeile: Art und Datum/Uhrzeit). */
   get finsternisZeilen(): Locator { return this.kalenderPanel.locator('.cal-eclipse-compact'); }
 
   async oeffneErlaeuterungen(): Promise<void> {
@@ -342,6 +344,29 @@ export class AstroUhr {
     return bb;
   }
   get menue(): Locator { return this.page.locator('#controls'); }
+  /** Titelzeile mit App-Name und Sprachknopf (steht vor Uhr und Menü). */
+  get kopf(): Locator { return this.page.locator('header.app-kopf'); }
+
+  /**
+   * Kleinste Schriftgröße sichtbarer Texte im Bereich (px) und die Texte,
+   * die darunter liegen – ohne Canvas/WebGL, die keinen DOM-Text haben.
+   */
+  async zuKleineTexte(bereich: Locator, min: number): Promise<string[]> {
+    return bereich.evaluate((root, min) => {
+      const zuKlein: string[] = [];
+      const weg = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+      for (let n = weg.nextNode(); n; n = weg.nextNode()) {
+        const text = (n.textContent ?? '').trim();
+        const el = n.parentElement;
+        if (!text || !el || el.getClientRects().length === 0) continue;
+        const s = getComputedStyle(el);
+        if (s.visibility === 'hidden' || el.closest('[inert], [aria-hidden="true"]')) continue;
+        const px = parseFloat(s.fontSize);
+        if (px < min - 0.05) zuKlein.push(`„${text.slice(0, 30)}“ ${px.toFixed(1)} px`);
+      }
+      return zuKlein;
+    }, min);
+  }
 
   /** Ist die Seite breiter als der Bildschirm (seitliches Scrollen)? */
   async seitlichVerschiebbar(): Promise<boolean> {

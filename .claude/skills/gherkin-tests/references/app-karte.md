@@ -15,7 +15,8 @@ Stand: November 2026. Vor dem Verwenden eines Selektors kurz im Template gegenpr
 |---|---|---|
 | Uhr (alles Gezeichnete) | `#canvas` in `app-canvas` | kein DOM-Inhalt, siehe Abschnitt 3 |
 | Seitenleiste | `#controls` (`app-controls`) | |
-| Sprachumschalter | `.lang-btn` | Beschriftung zeigt die *andere* Sprache („EN“ wenn Deutsch aktiv) |
+| Titelzeile | `header.app-kopf` (`uhr.kopf`) | eigener Bereich vor Uhr und Menü (Smartphone: ganz oben; Computer: links über dem Menü) |
+| Sprachumschalter | `.lang-btn` (in der Titelzeile, nicht in `#controls`) | Beschriftung zeigt die *andere* Sprache („EN“ wenn Deutsch aktiv) |
 | Einführung (Modal) | `#infoButtonHeader` | öffnet `app-modal` mit `app-info-modal-content` |
 | Simulation | `#simulationPanel > .controls-header` | beim Start bereits offen |
 | Datum/Uhrzeit-Feld | `#dateTimeInput` (Label „Datum und Uhrzeit:“) | `datetime-local`, Wert `JJJJ-MM-TTTHH:MM`, erlaubt 1911–2080 |
@@ -23,7 +24,7 @@ Stand: November 2026. Vor dem Verwenden eines Selektors kurz im Template gegenpr
 | Geschwindigkeit | `#speedSlider` | 0.1–5 |
 | Start/Stop, Reset | Buttons in `app-simulation-panel .btn-row` | „▶️ Start“/„⏸️ Stop“, „Reset“ (= jetzt) |
 | Kalender | `#calendarPanel > .controls-header` | öffnet Panel **und** schaltet Canvas auf die Kalenderscheibe um |
-| Kalender-Infos | `app-calendar-panel` | Text z. B. `📅 Sa, 22.05.1965📆 18. April🔢9🔠C,D🔤C🙏 HELENA🌑 1965…`; Langformen stehen nur im `title`-Attribut |
+| Kalender-Infos | `app-calendar-panel` | Datum mit ausgeschriebenem Wochentag (`.cal-date`), darunter Liste `dl.cal-werte` mit sichtbaren Bezeichnungen (`dt`: Osterdatum, Goldene Zahl, Sonntagsbuchstabe, Tagesbuchstabe, Tagesheilige(r)) und Werten (`dd`); Finsternisse als `li.cal-eclipse-compact` mit `.cal-finsternis-art` und `.cal-finsternis-zeit`. Werte über `uhr.kalenderAngabe(bezeichnung)` |
 | Kalenderscheibe: Reset | `.cc-reset-corner` | nur sichtbar, wenn Kalender offen |
 | Kalenderscheibe: Zoom/Modus | `.calendar-controls-bar .cc-btn` | nur Tablet/Desktop |
 | 3D-Modell | `#model3dPanel > .controls-header` | ersetzt Menü durch `app-model3d-panel`, Canvas wird ausgeblendet, three.js lädt verzögert |
@@ -89,6 +90,7 @@ Zustand über `uhr.zustand()`: `angleSun`, `angleMoon`, `angleZodiac`, `angleCal
 - **Tastatur:** `uhr.tabReihenfolge(n)` drückt n-mal Tab und meldet je Element, ob es sichtbar ist (Schritte in `tastatur.steps.ts`). Neue ein-/ausblendbare Bereiche immer mit „erreicht die Tab-Taste nur sichtbare Bedienelemente“ absichern.
 - **Menüpunkte sind `<button class="controls-header">`** (vorher `<div>`): per Rolle ansprechbar (`uhr.menue.getByRole('button', { name: … })`); Simulation/Kalender tragen `aria-expanded`, Fenster-Öffner `aria-haspopup="dialog"`. Die alten Selektoren `#…Panel > .controls-header` funktionieren weiter.
 - **Fenster sind Dialoge** (`getByRole('dialog', { name: Titel })`): Beim Öffnen liegt der Fokus auf „Schließen“, Tab bleibt im Fenster, beim Schließen kehrt der Fokus zum Auslöser zurück. Fokus-Prüfungen: `<body>` als „kein Element fokussiert“ werten – sein Text enthält sonst jedes Wort der Seite.
+- **Schriftgrößen:** Fließtext, Beschriftungen und Knöpfe ≥ 14 px, Menüpunkte 15 px, Nebensächliches (Untertitel, Zeitzone, Quellen, Hinweise) 13 px; Eingabefelder auf dem Smartphone 16 px (sonst zoomt iOS). Absichern mit „ist keine Schrift in Titelzeile und Menü/im Fenster kleiner als 13 Pixel“ (`uhr.zuKleineTexte`).
 - **Barrierefreiheit:** „Dann findet die automatische Barrierefreiheitsprüfung keine Verstöße“ (axe-core 4.14.0, WCAG 2.0–2.2 A/AA + best practice) nach jeder neuen Ansicht ergänzen (`barrierefreiheit.feature`). axe prüft keine Textalternativen für Canvas/WebGL und keine Sprachwechsel – dafür eigene Schritte. Die Uhr ist `role="img"` mit dynamischer Beschreibung (`getByRole('img', { name: … })`); `<html lang>` folgt der gewählten Sprache. Hauptüberschrift ist `<h1 class="app-title">`, der Seiteninhalt liegt in `<main class="container">`.
 - **Shell-Fallen bei Gegenproben (Git-Bash):** Argumente wie `</main>` werden als Pfad umgeschrieben, Backslashes in `node -e` verändert – Eingriffe als Skript-Datei schreiben und von dort ausführen.
 - **Gegenproben nie mit `git checkout`/`git stash` auf Dateien mit offenen Änderungen** – vorher sichern (cp + md5sum) und aus der Sicherung wiederherstellen.

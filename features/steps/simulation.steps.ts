@@ -55,8 +55,11 @@ Then('steht die Geschwindigkeit auf {string}', async ({ uhr }, anzeige: string) 
 });
 
 Then('hält der Zeitraffer beim Zeitpunkt {string} an', async ({ uhr }, zeitpunkt: string) => {
-  await expect(uhr.startStopButton, 'Zeitraffer läuft weiter').toContainText('Start', { timeout: 20_000 });
-  expect((await uhr.angezeigterZeitpunkt()).getTime()).toBe(parseDatum(zeitpunkt).getTime());
+  // Erst warten, bis die Zeit das Ende erreicht hat – der Knopf zeigt „Start“
+  // auch schon, bevor der Zeitraffer überhaupt angelaufen ist (Wettlauf).
+  const soll = parseDatum(zeitpunkt).getTime();
+  await expect.poll(async () => (await uhr.angezeigterZeitpunkt()).getTime(), { timeout: 20_000 }).toBe(soll);
+  await expect(uhr.startStopButton, 'Zeitraffer läuft weiter').toContainText('Start');
   // … und bleibt dort stehen
   const { nachher } = await uhr.beobachteZeitpunkt(800);
   expect(nachher.getTime()).toBe(parseDatum(zeitpunkt).getTime());
