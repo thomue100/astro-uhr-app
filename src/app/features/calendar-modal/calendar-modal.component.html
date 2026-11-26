@@ -31,6 +31,10 @@
 
   <hr style="border-top: 1px solid #1a4261; margin-top: 20px; margin-bottom: 20px;" />
 
+  @if (r.error) {
+  <!-- Ohne Kalenderdaten kein Rechengang – sonst stünde dort Lückentext -->
+  <p class="cal-error" style="margin-top: 10px;">{{ r.error }}</p>
+  } @else {
   <!-- Schritt 1 -->
   <strong style="color: #ffcc33; font-size: 1.2em;">
     {{ 'modal_calendar.step1_title' | translate }}
@@ -70,6 +74,7 @@
     {{ 'modal_calendar.result_is' | translate }}
     {{ r.dayOfWeek }}!
   </p>
+  }
 
 </div>
 }
