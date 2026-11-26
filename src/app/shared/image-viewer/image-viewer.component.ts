@@ -260,8 +260,10 @@ export class ImageViewerComponent implements AfterViewInit, OnDestroy {
     const img   = this.imgRef?.nativeElement;
     if (!stage || !img) return;
     const sw = stage.clientWidth, sh = stage.clientHeight;
-    const iw = (img.naturalWidth  || sw) * this.scale;
-    const ih = (img.naturalHeight || sh) * this.scale;
+    // Angezeigte Größe (ohne transform), nicht die Originalgröße des Fotos:
+    // Mit naturalWidth (z. B. 4000 px) ließ sich das Bild ganz aus dem Rahmen ziehen.
+    const iw = (img.offsetWidth  || sw) * this.scale;
+    const ih = (img.offsetHeight || sh) * this.scale;
     const m  = Math.min(sw, sh) * 0.2;
     this.offsetX = Math.min(this.offsetX,  sw*0.5 + iw*0.5 - m);
     this.offsetX = Math.max(this.offsetX, -sw*0.5 - iw*0.5 + m);
