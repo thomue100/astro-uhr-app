@@ -91,3 +91,38 @@ Then('hat die Uhr dabei ihre Größe behalten', async ({ ablage }) => {
   const { b } = ablage.get('beobachtung') as { b: number[] };
   expect([...new Set(b)], 'Uhr hat die Größe geändert („wackelt“)').toHaveLength(1);
 });
+
+Given('ich beobachte die Größe der Uhr ab dem Laden der Seite', async ({ uhr }) => {
+  await uhr.page.addInitScript(() => {
+    const w = window as unknown as { __groessen: number[] };
+    w.__groessen = [];
+    const t0 = performance.now();
+    const bild = () => {
+      const c = document.querySelector('#canvas') as HTMLCanvasElement | null;
+      if (c?.style.width) w.__groessen.push(Math.round(c.getBoundingClientRect().width));
+      if (performance.now() - t0 < 3000) requestAnimationFrame(bild);
+    };
+    requestAnimationFrame(bild);
+  });
+});
+
+Then('hatte die Uhr vom ersten Bild an ihre endgültige Größe', async ({ uhr }) => {
+  await uhr.page.waitForTimeout(1500); // Beobachtungszeitraum nach dem Laden
+  const groessen = await uhr.page.evaluate(() => (window as unknown as { __groessen: number[] }).__groessen);
+  expect(groessen.length, 'keine Messung').toBeGreaterThan(0);
+  expect([...new Set(groessen)], 'Uhr wuchs nach dem Laden noch an').toHaveLength(1);
+});
+
+Then('ist die Uhr quadratisch', async ({ uhr }) => {
+  const b = await uhr.box(uhr.canvas);
+  expect(Math.round(b.width)).toBe(Math.round(b.height));
+});
+
+Then('kann das Menü nicht waagerecht scrollen', async ({ uhr }) => {
+  // Der Testbrowser blendet Scrollbalken aus – daher Einstellung und Breiten prüfen
+  const r = await uhr.page.locator('app-controls').evaluate((e) => ({
+    overflowX: getComputedStyle(e).overflowX, inhalt: e.scrollWidth, sichtbar: e.clientWidth,
+  }));
+  expect(r.overflowX, 'waagerechter Scrollbalken möglich').toBe('hidden');
+  expect(r.inhalt, 'Inhalt breiter als das Menü').toBeLessThanOrEqual(r.sichtbar);
+});

@@ -76,3 +76,27 @@ Funktionalität: Feinschliff der Oberfläche
       | 1536   | 730   |
       | 1366   | 768   |
       | 1920   | 1080  |
+
+  # Spalte und Uhr schaukelten sich gegenseitig hoch (8 px Rahmen je Bild):
+  # die Uhr wuchs nach dem Laden 65 Bilder lang, das Menü zeigte kurz Balken.
+  Szenariogrundriss: Uhr steht beim Laden sofort in voller Größe
+    Angenommen ich nutze einen Computer mit <breite> mal <hoehe> Pixeln
+    Und ich beobachte die Größe der Uhr ab dem Laden der Seite
+    Und die Astro-Uhr ist geöffnet
+    Dann hatte die Uhr vom ersten Bild an ihre endgültige Größe
+    Und ist die Uhr quadratisch
+    Und braucht die Seite keinen Scrollbalken
+
+    Beispiele:
+      | breite | hoehe |
+      | 1366   | 768   |
+      | 1920   | 1080  |
+      | 2560   | 1300  |
+
+  # Erschien im Menü ein senkrechter Balken, stand das fest 250 px breite
+  # Menü um dessen Breite über – ein unnötiger waagerechter Balken folgte.
+  Szenario: Menü ohne waagerechten Scrollbalken
+    Angenommen ich nutze einen Computer mit 1280 mal 600 Pixeln
+    Und die Astro-Uhr ist geöffnet
+    Wenn ich den Kalender öffne
+    Dann kann das Menü nicht waagerecht scrollen
