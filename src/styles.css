@@ -87,7 +87,8 @@ body {
   .container {
     display: grid;
     grid-template-columns: 250px auto;
-    grid-template-rows: auto 1fr;
+    /* minmax(0, …): die Menüzeile darf die Seite nicht höher machen als die Uhr */
+    grid-template-rows: auto minmax(0, 1fr);
     grid-template-areas:
       "kopf  uhr"
       "menue uhr";
@@ -108,7 +109,24 @@ body {
 
   /* Menü reicht bis zur Unterkante der Uhr: eine durchgehende Spalte statt
      Leerfläche darunter (UX-Review 16) */
-  .container > app-controls { grid-area: menue; align-self: stretch; display: flex; flex-direction: column; }
+  .container > app-controls {
+    grid-area: menue; align-self: stretch; display: flex; flex-direction: column;
+    /* Seitenhöhe richtet sich nur nach der Uhr (contain: size – der Inhalt
+       des Menüs zählt nicht mit). Reicht der Platz bei sehr niedrigen Fenstern
+       nicht, scrollt nur das Menü in sich; Seite und Uhr bleiben stehen. Vorher
+       ließ das aufgeklappte Kalender-Panel die Seite kurz überlaufen: der
+       Scrollbalken blitzte auf und die Uhr „wackelte“. */
+    contain: size;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #2f8fc4 transparent;
+  }
+
+  /* Panels wechseln ohne Höhen-Animation: Mit max-height-Übergang waren beim
+     Umschalten kurz beide Panels offen (Seite bis zu 65 px zu hoch). */
+  .controls-content {
+    transition: opacity 0.25s ease-out;
+  }
   .container > app-canvas   { grid-area: uhr; }
 
   .controls {
