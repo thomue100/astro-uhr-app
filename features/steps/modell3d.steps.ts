@@ -15,6 +15,12 @@ When('ich das 3D-Modell öffne', async ({ uhr }) => {
   await uhr.oeffne3dModell();
 });
 
+/** Nur den Menüpunkt anklicken – ohne zu erwarten, dass das 3D-Bild erscheint (z. B. ohne WebGL). */
+When('ich das Menü des 3D-Modells öffne', async ({ uhr }) => {
+  await uhr.page.locator('#model3dPanel > .controls-header').click();
+  await expect(uhr.m3dPanel).toBeVisible();
+});
+
 When('ich zur Uhr zurückkehre', async ({ uhr }) => {
   await uhr.m3dZurueck.click();
 });
@@ -124,14 +130,66 @@ Then('zeigt das 3D-Modell die Beschriftung {string}', async ({ uhr }, text: stri
   await expect.poll(async () => (await uhr.sichtbareBeschriftungen()).map((b) => b.text), BILD).toContain(text);
 });
 
+// Kamera-Prüfungen nutzen nur feststehende Beschriftungen: Sonne und Mond
+// bewegen sich mit dem laufenden Modell und würden Kamerabewegung vortäuschen.
+type Lage = Array<{ text: string; x: number; y: number }>;
+
 When('ich mir die sichtbaren Beschriftungen merke', async ({ uhr, ablage }) => {
-  await uhr.page.waitForTimeout(800); // Kamerafahrt der Startansicht abwarten
-  ablage.set('beschriftungen', await uhr.sichtbareBeschriftungen());
+  await uhr.warteBisKameraRuhig(); // Anflug der Startansicht dauert einige Sekunden
+  ablage.set('beschriftungen', await uhr.feststehendeBeschriftungen());
 });
 
 Then('sind im 3D-Modell mehr Beschriftungen sichtbar als vorher', async ({ uhr, ablage }) => {
-  const vorher = (ablage.get('beschriftungen') as unknown[]).length;
-  await expect.poll(async () => (await uhr.sichtbareBeschriftungen()).length, BILD).toBeGreaterThan(vorher);
+  const vorher = (ablage.get('beschriftungen') as Lage).length;
+  await expect.poll(async () => (await uhr.feststehendeBeschriftungen()).length, BILD).toBeGreaterThan(vorher);
+});
+
+When('ich das 3D-Modell mit der Maus um {int} Pixel nach rechts ziehe', async ({ uhr }, dx: number) => {
+  await uhr.ziehe3d(dx, 0);
+});
+
+When('ich das 3D-Modell mit gedrückter Umschalttaste um {int} Pixel nach rechts ziehe', async ({ uhr }, dx: number) => {
+  await uhr.ziehe3d(dx, 0, true);
+});
+
+When('ich am Mausrad {int}-mal nach vorn drehe', async ({ uhr }, n: number) => {
+  await uhr.mausrad3d(-n);
+});
+
+/** Mittlerer Abstand der feststehenden Beschriftungen voneinander (px). */
+function streuung(pkt: Lage): number {
+  let summe = 0, n = 0;
+  for (let i = 0; i < pkt.length; i++) for (let j = i + 1; j < pkt.length; j++) {
+    summe += Math.hypot(pkt[i].x - pkt[j].x, pkt[i].y - pkt[j].y); n++;
+  }
+  return n ? summe / n : 0;
+}
+
+When('ich mir den Abstand der Beschriftungen merke', async ({ uhr, ablage }) => {
+  await uhr.warteBisKameraRuhig();
+  ablage.set('streuung', streuung(await uhr.feststehendeBeschriftungen()));
+});
+
+Then('rücken die Beschriftungen auseinander', async ({ uhr, ablage }) => {
+  const vorher = ablage.get('streuung') as number;
+  await expect.poll(async () => streuung(await uhr.feststehendeBeschriftungen()), BILD).toBeGreaterThan(vorher * 1.1);
+});
+
+Then('rücken alle Beschriftungen gemeinsam nach rechts', async ({ uhr, ablage }) => {
+  // Verschieben: alle bleiben sichtbar und wandern deutlich waagerecht nach
+  // rechts – wegen der Perspektive nahe Teile etwas weiter als ferne (gemessen
+  // 158–187 px bei 120 px Mausweg). Drehen ließe Beschriftungen verschwinden
+  // und verschöbe sie kaum waagerecht, dafür senkrecht.
+  const vorher = ablage.get('beschriftungen') as Lage;
+  await uhr.warteBisKameraRuhig();
+  const jetzt = await uhr.feststehendeBeschriftungen();
+  const wege = vorher.map((v) => { const n = jetzt.find((j) => j.text === v.text); return n ? [n.x - v.x, n.y - v.y] : null; });
+  expect(wege.every((w) => w !== null), 'Beschriftungen verschwunden (gedreht statt verschoben?)').toBe(true);
+  const dx = wege.map((w) => w![0]), dy = wege.map((w) => w![1]);
+  expect(dx.length, 'zu wenige Beschriftungen zum Vergleichen').toBeGreaterThan(2);
+  expect(Math.min(...dx), 'nicht deutlich nach rechts gewandert').toBeGreaterThan(50);
+  expect(Math.max(...dy.map(Math.abs)), 'senkrecht gewandert').toBeLessThan(5);
+  expect(Math.max(...dx) / Math.min(...dx), 'sehr ungleich weit gewandert').toBeLessThan(1.5);
 });
 
 When('ich die Ansicht {string} wähle', async ({ uhr }, ansicht: string) => {
@@ -140,7 +198,7 @@ When('ich die Ansicht {string} wähle', async ({ uhr }, ansicht: string) => {
 
 Then('hat sich die Kamera bewegt', async ({ uhr, ablage }) => {
   const vorher = JSON.stringify(ablage.get('beschriftungen'));
-  await expect.poll(async () => JSON.stringify(await uhr.sichtbareBeschriftungen()), { timeout: 5000 }).not.toBe(vorher);
+  await expect.poll(async () => JSON.stringify(await uhr.feststehendeBeschriftungen()), BILD).not.toBe(vorher);
 });
 
 Then('ist der Bedienhinweis des 3D-Modells ausgeblendet', async ({ uhr }) => {

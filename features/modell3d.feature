@@ -146,3 +146,37 @@ Funktionalität: 3D-Funktionsmodell des Räderwerks
     Und ich die Sprache umschalte
     Dann zeigt das 3D-Modell die Beschriftung "Sun"
     Und zeigt der Rahmen das 3D-Modell
+
+  # Kamera mit der Maus: Ziehen dreht, Umschalt + Ziehen verschiebt, Mausrad zoomt.
+  # Angehalten, damit nur die Kamera die Beschriftungen bewegt (nicht der Zeiger).
+  Szenario: Modell mit der Maus drehen
+    Angenommen die Astro-Uhr ist geöffnet
+    Wenn ich das 3D-Modell öffne
+    Und ich das 3D-Modell anhalte
+    Und ich mir die sichtbaren Beschriftungen merke
+    Und ich das 3D-Modell mit der Maus um 150 Pixel nach rechts ziehe
+    Dann hat sich die Kamera bewegt
+
+  Szenario: Modell mit gedrückter Umschalttaste verschieben
+    Angenommen die Astro-Uhr ist geöffnet
+    Wenn ich das 3D-Modell öffne
+    Und ich das 3D-Modell anhalte
+    Und ich mir die sichtbaren Beschriftungen merke
+    Und ich das 3D-Modell mit gedrückter Umschalttaste um 120 Pixel nach rechts ziehe
+    Dann rücken alle Beschriftungen gemeinsam nach rechts
+
+  Szenario: Mit dem Mausrad heranzoomen
+    Angenommen die Astro-Uhr ist geöffnet
+    Wenn ich das 3D-Modell öffne
+    Und ich das 3D-Modell anhalte
+    Und ich mir den Abstand der Beschriftungen merke
+    Und ich am Mausrad 3-mal nach vorn drehe
+    Dann rücken die Beschriftungen auseinander
+
+  Szenario: Christusfigur aus- und einblenden
+    Angenommen die Astro-Uhr ist geöffnet
+    Wenn ich das 3D-Modell öffne
+    Und ich im 3D-Modell "Christusfigur" umschalte
+    Dann ist im 3D-Modell "Christusfigur" ausgeschaltet
+    Wenn ich im 3D-Modell "Christusfigur" umschalte
+    Dann ist im 3D-Modell "Christusfigur" eingeschaltet

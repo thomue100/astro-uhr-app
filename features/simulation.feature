@@ -56,3 +56,17 @@ Funktionalität: Simulation – Zeitreise und Zeitraffer
     Und ich den Kalender öffne
     Dann ist der Zeitraffer angehalten
     Und bleibt die simulierte Zeit stehen
+
+  Szenario: Simulation zu- und wieder aufklappen
+    Dann ist das Simulationsfeld zu sehen
+    Wenn ich den Menüpunkt Simulation anklicke
+    Dann ist das Simulationsfeld zugeklappt
+    Wenn ich den Menüpunkt Simulation anklicke
+    Dann ist das Simulationsfeld zu sehen
+
+  Szenario: Öffnen der Simulation blendet die Kalenderscheibe aus
+    Wenn ich den Kalender öffne
+    Dann zeigt die Uhr die Kalenderscheibe
+    Wenn ich den Menüpunkt Simulation anklicke
+    Dann ist das Simulationsfeld zu sehen
+    Und zeigt die Uhr wieder das Zifferblatt

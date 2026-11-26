@@ -120,6 +120,37 @@ export class AstroUhr {
     this.eigenerKontext = undefined;
   }
 
+  /** Browser mit anderer Sprache (z. B. "en-US"); vor oeffnen(). */
+  async nutzeBrowserSprache(locale: string): Promise<void> {
+    await this.neueSitzung({ locale });
+  }
+
+  // ── Störungen nachstellen (vor oeffnen() aufrufen) ──────────────────
+  /** Bilder der Uhr (Zeiger, Hintergründe, Tierkreiszeichen) laden nicht. */
+  async sperreBilderDerUhr(): Promise<void> {
+    await this.page.route(/\/assets\/images\/(zeiger|hintergrund|tierkreiszeichen)\//, (r) => r.abort());
+  }
+
+  /** Kalenderdaten (data/*.json) laden nicht. */
+  async sperreKalenderdaten(): Promise<void> {
+    await this.page.route(/\/data\/[^/]+\.json/, (r) => r.abort());
+  }
+
+  /** Der Browser stellt kein WebGL bereit (wie bei alter Grafik/abgeschalteter Beschleunigung). */
+  async ohneWebGL(): Promise<void> {
+    await this.page.addInitScript(() => {
+      const original = HTMLCanvasElement.prototype.getContext;
+      HTMLCanvasElement.prototype.getContext = function (this: HTMLCanvasElement, typ: string, ...rest: unknown[]) {
+        return typ.startsWith('webgl') || typ === 'experimental-webgl' ? null : (original as any).call(this, typ, ...rest);
+      } as typeof original;
+    });
+  }
+
+  async neuLaden(): Promise<void> {
+    await this.page.reload();
+    await expect(this.canvas).toBeVisible();
+  }
+
   /** Gerät bittet um reduzierte Bewegung (Betriebssystem-Einstellung); vor oeffnen(). */
   async bevorzugeReduzierteBewegung(): Promise<void> {
     await this.page.emulateMedia({ reducedMotion: 'reduce' });
@@ -428,6 +459,53 @@ export class AstroUhr {
     return alsFeldwert(d);
   }
 
+  /**
+   * Beschriftungen fester Bauteile – ohne Sonne und Mond, die sich mit dem
+   * laufenden Modell bewegen. Ihre Bildschirmlage ändert sich nur mit der Kamera.
+   */
+  async feststehendeBeschriftungen(): Promise<Array<{ text: string; x: number; y: number }>> {
+    return (await this.sichtbareBeschriftungen())
+      .filter((b) => !/^(Sonne|Mond|Sun|Moon)$/.test(b.text))
+      .map((b) => {
+        const m = /translate\((-?[\d.]+)px,\s*(-?[\d.]+)px\)\s*$/.exec(b.transform);
+        return { text: b.text, x: m ? +m[1] : NaN, y: m ? +m[2] : NaN };
+      });
+  }
+
+  /**
+   * Wartet, bis die Kamera ruht. Nach dem Öffnen und nach einem Ansichtswechsel
+   * fährt sie einige Sekunden lang weich an ihr Ziel.
+   */
+  async warteBisKameraRuhig(): Promise<void> {
+    let vorher = '', gleich = 0;
+    for (let i = 0; i < 80; i++) {
+      const jetzt = JSON.stringify(await this.feststehendeBeschriftungen());
+      gleich = jetzt === vorher ? gleich + 1 : 0;
+      if (gleich >= 3) return;
+      vorher = jetzt;
+      await this.page.waitForTimeout(250);
+    }
+    throw new Error('Kamera des 3D-Modells kommt nicht zur Ruhe');
+  }
+
+  /** Mit der Maus im 3D-Bild ziehen (optional mit gedrückter Umschalttaste). */
+  async ziehe3d(dx: number, dy: number, umschalt = false): Promise<void> {
+    const bb = await this.box(this.m3dBild);
+    const x = bb.x + bb.width / 2, y = bb.y + bb.height / 2;
+    if (umschalt) await this.page.keyboard.down('Shift');
+    await this.page.mouse.move(x, y);
+    await this.page.mouse.down();
+    await this.page.mouse.move(x + dx, y + dy, { steps: 10 });
+    await this.page.mouse.up();
+    if (umschalt) await this.page.keyboard.up('Shift');
+  }
+
+  async mausrad3d(schritte: number): Promise<void> {
+    const bb = await this.box(this.m3dBild);
+    await this.page.mouse.move(bb.x + bb.width / 2, bb.y + bb.height / 2);
+    for (let i = 0; i < Math.abs(schritte); i++) await this.page.mouse.wheel(0, schritte < 0 ? -200 : 200);
+  }
+
   /** Sichtbare Beschriftungen und ihre Bildschirmpositionen. */
   async sichtbareBeschriftungen(): Promise<Array<{ text: string; transform: string }>> {
     return this.m3dBeschriftungen.evaluateAll((els) =>
@@ -484,6 +562,11 @@ export class AstroUhr {
   async sonnenAusschnitt(): Promise<{ x: number; y: number; width: number; height: number }> {
     const bb = await this.warteBisCanvasRuhig();
     return { x: bb.x + bb.width * 0.3, y: bb.y + bb.height * 0.08, width: bb.width * 0.4, height: bb.height * 0.28 };
+  }
+
+  /** Die ganze Uhr. */
+  async uhrAusschnitt(): Promise<{ x: number; y: number; width: number; height: number }> {
+    return this.warteBisCanvasRuhig();
   }
 
   /** Unterer Bereich der Uhr – dort steht mittags der Vollmond (gegenüber der Sonne). */

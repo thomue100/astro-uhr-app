@@ -11,7 +11,7 @@ export const coverageAktiv = !!process.env['COVERAGE'];
 export const coverageOptionen: CoverageReportOptions = {
   name: 'Abdeckung der Gherkin-Szenarien',
   outputDir: './coverage-bdd',
-  reports: [['v8'], ['console-summary'], ['json-summary'], ['console-details', { skipPercent: 0 }]],
+  reports: [['v8'], ['console-summary'], ['json-summary'], ['lcovonly'], ['console-details', { skipPercent: 0 }]],
   // Nur das App-Bundle des Dev-Servers, keine Vite-/Angular-Hilfsskripte
   entryFilter: (entry) => entry.url.startsWith('http://localhost:4200/') && !entry.url.includes('/@'),
   // Nur eigener Code, keine node_modules, keine Unit-Tests
