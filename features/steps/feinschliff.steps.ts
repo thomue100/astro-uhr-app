@@ -60,3 +60,34 @@ Then('zeigt die Kalenderscheibe den Hinweis {string}', async ({ uhr }, text: str
 Then('ist der Hinweis an der Kalenderscheibe verschwunden', async ({ uhr }) => {
   await expect(uhr.page.locator('.scheiben-hinweis')).toHaveCount(0);
 });
+
+/** Beobachtet über einen Wechsel hinweg (Bild für Bild) Seitenhöhe und Uhrgröße. */
+When('ich beim Umschalten auf {string} Seite und Uhr beobachte', async ({ uhr, ablage }, ziel: string) => {
+  await uhr.warteBisCanvasRuhig(); // Einblenden nach dem Laden abwarten – beobachtet wird nur der Wechsel
+  await uhr.page.evaluate(() => {
+    const w = window as unknown as { __beob: { h: number[]; b: number[] } };
+    w.__beob = { h: [], b: [] };
+    const t0 = performance.now();
+    const bild = () => {
+      w.__beob.h.push(document.documentElement.scrollHeight);
+      w.__beob.b.push(Math.round(document.querySelector('#canvas')!.getBoundingClientRect().width));
+      if (performance.now() - t0 < 900) requestAnimationFrame(bild);
+    };
+    requestAnimationFrame(bild);
+  });
+  const knopf = ziel === 'Kalender' ? '#calendarPanel > .controls-header' : '#simulationPanel > .controls-header';
+  await uhr.page.locator(knopf).click();
+  await uhr.page.waitForTimeout(1000); // Beobachtungszeitraum (Übergänge dauern bis 0,4 s)
+  ablage.set('beobachtung', await uhr.page.evaluate(() => (window as unknown as { __beob: unknown }).__beob));
+});
+
+Then('ist die Seite dabei nie höher als das Fenster geworden', async ({ uhr, ablage }) => {
+  const { h } = ablage.get('beobachtung') as { h: number[] };
+  const fenster = uhr.page.viewportSize()!.height;
+  expect(Math.max(...h), 'Seite lief kurz über – Scrollbalken blitzt auf').toBeLessThanOrEqual(fenster);
+});
+
+Then('hat die Uhr dabei ihre Größe behalten', async ({ ablage }) => {
+  const { b } = ablage.get('beobachtung') as { b: number[] };
+  expect([...new Set(b)], 'Uhr hat die Größe geändert („wackelt“)').toHaveLength(1);
+});

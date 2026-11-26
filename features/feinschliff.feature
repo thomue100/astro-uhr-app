@@ -55,3 +55,24 @@ Funktionalität: Feinschliff der Oberfläche
     Dann zeigt die Kalenderscheibe den Hinweis "Mit einem Finger drehen · mit zwei Fingern zoomen und verschieben"
     Wenn ich die Kalenderscheibe mit einem Finger um 30 Grad im Uhrzeigersinn drehe
     Dann ist der Hinweis an der Kalenderscheibe verschwunden
+
+  # Fehlerbild: Beim Wechsel Simulation ↔ Kalender waren kurz beide Panels
+  # offen, die Seite lief über, der Scrollbalken blitzte auf und die Uhr
+  # wackelte. 1536 × 730: Laptop mit 125 % Skalierung.
+  Szenariogrundriss: Umschalten zwischen Simulation und Kalender ohne Wackeln
+    Angenommen ich nutze einen Computer mit <breite> mal <hoehe> Pixeln
+    Und die Astro-Uhr ist geöffnet
+    Wenn ich beim Umschalten auf "Kalender" Seite und Uhr beobachte
+    Dann ist die Seite dabei nie höher als das Fenster geworden
+    Und hat die Uhr dabei ihre Größe behalten
+    Und braucht die Seite keinen Scrollbalken
+    Wenn ich beim Umschalten auf "Simulation" Seite und Uhr beobachte
+    Dann ist die Seite dabei nie höher als das Fenster geworden
+    Und hat die Uhr dabei ihre Größe behalten
+
+    Beispiele:
+      | breite | hoehe |
+      | 1280   | 600   |
+      | 1536   | 730   |
+      | 1366   | 768   |
+      | 1920   | 1080  |
