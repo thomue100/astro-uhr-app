@@ -86,7 +86,13 @@ body {
 @media (min-width: 851px) {
   .container {
     display: grid;
-    grid-template-columns: 250px auto;
+    /* Feste Uhrgröße aus der Fenstergröße: höchstens Fensterhöhe minus Rand,
+       Abstand und Umschalter, höchstens Fensterbreite minus Menü und Abstände.
+       Vorher richtete sich die Spalte nach der Uhr und die Uhr nach der
+       Spalte (plus 8 px Rahmen) – beim Start wuchs sie so 65 Bilder lang
+       in 8-px-Schritten, und das Menü zeigte kurz Scrollbalken. */
+    --uhr: min(calc(100vh - 152px), calc(100vw - 372px));
+    grid-template-columns: 250px var(--uhr);
     /* minmax(0, …): die Menüzeile darf die Seite nicht höher machen als die Uhr */
     grid-template-rows: auto minmax(0, 1fr);
     grid-template-areas:
@@ -118,6 +124,9 @@ body {
        Scrollbalken blitzte auf und die Uhr „wackelte“. */
     contain: size;
     overflow-y: auto;
+    /* Waagerecht gibt es nie etwas zu scrollen (overflow-y: auto schaltet sonst
+       auch die Waagerechte auf auto) */
+    overflow-x: hidden;
     scrollbar-width: thin;
     scrollbar-color: #2f8fc4 transparent;
   }
@@ -154,7 +163,9 @@ body {
 
 @media (min-width: 851px) {
   .controls {
-    width: 250px;
+    /* füllt die 250-px-Spalte; erscheint im Menü ein senkrechter Scrollbalken,
+       wird es entsprechend schmaler statt seitlich überzustehen */
+    width: auto;
     /* Fix "Scrollbalken am PC": keine max-height / kein overflow-y mehr.
        Die Sidebar darf natürlich wachsen; dank body{align-items:flex-start}
        verursacht das kein Springen mehr. */
@@ -577,10 +588,11 @@ input[type="range"]::-moz-range-thumb {
 }
 
 @media (min-width: 851px) {
+  /* Größe kommt aus --uhr (Höhe ist dort schon berücksichtigt); eine eigene
+     Höhenbegrenzung machte die Uhr auf großen Bildschirmen unquadratisch */
   #canvas {
     flex: 1;
     width: auto;
-    max-height: 80vh;
   }
 }
 

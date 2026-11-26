@@ -25,11 +25,12 @@
   width: 100%;
 }
 
-/* Computer: Uhr nie höher als das Fenster (abzüglich Rand, Abstand und
-   Umschalter) – sonst bräuchte die Seite einen Scrollbalken. */
+/* Computer: feste Breite aus --uhr (styles.css, .container) – nicht aus dem
+   Inhalt, sonst schaukeln sich Spalte und Uhr gegenseitig hoch. Der Canvas
+   bekommt die Innenbreite, sein 4-px-Rahmen kommt außen dazu (= --uhr). */
 @media (min-width: 851px) {
   .canvas-container {
-    max-width: calc(100vh - 152px);
+    width: calc(var(--uhr) - 8px);
     margin: 0 auto;
   }
 }
