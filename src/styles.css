@@ -224,6 +224,30 @@ body {
   text-overflow: ellipsis;
 }
 
+/*
+ * Die Menüpunkte sind echte <button> (per Tab erreichbar, Enter/Leertaste).
+ * Die globalen button-Stile (Rahmen, Rundung, Hover-Farbe, Schrift) werden
+ * hier zurückgesetzt, damit sie genauso aussehen wie zuvor als <div>.
+ */
+button.controls-header {
+  width: 100%;
+  border: none;
+  border-bottom: 1px solid #1a4261;
+  font-family: inherit;
+  line-height: inherit;
+  transition: none;
+}
+
+button.controls-header:hover {
+  background-color: #123b57;
+}
+
+/* Tastatur-Fokus deutlich sichtbar (nur bei Tastaturbedienung, nicht beim Klicken) */
+button.controls-header:focus-visible {
+  outline: 2px solid #ffcc33;
+  outline-offset: -3px;
+}
+
 .controls > #infoButtonHeader {
   border-radius: 8px 8px 0 0;
 }

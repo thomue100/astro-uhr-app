@@ -19,47 +19,47 @@
 
   @if (m3d.active()) {
   <!-- 3D-Modell offen: Bedienfeld ersetzt das Menü, Titelzeile bleibt stehen -->
-  <div class="controls-header m3d-back" (click)="close3d()">
+  <button type="button" class="controls-header m3d-back" (click)="close3d()">
     {{ 'model3d.back' | translate }}
-  </div>
+  </button>
   <app-model3d-panel />
   } @else {
-  <div class="controls-header" id="infoButtonHeader" (click)="openModal('info')">
+  <button type="button" class="controls-header" id="infoButtonHeader" aria-haspopup="dialog" (click)="openModal('info')">
     {{ 'nav.intro' | translate }}
-  </div>
+  </button>
 
   <!-- Simulation Panel -->
   <div id="simulationPanel">
-    <div class="controls-header" (click)="openSimulation()">
-      {{ isSimulationOpen ? '🔽' : '▶️' }} {{ 'nav.simulation' | translate }}
-    </div>
-    <div class="controls-content" [class.controls-content--hidden]="!isSimulationOpen" [inert]="!isSimulationOpen">
+    <button type="button" class="controls-header" [attr.aria-expanded]="isSimulationOpen" aria-controls="simulationContent" (click)="openSimulation()">
+      <span><span aria-hidden="true">{{ isSimulationOpen ? '🔽' : '▶️' }}</span> {{ 'nav.simulation' | translate }}</span>
+    </button>
+    <div class="controls-content" id="simulationContent" [class.controls-content--hidden]="!isSimulationOpen" [inert]="!isSimulationOpen">
       <app-simulation-panel />
     </div>
   </div>
 
   <!-- Kalender Panel -->
   <div id="calendarPanel">
-    <div class="controls-header" (click)="openCalendar()">
-      {{ isCalendarOpen ? '🔽' : '▶️' }} {{ 'nav.calendar' | translate }}
-    </div>
-    <div class="controls-content" [class.controls-content--hidden]="!isCalendarOpen" [inert]="!isCalendarOpen">
+    <button type="button" class="controls-header" [attr.aria-expanded]="isCalendarOpen" aria-controls="calendarContent" (click)="openCalendar()">
+      <span><span aria-hidden="true">{{ isCalendarOpen ? '🔽' : '▶️' }}</span> {{ 'nav.calendar' | translate }}</span>
+    </button>
+    <div class="controls-content" id="calendarContent" [class.controls-content--hidden]="!isCalendarOpen" [inert]="!isCalendarOpen">
       <app-calendar-panel (openCalendarModal)="openModal('calendar')" />
     </div>
   </div>
 
   <!-- 3D-Funktionsmodell des Räderwerks -->
   <div id="model3dPanel">
-    <div class="controls-header" (click)="open3d()">
+    <button type="button" class="controls-header" (click)="open3d()">
       {{ 'nav.model3d' | translate }}
-    </div>
+    </button>
   </div>
 
   <!-- Kunst & Geschichte -->
   <div id="historyPanel">
-    <div class="controls-header" (click)="openModal('history')">
+    <button type="button" class="controls-header" aria-haspopup="dialog" (click)="openModal('history')">
       {{ 'nav.history' | translate }}
-    </div>
+    </button>
   </div>
   }
 
