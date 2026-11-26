@@ -152,7 +152,8 @@ body {
 .lang-btn {
   flex-shrink: 0;
   width: auto !important;
-  min-height: 36px;
+  /* Touch-Ziel ≥44px wie alle Bedienelemente; ab Tablet wieder kompakt (s. u.) */
+  min-height: 44px;
   background: #123b57;
   color: #ffcc33;
   border: 1px solid #ffcc33;
@@ -163,6 +164,12 @@ body {
   cursor: pointer;
   white-space: nowrap;
   transition: background 0.2s, color 0.2s;
+}
+
+@media (min-width: 601px) {
+  .lang-btn {
+    min-height: 36px;
+  }
 }
 
 .lang-btn:hover {
@@ -365,6 +372,11 @@ input, select {
   box-sizing: border-box;
 }
 
+/* Touch-Ziel ≥44px (Apple HIG / WCAG 2.5.5); Schieberegler haben eigene Maße */
+input:not([type="range"]), select {
+  min-height: 44px;
+}
+
 input:focus, select:focus {
   border-color: #ffcc33;
   outline: none;
@@ -374,6 +386,10 @@ input:focus, select:focus {
   input, select {
     font-size: 13px;
     padding: 3px 8px;
+  }
+
+  input:not([type="range"]), select {
+    min-height: auto;
   }
 }
 
