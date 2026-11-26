@@ -54,8 +54,22 @@ body {
   margin: 10px auto;
   background: rgba(10, 28, 40, 0.85);
   border-radius: 16px;
-  backdrop-filter: blur(4px);
   box-shadow: 0 0 30px rgba(0, 0, 0, 0.4);
+  position: relative;
+}
+
+/* Weichzeichner hinter dem Container. Bewusst NICHT als backdrop-filter am
+   Container selbst: Das machte ihn zum Bezugsrahmen für position: fixed –
+   die Fenster (Modals) wurden im Container statt im Bildschirm zentriert und
+   waren am Computer oben abgeschnitten. */
+.container::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  backdrop-filter: blur(4px);
+  z-index: -1;
+  pointer-events: none;
 }
 
 /* Mobile: Uhr (app-canvas) erscheint zuerst, Controls darunter.
