@@ -47,7 +47,7 @@ Then('ist der Zeitraffer angehalten', async ({ uhr }) => {
 });
 
 Then('ist der Zeitraffer gestartet', async ({ uhr }) => {
-  await expect(uhr.startStopButton).toContainText('Stop');
+  await expect(uhr.startStopButton).toContainText(/Anhalten|Pause/);
 });
 
 Then('steht die Geschwindigkeit auf {string}', async ({ uhr }, anzeige: string) => {
@@ -72,4 +72,20 @@ Then('meldet der Kalender kein ungültiges Jahr', async ({ uhr }) => {
 Then('lautet die Zeitanzeige der Simulation {string}', async ({ uhr }, text: string) => {
   // innerText mit normalisierten Leerräumen: Zeilenumbruch vor der Zeitzone = ein Leerzeichen
   await expect(uhr.liveAnzeige).toHaveText(text, { useInnerText: true });
+});
+
+Then('bietet die Simulation die Knöpfe {string} und {string}', async ({ uhr }, a: string, b: string) => {
+  for (const name of [a, b]) await expect(uhr.simulation.getByRole('button', { name, exact: true })).toBeVisible();
+});
+
+Then('läuft der Zeitraffer ungefähr mit {float} Stunden pro Sekunde', async ({ uhr }, stunden: number) => {
+  const startZeit = (await uhr.angezeigterZeitpunkt()).getTime();
+  const startEcht = Date.now();
+  await uhr.page.waitForTimeout(3000); // Beobachtungszeitraum ist hier der Zweck
+  const sim = ((await uhr.angezeigterZeitpunkt()).getTime() - startZeit) / 3_600_000;
+  const echt = (Date.now() - startEcht) / 1000;
+  const tempo = sim / echt;
+  // Headless zeichnet nur wenige Bilder/s, je Bild zählen höchstens 0,1 s → etwas langsamer erlaubt
+  expect(tempo, `${tempo.toFixed(2)} Std. pro Sek.`).toBeGreaterThan(stunden * 0.5);
+  expect(tempo, `${tempo.toFixed(2)} Std. pro Sek.`).toBeLessThan(stunden * 1.2);
 });

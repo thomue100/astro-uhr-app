@@ -222,7 +222,7 @@ export class AstroUhr {
   get liveAnzeige(): Locator { return this.page.locator('#liveDateTime'); }
   /** Nur der Zeitpunkt „TT.MM.JJJJ HH:mm:ss“ aus der Live-Anzeige (ohne Wochentag und Zeitzone). */
   get liveZeitpunkt(): Locator { return this.liveAnzeige.locator('.live-zeitpunkt'); }
-  get startStopButton(): Locator { return this.simulation.getByRole('button', { name: /Start|Stop/ }); }
+  get startStopButton(): Locator { return this.simulation.getByRole('button', { name: /Start|Anhalten|Pause/ }); }
   get geschwindigkeitsRegler(): Locator { return this.simulation.getByRole('slider'); }
 
   async starteSimulation(): Promise<void> {
@@ -230,11 +230,11 @@ export class AstroUhr {
     await this.startStopButton.click();
   }
   async halteSimulationAn(): Promise<void> {
-    await expect(this.startStopButton).toContainText('Stop');
+    await expect(this.startStopButton).toContainText(/Anhalten|Pause/);
     await this.startStopButton.click();
   }
   async setzeSimulationZurueck(): Promise<void> {
-    await this.simulation.getByRole('button', { name: 'Reset', exact: true }).click();
+    await this.simulation.getByRole('button', { name: /^(Jetzt|Now)$/ }).click();
   }
   async stelleGeschwindigkeitEin(faktor: number): Promise<void> {
     await this.geschwindigkeitsRegler.fill(String(faktor));
@@ -259,7 +259,7 @@ export class AstroUhr {
 
   // ── Bedienung der Kalenderscheibe ───────────────────────────────────
   scheibenButton(bezeichnung: string): Locator { return this.page.getByTitle(bezeichnung, { exact: true }); }
-  get scheibenReset(): Locator { return this.scheibenButton('⟲ Reset'); }
+  get scheibenReset(): Locator { return this.scheibenButton('⟲ Ansicht zurücksetzen'); }
 
   /**
    * Bedienbar = sichtbar, nicht durchsichtig und klickbar. Die Steuerung wird

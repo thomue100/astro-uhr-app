@@ -180,3 +180,12 @@ Funktionalität: 3D-Funktionsmodell des Räderwerks
     Dann ist im 3D-Modell "Christusfigur" ausgeschaltet
     Wenn ich im 3D-Modell "Christusfigur" umschalte
     Dann ist im 3D-Modell "Christusfigur" eingeschaltet
+
+  # UX-Review: Ein/Aus nicht nur über die Farbe zeigen (WCAG 1.4.1)
+  Szenario: Eingeschaltete Schalter tragen ein Häkchen
+    Angenommen die Astro-Uhr ist geöffnet
+    Wenn ich das 3D-Modell öffne
+    Dann trägt der Schalter "Christusfigur" ein Häkchen
+    Und trägt der Schalter "Scheiben durchsichtig" kein Häkchen
+    Wenn ich im 3D-Modell "Christusfigur" umschalte
+    Dann trägt der Schalter "Christusfigur" kein Häkchen

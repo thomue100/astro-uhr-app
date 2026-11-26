@@ -59,17 +59,17 @@ Then('heißt das Feld zum Stellen der Uhr {string}', async ({ uhr }, text: strin
 });
 
 Then('läuft das 3D-Modell mit {string}', async ({ uhr }, geschwindigkeit: string) => {
-  await expect(uhr.m3dLaufKnopf).toHaveAttribute('aria-pressed', 'true');
+  await expect(uhr.m3dLaufKnopf, 'Modell läuft (Knopf bietet „Anhalten“)').toContainText(/Anhalten|Pause/);
   await expect(uhr.m3dGeschwindigkeit.locator('option:checked')).toHaveText(geschwindigkeit);
 });
 
 When('ich das 3D-Modell anhalte', async ({ uhr }) => {
-  await expect(uhr.m3dLaufKnopf).toHaveAttribute('aria-pressed', 'true');
+  await expect(uhr.m3dLaufKnopf, 'Modell läuft (Knopf bietet „Anhalten“)').toContainText(/Anhalten|Pause/);
   await uhr.m3dLaufKnopf.click();
 });
 
 When('ich das 3D-Modell weiterlaufen lasse', async ({ uhr }) => {
-  await expect(uhr.m3dLaufKnopf).toHaveAttribute('aria-pressed', 'false');
+  await expect(uhr.m3dLaufKnopf, 'Modell steht (Knopf bietet „Start“)').toContainText('Start');
   await uhr.m3dLaufKnopf.click();
 });
 
@@ -87,7 +87,7 @@ When('ich im 3D-Modell auf „Jetzt“ klicke', async ({ uhr }) => {
 });
 
 Then('steht die Zeit im 3D-Modell still', async ({ uhr }) => {
-  await expect(uhr.m3dLaufKnopf).toHaveAttribute('aria-pressed', 'false');
+  await expect(uhr.m3dLaufKnopf, 'Modell steht (Knopf bietet „Start“)').toContainText('Start');
   const vorher = await uhr.m3dZeitpunkt();
   await uhr.page.waitForTimeout(1200); // Feld wird alle 0,5 s nachgeführt – länger beobachten
   expect((await uhr.m3dZeitpunkt()).getTime()).toBe(vorher.getTime());
@@ -207,4 +207,16 @@ Then('ist der Bedienhinweis des 3D-Modells ausgeblendet', async ({ uhr }) => {
 
 Then('ist der Bedienhinweis des 3D-Modells zu sehen', async ({ uhr }) => {
   await expect(uhr.m3dHinweis).toBeVisible();
+});
+
+Then('bietet das 3D-Modell die Knöpfe {string} und {string}', async ({ uhr }, a: string, b: string) => {
+  for (const name of [a, b]) await expect(uhr.m3dPanel.getByRole('button', { name, exact: true })).toBeVisible();
+});
+
+Then('trägt der Schalter {string} ein Häkchen', async ({ uhr }, name: string) => {
+  await expect.poll(() => uhr.m3dKnopf(name).evaluate((e) => getComputedStyle(e, '::before').content)).toContain('✓');
+});
+
+Then('trägt der Schalter {string} kein Häkchen', async ({ uhr }, name: string) => {
+  await expect.poll(() => uhr.m3dKnopf(name).evaluate((e) => getComputedStyle(e, '::before').content)).toBe('none');
 });

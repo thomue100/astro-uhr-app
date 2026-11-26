@@ -36,9 +36,9 @@ Funktionalität: Simulation – Zeitreise und Zeitraffer
     Und bleibt die simulierte Zeit stehen
 
   Szenario: Geschwindigkeit einstellen
-    Dann steht die Geschwindigkeit auf "0.5x"
+    Dann steht die Geschwindigkeit auf "1,1 Std. pro Sek."
     Wenn ich die Geschwindigkeit auf 2.0 stelle
-    Dann steht die Geschwindigkeit auf "2.0x"
+    Dann steht die Geschwindigkeit auf "4,6 Std. pro Sek."
 
   Szenario: Zurück zum aktuellen Zeitpunkt
     Wenn ich das Datum "01.01.2000 00:00" einstelle
@@ -86,3 +86,19 @@ Funktionalität: Simulation – Zeitreise und Zeitraffer
     Dann lautet die Zeitanzeige der Simulation "Mittwoch, 25.11.2026 14:30:00 Lübecker Zeit"
     Wenn ich die Sprache umschalte
     Dann lautet die Zeitanzeige der Simulation "Wednesday, 25.11.2026 14:30:00 Lübeck time"
+
+  # UX-Review: Geschwindigkeit als Zeit pro Sekunde (wie im 3D-Modell) und
+  # unabhängig von der Bildrate des Bildschirms
+  Szenario: Zeitraffer läuft mit der angezeigten Geschwindigkeit
+    Wenn ich die Geschwindigkeit auf 2.0 stelle
+    Dann steht die Geschwindigkeit auf "4,6 Std. pro Sek."
+    Wenn ich die Simulation starte
+    Dann läuft der Zeitraffer ungefähr mit 4.6 Stunden pro Sekunde
+
+  # UX-Review: dieselben Begriffe wie im 3D-Modell
+  Szenario: Gleiche Begriffe in Simulation und 3D-Modell
+    Dann bietet die Simulation die Knöpfe "▶️ Start" und "Jetzt"
+    Wenn ich das 3D-Modell öffne
+    Dann bietet das 3D-Modell die Knöpfe "⏸️ Anhalten" und "Jetzt"
+    Wenn ich das 3D-Modell anhalte
+    Dann bietet das 3D-Modell die Knöpfe "▶️ Start" und "Jetzt"

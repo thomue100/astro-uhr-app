@@ -27,7 +27,7 @@ Funktionalität: Bedienung mit der Tab-Taste
 
   Szenario: Bedienelemente der Kalenderscheibe nur bei geöffnetem Kalender
     Dann erreicht die Tab-Taste "Vergrößern" nicht
-    Und erreicht die Tab-Taste "⟲ Reset" nicht
+    Und erreicht die Tab-Taste "⟲ Ansicht zurücksetzen" nicht
 
   # ── Menüpunkte ─────────────────────────────────────────────────────────
   Szenario: Alle Menüpunkte sind per Tab erreichbar
