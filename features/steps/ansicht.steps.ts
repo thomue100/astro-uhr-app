@@ -6,6 +6,15 @@ When('ich im Umschalter {string} wähle', async ({ uhr }, name: string) => {
   await uhr.ansichtKnopf(name).click();
 });
 
+When('ich im Umschalter {string} per Tastatur wähle', async ({ uhr }, name: string) => {
+  await uhr.ansichtKnopf(name).focus();
+  await uhr.page.keyboard.press('Enter');
+});
+
+Then('bietet das Menü keinen eigenen Punkt für das 3D-Modell', async ({ uhr }) => {
+  await expect(uhr.page.locator('#controls').getByRole('button', { name: /3D/ })).toHaveCount(0);
+});
+
 Then('ist im Umschalter {string} gewählt', async ({ uhr }, name: string) => {
   await expect(uhr.ansichtKnopf(name)).toHaveAttribute('aria-pressed', 'true');
   // genau einer gewählt

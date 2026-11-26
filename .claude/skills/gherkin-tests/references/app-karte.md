@@ -29,7 +29,7 @@ Stand: November 2026. Vor dem Verwenden eines Selektors kurz im Template gegenpr
 | Kalender-Infos | `app-calendar-panel` | Datum mit ausgeschriebenem Wochentag (`.cal-date`), darunter Liste `dl.cal-werte` mit sichtbaren Bezeichnungen (`dt`: Osterdatum, Goldene Zahl, Sonntagsbuchstabe, Tagesbuchstabe, Tagesheilige(r)) und Werten (`dd`); Finsternisse als `li.cal-eclipse-compact` mit `.cal-finsternis-art` und `.cal-finsternis-zeit`. Werte über `uhr.kalenderAngabe(bezeichnung)` |
 | Kalenderscheibe: Reset | `.cc-reset-corner` | nur sichtbar, wenn Kalender offen |
 | Kalenderscheibe: Zoom/Modus | `.calendar-controls-bar .cc-btn` | nur Tablet/Desktop |
-| 3D-Modell | `#model3dPanel > .controls-header` | ersetzt Menü durch `app-model3d-panel`, Canvas wird ausgeblendet, three.js lädt verzögert |
+| 3D-Modell | Umschalter-Knopf „3D-Modell“ (`uhr.oeffne3dModell()`; kein Menüpunkt mehr) | ersetzt Menü durch `app-model3d-panel`, Canvas wird ausgeblendet, three.js lädt verzögert |
 | 3D: zurück | `.controls-header.m3d-back` oder Escape | |
 | 3D: Uhr stellen | `#m3d-when` | |
 | Kunst & Geschichte | `#historyPanel > .controls-header` | Modal `app-history-modal-content` |
@@ -45,7 +45,6 @@ Alle sichtbaren Texte stehen in `public/i18n/de.json` und `en.json`. Erwartungsw
 | `nav.simulation` | Simulation | Simulation |
 | `nav.calendar` | Kalender | Calendar |
 | `nav.history` | ℹ️ Kunst & Geschichte | ℹ️ Art & History |
-| `nav.model3d` | ⚙️ 3D-Funktionsmodell | ⚙️ 3D working model |
 | `simulation.date_label` | Datum und Uhrzeit: | |
 | `calendar.easter` | Osterdatum | Easter date |
 | `weekdays_short.*` | So Mo Di Mi Do Fr Sa | |

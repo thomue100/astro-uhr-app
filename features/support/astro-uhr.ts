@@ -511,7 +511,7 @@ export class AstroUhr {
   m3dKnopf(name: string): Locator { return this.m3dPanel.getByRole('button', { name, exact: true }); }
 
   async oeffne3dModell(): Promise<void> {
-    await this.menuepunkt('model3dPanel').click();
+    await this.ansichtKnopf('3D-Modell').click();
     await expect(this.m3dBild).toBeVisible({ timeout: 15_000 }); // three.js lädt nach
   }
 

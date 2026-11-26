@@ -15,9 +15,9 @@ When('ich das 3D-Modell öffne', async ({ uhr }) => {
   await uhr.oeffne3dModell();
 });
 
-/** Nur den Menüpunkt anklicken – ohne zu erwarten, dass das 3D-Bild erscheint (z. B. ohne WebGL). */
+/** Nur umschalten – ohne zu erwarten, dass das 3D-Bild erscheint (z. B. ohne WebGL). */
 When('ich das Menü des 3D-Modells öffne', async ({ uhr }) => {
-  await uhr.page.locator('#model3dPanel > .controls-header').click();
+  await uhr.ansichtKnopf('3D-Modell').click();
   await expect(uhr.m3dPanel).toBeVisible();
 });
 

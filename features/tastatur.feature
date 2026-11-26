@@ -34,7 +34,6 @@ Funktionalität: Bedienung mit der Tab-Taste
     Dann erreicht die Tab-Taste "Einführung"
     Und erreicht die Tab-Taste "Simulation"
     Und erreicht die Tab-Taste "Kalender"
-    Und erreicht die Tab-Taste "3D-Funktionsmodell"
     Und erreicht die Tab-Taste "Kunst & Geschichte"
 
   Szenario: Kalender mit der Tastatur auf- und zuklappen
@@ -79,7 +78,7 @@ Funktionalität: Bedienung mit der Tab-Taste
 
   # ── 3D-Modell ──────────────────────────────────────────────────────────
   Szenario: 3D-Modell mit der Tastatur öffnen und verlassen
-    Wenn ich den Menüpunkt "3D-Funktionsmodell" per Tastatur betätige
+    Wenn ich im Umschalter "3D-Modell" per Tastatur wähle
     Dann zeigt der Rahmen das 3D-Modell
     Wenn ich den Menüpunkt "Zurück zur Uhr" per Tastatur betätige
     Dann zeigt der Rahmen wieder die Uhr mit dem Menü

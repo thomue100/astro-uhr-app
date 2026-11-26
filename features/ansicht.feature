@@ -21,6 +21,15 @@ Funktionalität: Umschalter für die Ansicht im Rahmen
     Dann zeigt der Rahmen das Zifferblatt
     Und ist das Simulationsfeld zu sehen
 
+  # Nur ein Weg zur Ansicht: das 3D-Modell steht nicht zusätzlich im Menü
+  Szenario: Umschalter ist der einzige Weg zum 3D-Modell
+    Dann bietet das Menü keinen eigenen Punkt für das 3D-Modell
+
+  Szenario: Ansichten sind per Tab erreichbar
+    Dann erreicht die Tab-Taste "Uhr"
+    Und erreicht die Tab-Taste "Kalenderscheibe"
+    Und erreicht die Tab-Taste "3D-Modell"
+
   Szenario: Umschalter folgt dem Menü
     Wenn ich den Kalender öffne
     Dann ist im Umschalter "Kalenderscheibe" gewählt
