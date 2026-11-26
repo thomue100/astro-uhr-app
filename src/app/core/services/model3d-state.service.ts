@@ -1,6 +1,6 @@
 // src/app/core/services/model3d-state.service.ts
 import { Injectable, signal } from '@angular/core';
-import { HOUR, ViewKey } from '../../features/model3d/clock-math';
+import { ViewKey, alsOrtszeitText, ausOrtszeit } from '../../features/model3d/clock-math';
 
 /**
  * Gemeinsamer Zustand des 3D-Funktionsmodells: Das Bedienfeld sitzt in der
@@ -27,7 +27,7 @@ export class Model3dStateService {
   /** Gewünschte Kameraansicht; seq sorgt dafür, dass auch dieselbe Ansicht erneut angefahren wird */
   readonly view = signal<{ key: ViewKey; seq: number }>({ key: 'start', seq: 0 });
 
-  /** Wert des Feldes „Uhr stellen (MEZ)“ */
+  /** Wert des Feldes „Uhr stellen“ (Lübecker Ortszeit, im Sommer MESZ) */
   readonly whenText = signal('');
 
   open(start: Date): void {
@@ -51,21 +51,15 @@ export class Model3dStateService {
     this.syncWhen();
   }
 
-  /** Wert aus dem Feld „Uhr stellen (MEZ)“ übernehmen */
+  /** Wert aus dem Feld „Uhr stellen“ (Lübecker Ortszeit) übernehmen */
   setWhen(value: string): void {
     const m = /^(\d+)-(\d+)-(\d+)T(\d+):(\d+)/.exec(value);
     if (!m) return;
-    const d = new Date(0);
-    d.setUTCFullYear(+m[1], +m[2] - 1, +m[3]);
-    d.setUTCHours(+m[4], +m[5]);
-    this.simT = d.getTime() - HOUR;
+    this.simT = ausOrtszeit(+m[1], +m[2], +m[3], +m[4], +m[5]);
   }
 
-  /** Feld „Uhr stellen“ auf die simulierte Zeit (MEZ) setzen */
+  /** Feld „Uhr stellen“ auf die simulierte Zeit (Lübecker Ortszeit) setzen */
   syncWhen(): void {
-    const d = new Date(this.simT + HOUR), pad = (n: number) => String(n).padStart(2, '0');
-    this.whenText.set(
-      `${d.getUTCFullYear()}-${pad(d.getUTCMonth() + 1)}-${pad(d.getUTCDate())}T${pad(d.getUTCHours())}:${pad(d.getUTCMinutes())}`,
-    );
+    this.whenText.set(alsOrtszeitText(this.simT));
   }
 }

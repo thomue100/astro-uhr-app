@@ -307,19 +307,17 @@ export class AstroUhr {
     await expect(this.m3dBild).toBeVisible({ timeout: 15_000 }); // three.js lädt nach
   }
 
-  /** Zeitpunkt im Feld „Uhr stellen (MEZ)“ – MEZ = UTC+1 ganzjährig. */
+  /** Zeitpunkt im Feld „Uhr stellen“ – Lübecker Ortszeit (im Sommer MESZ), wie die echte Uhr. */
   async m3dZeitpunkt(): Promise<Date> {
     const v = await this.m3dUhrStellen.inputValue();
     const m = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})$/.exec(v);
     if (!m) throw new Error(`Feld „Uhr stellen“ enthält "${v}"`);
-    return new Date(Date.UTC(+m[1], +m[2] - 1, +m[3], +m[4], +m[5]) - 3600_000);
+    return berlinZeitpunkt(+m[1], +m[2], +m[3], +m[4], +m[5]);
   }
 
-  /** Zeitpunkt → Feldwert in MEZ (UTC+1). */
-  static alsMezFeldwert(d: Date): string {
-    const t = new Date(d.getTime() + 3600_000);
-    const p = (n: number) => String(n).padStart(2, '0');
-    return `${t.getUTCFullYear()}-${p(t.getUTCMonth() + 1)}-${p(t.getUTCDate())}T${p(t.getUTCHours())}:${p(t.getUTCMinutes())}`;
+  /** Zeitpunkt → Feldwert in Lübecker Ortszeit (Format datetime-local). */
+  static alsFeldwert(d: Date): string {
+    return alsFeldwert(d);
   }
 
   /** Sichtbare Beschriftungen und ihre Bildschirmpositionen. */

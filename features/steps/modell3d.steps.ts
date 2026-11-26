@@ -43,9 +43,13 @@ Then('zeigt der Rahmen wieder die Uhr mit dem Menü', async ({ uhr }) => {
 });
 
 // ── Zeit im Modell ──────────────────────────────────────────────────────
-Then('ist die Uhr im 3D-Modell auf {string} MEZ gestellt', async ({ uhr }, zeitpunkt: string) => {
-  // Angabe in Lübecker Ortszeit (im Winter = MEZ); Feld zeigt MEZ
-  await expect(uhr.m3dUhrStellen).toHaveValue(AstroUhr.alsMezFeldwert(parseDatum(zeitpunkt)));
+Then('ist die Uhr im 3D-Modell auf {string} gestellt', async ({ uhr }, zeitpunkt: string) => {
+  // Angabe und Feld in Lübecker Ortszeit (im Sommer MESZ) – wie die echte Uhr
+  await expect(uhr.m3dUhrStellen).toHaveValue(AstroUhr.alsFeldwert(parseDatum(zeitpunkt)));
+});
+
+Then('heißt das Feld zum Stellen der Uhr {string}', async ({ uhr }, text: string) => {
+  await expect(uhr.m3dPanel.locator('label[for="m3d-when"]')).toHaveText(text);
 });
 
 Then('läuft das 3D-Modell mit {string}', async ({ uhr }, geschwindigkeit: string) => {
@@ -68,7 +72,7 @@ When('ich die Geschwindigkeit des 3D-Modells auf {string} stelle', async ({ uhr 
 });
 
 When('ich die Uhr im 3D-Modell auf {string} stelle', async ({ uhr }, zeitpunkt: string) => {
-  await uhr.m3dUhrStellen.fill(AstroUhr.alsMezFeldwert(parseDatum(zeitpunkt)));
+  await uhr.m3dUhrStellen.fill(AstroUhr.alsFeldwert(parseDatum(zeitpunkt)));
   await uhr.m3dUhrStellen.blur();
 });
 

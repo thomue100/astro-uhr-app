@@ -32,13 +32,24 @@ Funktionalität: 3D-Funktionsmodell des Räderwerks
     Und ich zur Uhr zurückkehre
     Dann ist der Zeitraffer angehalten
 
-  # Winterdatum: Lübecker Ortszeit = MEZ. (Sommer siehe offene Frage MEZ/MESZ)
-  Szenario: Das Modell übernimmt den eingestellten Zeitpunkt der Uhr
+  # Die echte Uhr wird zur Sommerzeit umgestellt – das Modell zeigt wie die
+  # Uhr die Lübecker Ortszeit (Winter MEZ, Sommer MESZ). Früher rechnete das
+  # Modell ganzjährig in MEZ und ging im Sommer eine Stunde nach.
+  Szenariogrundriss: Das Modell übernimmt den eingestellten Zeitpunkt der Uhr
     Angenommen mein Gerät bevorzugt reduzierte Bewegung
     Und die Astro-Uhr ist geöffnet
-    Wenn ich das Datum "22.12.1965 09:45" einstelle
+    Wenn ich das Datum "<zeitpunkt>" einstelle
     Und ich das 3D-Modell öffne
-    Dann ist die Uhr im 3D-Modell auf "22.12.1965 09:45" MEZ gestellt
+    Dann ist die Uhr im 3D-Modell auf "<zeitpunkt>" gestellt
+    Und heißt das Feld zum Stellen der Uhr "Uhr stellen (Lübecker Zeit)"
+
+    # Winter, Sommer und jeweils die erste Stunde nach den Umstellungen 2026
+    Beispiele:
+      | zeitpunkt        |
+      | 22.12.1965 09:45 |
+      | 15.07.2026 12:00 |
+      | 29.03.2026 03:30 |
+      | 25.10.2026 03:30 |
 
   Szenario: Bei reduzierter Bewegung läuft das Modell in Echtzeit
     Angenommen mein Gerät bevorzugt reduzierte Bewegung
@@ -74,10 +85,20 @@ Funktionalität: 3D-Funktionsmodell des Räderwerks
     Wenn ich das 3D-Modell öffne
     Und ich das 3D-Modell anhalte
     Und ich die Uhr im 3D-Modell auf "01.01.2000 08:00" stelle
-    Dann ist die Uhr im 3D-Modell auf "01.01.2000 08:00" MEZ gestellt
+    Dann ist die Uhr im 3D-Modell auf "01.01.2000 08:00" gestellt
     Und steht die Zeit im 3D-Modell still
     Wenn ich im 3D-Modell auf „Jetzt“ klicke
-    Dann ist die Uhr im 3D-Modell auf "25.11.2026 14:30" MEZ gestellt
+    Dann ist die Uhr im 3D-Modell auf "25.11.2026 14:30" gestellt
+
+  Szenario: Uhr im Modell auf eine Sommerzeit stellen
+    Angenommen heute ist der "15.07.2026 16:45"
+    Und die Astro-Uhr ist geöffnet
+    Wenn ich das 3D-Modell öffne
+    Und ich das 3D-Modell anhalte
+    Und ich die Uhr im 3D-Modell auf "01.08.2026 12:00" stelle
+    Dann ist die Uhr im 3D-Modell auf "01.08.2026 12:00" gestellt
+    Wenn ich im 3D-Modell auf „Jetzt“ klicke
+    Dann ist die Uhr im 3D-Modell auf "15.07.2026 16:45" gestellt
 
   Szenario: Grundeinstellung der Darstellung
     Angenommen die Astro-Uhr ist geöffnet

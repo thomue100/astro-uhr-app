@@ -262,7 +262,7 @@
       "s21600": "6 hours per sec.",
       "s86400": "1 day per sec."
     },
-    "set_clock": "Set the clock (CET)",
+    "set_clock": "Set the clock (Lübeck time)",
     "now": "Now",
     "view": "View",
     "views": {
