@@ -20,3 +20,9 @@ Then('ist die Seitensprache {string}', async ({ uhr }, sprache: string) => {
 Then('beschreibt die Textalternative der Uhr {string}', async ({ uhr }, text: string) => {
   await expect(uhr.page.getByRole('img', { name: new RegExp(text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')) })).toBeVisible();
 });
+
+Then('zeichnet der Browser die Symbole der Eingabefelder hell auf dunkel', async ({ uhr }) => {
+  for (const feld of [uhr.datumsfeld, uhr.geschwindigkeitsRegler]) {
+    await expect(feld).toHaveCSS('color-scheme', 'dark');
+  }
+});

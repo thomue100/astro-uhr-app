@@ -63,3 +63,8 @@ Funktionalität: Barrierefreiheit
     Wenn ich die Sprache umschalte
     Dann beschreibt die Textalternative der Uhr "Astronomical clock set to Tuesday, 24 November 2026, 15:53"
     Und beschreibt die Textalternative der Uhr "Moon: full moon"
+
+  # WCAG 1.4.11: Kalendersymbol im Datumsfeld war dunkelgrau auf Dunkelblau
+  Szenario: Symbole in Eingabefeldern sind gut sichtbar
+    Angenommen die Astro-Uhr ist geöffnet
+    Dann zeichnet der Browser die Symbole der Eingabefelder hell auf dunkel

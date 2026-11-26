@@ -146,3 +146,12 @@ Then('lässt sich das Bild {string} nicht aus dem Rahmen schieben', async ({ uhr
 Then('ist der Bedienhinweis des Bildbetrachters ausgeblendet', async ({ uhr }) => {
   await expect(uhr.bildbetrachter.first().locator('.iv-hint')).toBeHidden();
 });
+
+Then('kommt im Fenster der Text {string} genau einmal vor', async ({ uhr }, text: string) => {
+  const inhalt = await uhr.modal.innerText();
+  expect(inhalt.split(text).length - 1, `Anzahl von „${text}“`).toBe(1);
+});
+
+Then('kommt im Fenster der Text {string} nicht vor', async ({ uhr }, text: string) => {
+  await expect(uhr.modal).not.toContainText(text);
+});

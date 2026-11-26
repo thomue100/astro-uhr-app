@@ -87,3 +87,11 @@ Funktionalität: Kalenderangaben zum eingestellten Datum
       | 15.09.2026 | Dienstag   |
       | 29.02.2024 | Donnerstag |
       | 25.12.2026 | Freitag    |
+
+  # UX-Review: ein Absatz stand doppelt, an der Regel hing ein loser Buchstabe
+  Szenario: Erläuterungen ohne doppelten Absatz und ohne losen Buchstaben
+    Wenn ich das Datum "26.11.2026 12:00" einstelle
+    Und ich den Kalender öffne
+    Und ich die Erläuterungen zum Kalender öffne
+    Dann kommt im Fenster der Text "Ganz innen stehen die Daten der Ostersonntage" genau einmal vor
+    Und kommt im Fenster der Text "usw. E" nicht vor

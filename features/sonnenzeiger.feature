@@ -33,3 +33,10 @@ Funktionalität: Sonnenzeiger zeigt die Lübecker Ortszeit
       | Asia/Tokyo       | 25.11.2026 12:00 | 12:00   |
       | UTC              | 15.07.2026 08:15 | 08:15   |
 
+
+  # Die Zeitanzeige zeigt – wie der Sonnenzeiger – Lübecker Zeit, nicht die des Geräts
+  Szenario: Zeitanzeige auf einem Gerät in New York
+    Angenommen mein Gerät ist auf die Zeitzone "America/New_York" eingestellt
+    Und heute ist der "25.11.2026 12:00"
+    Und die Astro-Uhr ist geöffnet
+    Dann lautet die Zeitanzeige der Simulation "Mittwoch, 25.11.2026 12:00:00 Lübecker Zeit"

@@ -65,3 +65,8 @@ Then('hält der Zeitraffer beim Zeitpunkt {string} an', async ({ uhr }, zeitpunk
 Then('meldet der Kalender kein ungültiges Jahr', async ({ uhr }) => {
   await expect(uhr.kalenderPanel).not.toContainText(/Ungültiges Jahr|Invalid year/);
 });
+
+Then('lautet die Zeitanzeige der Simulation {string}', async ({ uhr }, text: string) => {
+  // innerText mit normalisierten Leerräumen: Zeilenumbruch vor der Zeitzone = ein Leerzeichen
+  await expect(uhr.liveAnzeige).toHaveText(text, { useInnerText: true });
+});

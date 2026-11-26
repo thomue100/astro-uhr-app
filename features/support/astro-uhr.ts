@@ -218,6 +218,8 @@ export class AstroUhr {
   // ── Simulation ──────────────────────────────────────────────────────
   get simulation(): Locator { return this.page.locator('app-simulation-panel'); }
   get liveAnzeige(): Locator { return this.page.locator('#liveDateTime'); }
+  /** Nur der Zeitpunkt „TT.MM.JJJJ HH:mm:ss“ aus der Live-Anzeige (ohne Wochentag und Zeitzone). */
+  get liveZeitpunkt(): Locator { return this.liveAnzeige.locator('.live-zeitpunkt'); }
   get startStopButton(): Locator { return this.simulation.getByRole('button', { name: /Start|Stop/ }); }
   get geschwindigkeitsRegler(): Locator { return this.simulation.getByRole('slider'); }
 
@@ -247,7 +249,7 @@ export class AstroUhr {
 
   /** Angezeigter Zeitpunkt der Simulation (Live-Anzeige "TT.MM.JJJJ HH:mm:ss"). */
   async angezeigterZeitpunkt(): Promise<Date> {
-    const text = (await this.liveAnzeige.innerText()).trim();
+    const text = (await this.liveZeitpunkt.innerText()).trim();
     const m = /^(\d{2})\.(\d{2})\.(\d{4}) (\d{2}):(\d{2}):(\d{2})$/.exec(text);
     if (!m) throw new Error(`Live-Anzeige "${text}" nicht lesbar`);
     return new Date(berlinZeitpunkt(+m[3], +m[2], +m[1], +m[4], +m[5]).getTime() + +m[6] * 1000);

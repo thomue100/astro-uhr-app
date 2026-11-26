@@ -80,3 +80,9 @@ Funktionalität: Simulation – Zeitreise und Zeitraffer
     Wenn ich den Kalender öffne
     Dann zeigt der Kalender "31.12.2080"
     Und meldet der Kalender kein ungültiges Jahr
+
+  # UX-Review: Wochentag und Zeitzone machen die laufende Anzeige aussagekräftig
+  Szenario: Zeitanzeige mit Wochentag in Lübecker Zeit
+    Dann lautet die Zeitanzeige der Simulation "Mittwoch, 25.11.2026 14:30:00 Lübecker Zeit"
+    Wenn ich die Sprache umschalte
+    Dann lautet die Zeitanzeige der Simulation "Wednesday, 25.11.2026 14:30:00 Lübeck time"
