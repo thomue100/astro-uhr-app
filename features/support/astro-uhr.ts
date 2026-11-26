@@ -277,10 +277,10 @@ export class AstroUhr {
     return this.page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth + 1);
   }
 
-  /** Alle sichtbaren Knöpfe und Menüpunkte im Menü, die kleiner als `min` px sind (Beschriftung + Höhe). */
-  async zuKleineBedienelemente(min: number): Promise<string[]> {
-    return this.menue.evaluate((root, min) => {
-      const els = Array.from(root.querySelectorAll<HTMLElement>('button, select, input, .controls-header'));
+  /** Alle sichtbaren Bedienelemente in `bereich` (Standard: Menü), die kleiner als `min` px sind. */
+  async zuKleineBedienelemente(min: number, bereich: Locator = this.menue): Promise<string[]> {
+    return bereich.evaluate((root, min) => {
+      const els = Array.from(root.querySelectorAll<HTMLElement>('button, select, input, .controls-header, .modal-close'));
       return els
         .filter((e) => e.offsetParent !== null && getComputedStyle(e).visibility !== 'hidden')
         .filter((e) => !(e instanceof HTMLInputElement && e.type === 'range'))
@@ -288,6 +288,79 @@ export class AstroUhr {
         .filter(([, h]) => h < min - 0.5)
         .map(([name, h]) => `${name} (${h.toFixed(0)} px)`);
     }, min);
+  }
+
+  // ── Fenster (Modals) ────────────────────────────────────────────────
+  get fenster(): Locator { return this.page.locator('app-modal'); }
+  get fensterTitel(): Locator { return this.modal.locator('.modal-title'); }
+  /** Das „ד oben rechts – als Knopf „Schließen“ auch für Tastatur und Screenreader. */
+  get fensterKreuz(): Locator {
+    return this.modal.locator('.modal-header').getByRole('button', { name: /Schließen|Close/ });
+  }
+  get fensterSchliessen(): Locator {
+    return this.modal.locator('.modal-footer').getByRole('button', { name: /Schließen|Close/ });
+  }
+
+  /** Öffnet ein Fenster über seinen Menüpunkt: "Einführung" oder "Kunst & Geschichte". */
+  async oeffneFenster(name: string): Promise<void> {
+    const panel = { 'Einführung': 'infoButtonHeader', 'Kunst & Geschichte': 'historyPanel' }[name];
+    if (!panel) throw new Error(`Unbekanntes Fenster "${name}"`);
+    const ziel = panel === 'infoButtonHeader' ? this.einfuehrung : this.menuepunkt(panel);
+    await ziel.click();
+    await this.warteAufFenster();
+  }
+
+  /** Wartet, bis das Fenster fertig eingeblendet ist (CSS-Animationen fadeIn/slideIn, 0,3 s). */
+  async warteAufFenster(): Promise<void> {
+    await expect(this.modal).toBeVisible();
+    await this.fenster.evaluate((el) =>
+      Promise.all(el.getAnimations({ subtree: true }).map((a) => a.finished)).then(() => undefined));
+  }
+
+  /** Klick auf den abgedunkelten Hintergrund neben dem Fenster. */
+  async klickeNebenDasFenster(): Promise<void> {
+    await this.page.locator('.modal-overlay').click({ position: { x: 5, y: 5 } });
+  }
+
+  async hintergrundScrollGesperrt(): Promise<boolean> {
+    return this.page.evaluate(() => getComputedStyle(document.body).overflow === 'hidden');
+  }
+
+  // ── Bildbetrachter ──────────────────────────────────────────────────
+  get bildbetrachter(): Locator { return this.modal.locator('app-image-viewer'); }
+  /** Bildbetrachter, dessen Titel `titel` enthält. */
+  bild(titel: string): Locator { return this.bildbetrachter.filter({ hasText: titel }); }
+
+  /** Lage des Bildes laut CSS-transform: translate(x, y) scale(s). */
+  async bildAnsicht(titel: string): Promise<{ x: number; y: number; s: number }> {
+    const t = await this.bild(titel).locator('img').evaluate((img) => (img as HTMLElement).style.transform);
+    const m = /translate\((-?[\d.]+)px,\s*(-?[\d.]+)px\)\s*scale\((-?[\d.]+)\)/.exec(t);
+    if (!m) throw new Error(`Bild-Transform "${t}" nicht lesbar`);
+    return { x: +m[1], y: +m[2], s: +m[3] };
+  }
+
+  /** Scrollt jedes Bild ins Sichtfeld (sie laden „lazy“) und liefert die nicht ladbaren. */
+  async nichtGeladeneBilder(): Promise<string[]> {
+    const fehlend: string[] = [];
+    for (const viewer of await this.bildbetrachter.all()) {
+      const img = viewer.locator('img');
+      await img.scrollIntoViewIfNeeded();
+      const ok = await expect
+        .poll(() => img.evaluate((i: HTMLImageElement) => i.complete && i.naturalWidth > 0), { timeout: 10_000 })
+        .toBe(true).then(() => true, () => false);
+      if (!ok) fehlend.push(await img.getAttribute('src') ?? '?');
+    }
+    return fehlend;
+  }
+
+  async ziehePixelIn(element: Locator, dx: number, dy: number): Promise<void> {
+    await element.scrollIntoViewIfNeeded();
+    const bb = await this.box(element);
+    const x = bb.x + bb.width / 2, y = bb.y + bb.height / 2;
+    await this.page.mouse.move(x, y);
+    await this.page.mouse.down();
+    await this.page.mouse.move(x + dx, y + dy, { steps: 8 });
+    await this.page.mouse.up();
   }
 
   // ── 3D-Funktionsmodell ──────────────────────────────────────────────

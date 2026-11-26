@@ -30,8 +30,7 @@ Then('sind alle Knöpfe und Menüpunkte mindestens {int} Pixel hoch', async ({ u
 });
 
 When('ich die Einführung öffne', async ({ uhr }) => {
-  await uhr.einfuehrung.click();
-  await expect(uhr.modal).toBeVisible();
+  await uhr.oeffneFenster('Einführung');
 });
 
 Then('passt das geöffnete Fenster auf den Bildschirm', async ({ uhr }) => {
