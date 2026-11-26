@@ -10,12 +10,11 @@ import { CalendarPanelComponent } from '../calendar-panel/calendar-panel.compone
 import { ClockSimulationService } from '../../core/services/clock-simulation.service';
 import { TranslationService } from '../../core/services/translation.service';
 import { TranslatePipe } from '../../shared/pipes/translate.pipe';
-import { TimeUtility } from '../../shared/utils/TimeUtility';
 import { Model3dPanelComponent } from '../model3d/model3d-panel.component';
 import { Model3dStateService } from '../../core/services/model3d-state.service';
+import { AnsichtService } from '../../core/services/ansicht.service';
 
 type ModalType = 'info' | 'history' | 'calendar' | null;
-type ActivePanel = 'simulation' | 'calendar' | 'none';
 
 @Component({
   selector: 'app-controls',
@@ -41,42 +40,16 @@ export class ControlsComponent {
   private readonly clockService = inject(ClockSimulationService);
   readonly t = inject(TranslationService);
   readonly m3d = inject(Model3dStateService);
+  readonly ansicht = inject(AnsichtService);
 
   readonly activeModal  = signal<ModalType>(null);
-  readonly activePanel  = signal<ActivePanel>('simulation');
   readonly currentDate  = this.clockService.currentDate;
 
-  get isSimulationOpen(): boolean { return this.activePanel() === 'simulation'; }
-  get isCalendarOpen():   boolean { return this.activePanel() === 'calendar'; }
+  get isSimulationOpen(): boolean { return this.ansicht.panel() === 'simulation'; }
+  get isCalendarOpen():   boolean { return this.ansicht.panel() === 'calendar'; }
 
-  openSimulation(): void {
-    if (this.activePanel() === 'simulation') {
-      this.activePanel.set('none');
-      this.clockService.setShowCalendarDisk(false);
-      this.clockService.triggerRedraw();
-      return;
-    }
-    this.activePanel.set('simulation');
-    this.clockService.setShowCalendarDisk(false);
-    this.clockService.triggerRedraw();
-  }
-
-  openCalendar(): void {
-    if (this.activePanel() === 'calendar') {
-      this.activePanel.set('none');
-      this.clockService.setShowCalendarDisk(false);
-      this.clockService.triggerRedraw();
-      return;
-    }
-    if (this.clockService.isAnimationRunning()) this.clockService.stopAnimation();
-    this.activePanel.set('calendar');
-    this.clockService.setCalendarZoom(1.5);
-    this.clockService.setAngleCalendarDisk(
-      TimeUtility.calculateCalendarDiskAngle(this.clockService.getCurrentDate()),
-    );
-    this.clockService.setShowCalendarDisk(true);
-    this.clockService.triggerRedraw();
-  }
+  openSimulation(): void { this.ansicht.schalteSimulation(); }
+  openCalendar():   void { this.ansicht.schalteKalender(); }
 
   openModal(type: Exclude<ModalType, null>): void {
     if (this.clockService.isAnimationRunning()) this.clockService.stopAnimation();
@@ -90,21 +63,8 @@ export class ControlsComponent {
   }
 
   /** 3D-Modell im Rahmen der Uhr zeigen; das Bedienfeld ersetzt das Menü */
-  open3d(): void {
-    if (this.clockService.isAnimationRunning()) this.clockService.stopAnimation();
-    this.clockService.setShowCalendarDisk(false);
-    this.clockService.triggerRedraw();
-    this.m3d.open(this.clockService.getCurrentDate());
-  }
-
-  /** Zurück zur Uhr – mit dem zuvor offenen Panel (ggf. wieder mit Kalenderscheibe) */
-  close3d(): void {
-    this.m3d.close();
-    if (this.activePanel() === 'calendar') {
-      this.clockService.setShowCalendarDisk(true);
-      this.clockService.triggerRedraw();
-    }
-  }
+  open3d():  void { this.ansicht.oeffne3d(); }
+  close3d(): void { this.ansicht.schliesse3d(); }
 
   handleEscape(): void {
     if (this.activeModal()) this.closeModal();

@@ -297,5 +297,11 @@
       "full": "Vollmond",
       "waning": "abnehmend"
     }
+  },
+  "view_switch": {
+    "label": "Ansicht im Rahmen",
+    "uhr": "Uhr",
+    "kalender": "Kalenderscheibe",
+    "modell3d": "3D-Modell"
   }
 }

@@ -297,5 +297,11 @@
       "full": "full moon",
       "waning": "waning"
     }
+  },
+  "view_switch": {
+    "label": "View in the frame",
+    "uhr": "Clock",
+    "kalender": "Calendar disk",
+    "modell3d": "3D model"
   }
 }

@@ -1,5 +1,15 @@
 <!-- src/app/features/canvas/canvas.component.html -->
 <div class="canvas-wrapper">
+  <!-- Sichtbarer Umschalter: Was zeigt der Rahmen? (vorher nur über das Menü,
+       ein versteckter Moduswechsel). Gleicher Zustand wie im Menü. -->
+  <div class="ansicht-umschalter" role="group" [attr.aria-label]="'view_switch.label' | translate">
+    @for (a of ansichten; track a) {
+      <button type="button" [attr.aria-pressed]="ansicht.ansicht() === a" (click)="ansicht.waehle(a)">
+        {{ ('view_switch.' + a) | translate }}
+      </button>
+    }
+  </div>
+
   <div
     class="canvas-container"
     [class.canvas-container--interactive]="showCalendarControls()"

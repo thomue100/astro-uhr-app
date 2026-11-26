@@ -178,3 +178,42 @@
   height: 100%;
   color: #88aacc;
 }
+
+/* ======================================================== */
+/* === UMSCHALTER ÜBER DEM RAHMEN: Uhr | Kalender | 3D  === */
+/* ======================================================== */
+.ansicht-umschalter {
+  display: flex;
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto 10px;
+  border: 1px solid #2f8fc4;
+  border-radius: 8px;
+  overflow: hidden;
+}
+.ansicht-umschalter button {
+  /* Breite nach Textlänge: „Kalenderscheibe“ passt auch bei 320 px */
+  flex: 1 1 auto;
+  width: auto;
+  min-width: 0;
+  min-height: 44px;
+  padding: 6px 6px;
+  border: 0;
+  border-radius: 0;
+  background: #0e2030;
+  color: #ffcc33;
+  font-size: 14px;
+  white-space: nowrap;
+}
+.ansicht-umschalter button + button { border-left: 1px solid #2f8fc4; }
+.ansicht-umschalter button:hover { background: #184a6b; }
+.ansicht-umschalter button[aria-pressed='true'] {
+  background: #ffcc33;
+  color: #071522;
+  cursor: default;
+}
+.ansicht-umschalter button:focus-visible {
+  outline: 2px solid #ffcc33;
+  outline-offset: -4px;
+}
+.ansicht-umschalter button[aria-pressed='true']:focus-visible { outline-color: #071522; }

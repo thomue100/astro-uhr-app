@@ -13,6 +13,7 @@ import { ClockRenderer } from '../../shared/utils/ClockRenderer';
 import { TimeUtility } from '../../shared/utils/TimeUtility';
 import { TranslatePipe } from '../../shared/pipes/translate.pipe';
 import { Model3dStateService } from '../../core/services/model3d-state.service';
+import { AnsichtService, Ansicht } from '../../core/services/ansicht.service';
 import { Model3dStageComponent } from '../model3d/model3d-stage.component';
 
 type InteractionMode = 'rotate' | 'pan';
@@ -30,6 +31,9 @@ export class CanvasComponent implements OnInit, AfterViewInit, OnDestroy {
   private readonly clockService = inject(ClockSimulationService);
   private readonly t = inject(TranslationService);
   readonly m3d = inject(Model3dStateService);
+  readonly ansicht = inject(AnsichtService);
+  /** Umschalter über dem Rahmen: was im Rahmen zu sehen ist */
+  readonly ansichten: Ansicht[] = ['uhr', 'kalender', 'modell3d'];
 
   /**
    * Textalternative der gezeichneten Uhr für Screenreader (WCAG 1.1.1):
