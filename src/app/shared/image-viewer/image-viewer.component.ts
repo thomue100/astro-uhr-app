@@ -179,7 +179,9 @@ export class ImageViewerComponent implements AfterViewInit, OnDestroy {
   ngAfterViewInit(): void { this.reset(); }
   ngOnDestroy(): void {}
 
-  onImageLoad():  void { this.reset(); }
+  // Nicht zurücksetzen: Das Foto lädt „lazy“ erst beim Hineinscrollen – eine
+  // schon begonnene Geste ginge sonst verloren. Nur an die echte Größe anpassen.
+  onImageLoad():  void { this._clamp(); this._apply(); }
   onImageError(): void { this.loadError = true; }
 
   zoom(delta: number): void {
