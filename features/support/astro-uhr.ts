@@ -180,7 +180,10 @@ export class AstroUhr {
 
   /** Datum über das Simulationsfeld einstellen (wie ein Mensch es tut). */
   async stelleDatumEin(datum: Date): Promise<void> {
-    if (!(await this.datumsfeld.isVisible())) await this.menuepunkt('simulationPanel').click();
+    // Zugeklappte Panels sind „inert“ (nicht bedienbar), gelten für Playwright
+    // aber als sichtbar → am inert-Zustand erkennen und ggf. aufklappen.
+    const zu = await this.page.locator('#simulationPanel > .controls-content').evaluate((e) => (e as HTMLElement).inert);
+    if (zu) await this.menuepunkt('simulationPanel').click();
     await this.datumsfeld.fill(alsFeldwert(datum));
   }
 
@@ -354,6 +357,36 @@ export class AstroUhr {
         .filter(([, h]) => h < min - 0.5)
         .map(([name, h]) => `${name} (${h.toFixed(0)} px)`);
     }, min);
+  }
+
+  // ── Tastatur ────────────────────────────────────────────────────────
+  /**
+   * Drückt `anzahl`-mal Tab (ab Seitenanfang) und liefert für jedes fokussierte
+   * Element Beschriftung und ob es für Sehende sichtbar ist. Unsichtbar heißt:
+   * ein Vorfahr ist durchsichtig (opacity 0) oder auf Höhe 0 zugeklappt.
+   */
+  async tabReihenfolge(anzahl: number): Promise<Array<{ name: string; sichtbar: boolean }>> {
+    await this.page.waitForTimeout(500); // Auf-/Zuklappen (0,4 s) abwarten
+    await this.page.evaluate(() => (document.activeElement as HTMLElement | null)?.blur());
+    await this.page.locator('body').focus();
+    const liste: Array<{ name: string; sichtbar: boolean }> = [];
+    for (let i = 0; i < anzahl; i++) {
+      await this.page.keyboard.press('Tab');
+      const info = await this.page.evaluate(() => {
+        const e = document.activeElement as HTMLElement | null;
+        if (!e || e === document.body) return null;
+        let sichtbar = e.getClientRects().length > 0;
+        for (let a: HTMLElement | null = e; a && sichtbar; a = a.parentElement) {
+          const s = getComputedStyle(a);
+          if (parseFloat(s.opacity) === 0 || s.visibility === 'hidden') sichtbar = false;
+          if (a !== e && s.overflow === 'hidden' && a.clientHeight === 0) sichtbar = false;
+        }
+        const name = (e.getAttribute('aria-label') || e.getAttribute('title') || e.textContent || e.id || e.tagName).trim();
+        return { name, sichtbar };
+      });
+      if (info && (liste.length === 0 || liste[liste.length - 1].name !== info.name)) liste.push(info);
+    }
+    return liste;
   }
 
   // ── Fenster (Modals) ────────────────────────────────────────────────
