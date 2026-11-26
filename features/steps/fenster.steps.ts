@@ -92,28 +92,30 @@ Then('meldet der Bildbetrachter {string} für {string}', async ({ uhr }, meldung
 
 // ── Bildbetrachter bedienen ─────────────────────────────────────────────
 When('ich das Bild {string} {int}-mal vergrößere', async ({ uhr }, titel: string, n: number) => {
+  await uhr.bildBereit(titel);
   const knopf = uhr.bild(titel).getByTitle('Vergrößern', { exact: true });
   for (let i = 0; i < n; i++) await knopf.click();
 });
 
 When('ich das Bild {string} {int}-mal verkleinere', async ({ uhr }, titel: string, n: number) => {
+  await uhr.bildBereit(titel);
   const knopf = uhr.bild(titel).getByTitle('Verkleinern', { exact: true });
   for (let i = 0; i < n; i++) await knopf.click();
 });
 
 When('ich das Bild {string} mit dem Mausrad {int}-mal vergrößere', async ({ uhr }, titel: string, n: number) => {
-  const buehne = uhr.bild(titel).locator('.iv-stage');
-  await buehne.scrollIntoViewIfNeeded();
+  const buehne = await uhr.bildBereit(titel);
   await buehne.hover();
   for (let i = 0; i < n; i++) await uhr.page.mouse.wheel(0, -100);
 });
 
 When('ich das Bild {string} um {int} Pixel nach rechts ziehe', async ({ uhr }, titel: string, dx: number) => {
-  await uhr.ziehePixelIn(uhr.bild(titel).locator('.iv-stage'), dx, 0);
+  await uhr.ziehePixelIn(await uhr.bildBereit(titel), dx, 0);
 });
 
 When('ich das Bild {string} {int}-mal um {int} Pixel nach rechts ziehe', async ({ uhr }, titel: string, n: number, dx: number) => {
-  for (let i = 0; i < n; i++) await uhr.ziehePixelIn(uhr.bild(titel).locator('.iv-stage'), dx, 0);
+  const buehne = await uhr.bildBereit(titel);
+  for (let i = 0; i < n; i++) await uhr.ziehePixelIn(buehne, dx, 0);
 });
 
 When('ich die Ansicht des Bildes {string} zurücksetze', async ({ uhr }, titel: string) => {

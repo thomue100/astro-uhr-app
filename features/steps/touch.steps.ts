@@ -79,8 +79,7 @@ Then('ist die Kalenderscheibe unverändert', async ({ uhr, ablage }) => {
 
 // ── Bildbetrachter ──────────────────────────────────────────────────────
 async function buehnenMitte(uhr: AstroUhr, titel: string): Promise<{ cx: number; cy: number; a: number }> {
-  const buehne = uhr.bild(titel).locator('.iv-stage');
-  await buehne.scrollIntoViewIfNeeded();
+  const buehne = await uhr.bildBereit(titel);
   const bb = await uhr.box(buehne);
   return { cx: bb.x + bb.width / 2, cy: bb.y + bb.height / 2, a: bb.width / 8 };
 }
@@ -116,3 +115,24 @@ When(
     ]);
   },
 );
+
+Given('das Bild {string} lädt langsam', async ({ uhr }, datei: string) => {
+  await uhr.page.route(`**/${datei}`, async (route) => {
+    await new Promise((r) => setTimeout(r, 2000));
+    await route.continue();
+  });
+});
+
+When('ich das Bild {string} noch während des Ladens mit zwei Fingern auf das {float}-fache aufziehe', async ({ uhr }, titel: string, faktor: number) => {
+  const buehne = uhr.bild(titel).locator('.iv-stage');
+  await buehne.scrollIntoViewIfNeeded();
+  const geladen = await uhr.bild(titel).locator('img').evaluate((i: HTMLImageElement) => i.complete && i.naturalWidth > 0);
+  expect(geladen, 'Foto ist schon geladen – die Probe prüft dann nichts').toBe(false);
+  const bb = await uhr.box(buehne);
+  const cx = bb.x + bb.width / 2, cy = bb.y + bb.height / 2, a = bb.width / 8;
+  await uhr.beruehreElement(buehne, [zweiFinger(cx, cy, a), ...verlauf().map((t) => zweiFinger(cx, cy, a * (1 + (faktor - 1) * t)))]);
+});
+
+When('das Bild {string} fertig geladen ist', async ({ uhr }, titel: string) => {
+  await uhr.bildBereit(titel);
+});

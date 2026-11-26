@@ -69,3 +69,14 @@ Funktionalität: Finger-Gesten auf Smartphone und Tablet
     Und ich das Bild "Das moderne Uhrwerk" mit zwei Fingern auf das 1.5-fache aufziehe, einen Finger anhebe und mit dem anderen um 40 Pixel nach rechts schiebe
     Dann wird das Bild "Das moderne Uhrwerk" 1.5-fach vergrößert angezeigt
     Und ist das Bild "Das moderne Uhrwerk" um 40 Pixel nach rechts verschoben
+
+  # Das Foto lädt erst beim Hineinscrollen („lazy“). Früher setzte das Ende
+  # des Ladens die Ansicht zurück – eine schon begonnene Geste ging verloren.
+  Szenario: Geste bleibt erhalten, wenn das Foto erst danach fertig lädt
+    Angenommen ich nutze ein Smartphone
+    Und das Bild "uhrwerk.jpg" lädt langsam
+    Und die Astro-Uhr ist geöffnet
+    Wenn ich das Fenster "Kunst & Geschichte" öffne
+    Und ich das Bild "Das moderne Uhrwerk" noch während des Ladens mit zwei Fingern auf das 2.0-fache aufziehe
+    Und das Bild "Das moderne Uhrwerk" fertig geladen ist
+    Dann wird das Bild "Das moderne Uhrwerk" 2.0-fach vergrößert angezeigt

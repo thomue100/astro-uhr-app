@@ -465,6 +465,15 @@ export class AstroUhr {
     return { x: +m[1], y: +m[2], s: +m[3] };
   }
 
+  /** Scrollt die Bühne des Bildes ins Sichtfeld und wartet, bis das Foto („lazy“) geladen ist. */
+  async bildBereit(titel: string): Promise<Locator> {
+    const buehne = this.bild(titel).locator('.iv-stage');
+    await buehne.scrollIntoViewIfNeeded();
+    await expect.poll(() => this.bild(titel).locator('img').evaluate((i: HTMLImageElement) => i.complete && i.naturalWidth > 0),
+      { message: `Foto „${titel}“ lädt nicht`, timeout: 10_000 }).toBe(true);
+    return buehne;
+  }
+
   /** Scrollt jedes Bild ins Sichtfeld (sie laden „lazy“) und liefert die nicht ladbaren. */
   async nichtGeladeneBilder(): Promise<string[]> {
     const fehlend: string[] = [];
