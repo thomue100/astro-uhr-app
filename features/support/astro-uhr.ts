@@ -3,6 +3,8 @@
 // Seitenobjekt für die Astro-Uhr. Schritt-Definitionen sprechen nur hiermit,
 // nie direkt mit Selektoren: Ändert sich das Markup, wird nur diese Datei angepasst.
 import { expect, type Browser, type BrowserContext, type Locator, type Page } from '@playwright/test';
+import { CoverageReport } from 'monocart-coverage-reports';
+import { coverageAktiv, coverageOptionen } from './coverage';
 
 // ── Zeit: Alle Datumsangaben der Szenarien sind Lübecker Ortszeit ─────────
 const ZONE = 'Europe/Berlin';
@@ -92,7 +94,7 @@ export class AstroUhr {
   private sitzungsWunsch: Parameters<Browser['newContext']>[0] = {};
   private async neueSitzung(wunsch: Parameters<Browser['newContext']>[0]): Promise<void> {
     this.sitzungsWunsch = { ...this.sitzungsWunsch, ...wunsch };
-    await this.eigenerKontext?.close();
+    await this.sitzungBeenden();
     this.eigenerKontext = await this.browser.newContext({
       viewport: { width: 1400, height: 1000 },
       deviceScaleFactor: 2,
@@ -102,6 +104,20 @@ export class AstroUhr {
       ...this.sitzungsWunsch,
     });
     this.page = await this.eigenerKontext.newPage();
+    // Abdeckungsmessung (COVERAGE=1) auch für eigene Sitzungen – sonst fehlen
+    // alle Smartphone-/Zeitzonen-Szenarien, z. B. die Touch-Gesten.
+    if (coverageAktiv) await this.page.coverage.startJSCoverage({ resetOnNavigation: false });
+  }
+
+  /** Schließt die eigene Sitzung und liefert vorher ggf. ihre Abdeckungsdaten ab. */
+  private async sitzungBeenden(): Promise<void> {
+    if (!this.eigenerKontext) return;
+    if (coverageAktiv) {
+      const daten = await this.page.coverage.stopJSCoverage().catch(() => []);
+      if (daten.length) await new CoverageReport(coverageOptionen).add(daten);
+    }
+    await this.eigenerKontext.close();
+    this.eigenerKontext = undefined;
   }
 
   /** Gerät bittet um reduzierte Bewegung (Betriebssystem-Einstellung); vor oeffnen(). */
@@ -110,7 +126,7 @@ export class AstroUhr {
   }
 
   async aufraeumen(): Promise<void> {
-    await this.eigenerKontext?.close();
+    await this.sitzungBeenden();
   }
 
   /**
@@ -241,21 +257,40 @@ export class AstroUhr {
   }
 
   /**
-   * Finger-Geste auf dem Uhr-Canvas. `bilder` ist eine Folge von Momentaufnahmen,
-   * jede mit der Position aller Finger (Bildschirmkoordinaten). Playwright kann
-   * nur einzelne Taps; Mehrfinger-Gesten werden als TouchEvents nachgestellt
-   * (braucht eine Sitzung mit hasTouch, siehe nutzeSmartphone).
+   * Finger-Geste auf dem Uhr-Canvas, siehe beruehreElement().
    */
   async beruehre(bilder: Array<Array<[number, number]>>): Promise<void> {
-    await this.canvas.evaluate((el, bilder) => {
-      const finger = (pts: Array<[number, number]>) =>
-        pts.map(([x, y], i) => new Touch({ identifier: i, target: el, clientX: x, clientY: y }));
-      const sende = (typ: string, pts: Array<[number, number]>, geaendert: Array<[number, number]>) =>
-        el.dispatchEvent(new TouchEvent(typ, { touches: finger(pts), changedTouches: finger(geaendert), bubbles: true, cancelable: true }));
-      sende('touchstart', bilder[0], bilder[0]);
-      for (const b of bilder.slice(1)) sende('touchmove', b, b);
-      sende('touchend', [], bilder[bilder.length - 1]);
+    await this.beruehreElement(this.canvas, bilder);
+  }
+
+  /**
+   * Finger-Geste auf einem Element. `bilder` ist eine Folge von Momentaufnahmen,
+   * jede mit der Position aller aufliegenden Finger (Bildschirmkoordinaten).
+   * Kommt ein Finger hinzu → touchstart, gleiche Zahl → touchmove, weniger →
+   * touchend mit den verbleibenden Fingern; am Ende werden alle angehoben.
+   * Playwright kann nur einzelne Taps; Mehrfinger-Gesten werden daher als
+   * TouchEvents nachgestellt (braucht eine Sitzung mit hasTouch, s. nutzeSmartphone).
+   */
+  async beruehreElement(ziel: Locator, bilder: Array<Array<[number, number]>>): Promise<void> {
+    await ziel.evaluate((el, bilder) => {
+      const finger = (pts: Array<[number, number]>, ab = 0) =>
+        pts.map(([x, y], i) => new Touch({ identifier: ab + i, target: el, clientX: x, clientY: y }));
+      const sende = (typ: string, touches: Touch[], geaendert: Touch[]) =>
+        el.dispatchEvent(new TouchEvent(typ, { touches, changedTouches: geaendert, bubbles: true, cancelable: true }));
+      let vorher: Array<[number, number]> = [];
+      for (const jetzt of [...bilder, []]) {
+        const alle = finger(jetzt);
+        if (jetzt.length > vorher.length) sende('touchstart', alle, alle.slice(vorher.length));
+        else if (jetzt.length === vorher.length) sende('touchmove', alle, alle);
+        else sende('touchend', alle, finger(vorher.slice(jetzt.length), jetzt.length));
+        vorher = jetzt;
+      }
     }, bilder);
+  }
+
+  /** Tablet im Hochformat mit Touch-Bildschirm (Modusknöpfe der Kalenderscheibe sichtbar). */
+  async nutzeTablet(): Promise<void> {
+    await this.neueSitzung({ viewport: { width: 768, height: 1024 }, deviceScaleFactor: 2, isMobile: true, hasTouch: true });
   }
 
   /** Mittelpunkt und Radius für Gesten auf dem Canvas. */

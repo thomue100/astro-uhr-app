@@ -143,24 +143,6 @@ Then('lässt sich das Bild {string} nicht aus dem Rahmen schieben', async ({ uhr
   expect(bild.x + bild.width, 'Bild ganz links aus dem Rahmen').toBeGreaterThan(buehne.x);
 });
 
-When('ich das Bild {string} mit zwei Fingern auf das {float}-fache aufziehe', async ({ uhr }, titel: string, faktor: number) => {
-  const buehne = uhr.bild(titel).locator('.iv-stage');
-  await buehne.scrollIntoViewIfNeeded();
-  const bb = await uhr.box(buehne);
-  const cx = bb.x + bb.width / 2, cy = bb.y + bb.height / 2, a = bb.width / 8;
-  await buehne.evaluate((el, { cx, cy, a, faktor }) => {
-    const finger = (d: number) => [
-      new Touch({ identifier: 0, target: el, clientX: cx - d, clientY: cy }),
-      new Touch({ identifier: 1, target: el, clientX: cx + d, clientY: cy }),
-    ];
-    const sende = (typ: string, t: Touch[]) =>
-      el.dispatchEvent(new TouchEvent(typ, { touches: typ === 'touchend' ? [] : t, changedTouches: t, bubbles: true, cancelable: true }));
-    sende('touchstart', finger(a));
-    for (let i = 1; i <= 10; i++) sende('touchmove', finger(a * (1 + ((faktor - 1) * i) / 10)));
-    sende('touchend', finger(a * faktor));
-  }, { cx, cy, a, faktor });
-});
-
 Then('ist der Bedienhinweis des Bildbetrachters ausgeblendet', async ({ uhr }) => {
   await expect(uhr.bildbetrachter.first().locator('.iv-hint')).toBeHidden();
 });
