@@ -2,7 +2,7 @@
 import { Component, inject, signal, effect } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { DatePipe, DecimalPipe } from '@angular/common';
-import { ClockSimulationService } from '../../core/services/clock-simulation.service';
+import { ClockSimulationService, KALENDER_ANFANG, KALENDER_ENDE } from '../../core/services/clock-simulation.service';
 import { TranslatePipe } from '../../shared/pipes/translate.pipe';
 
 @Component({
@@ -34,9 +34,7 @@ export class SimulationPanelComponent {
     if (!raw) return;
     const d = new Date(raw);
     if (isNaN(d.getTime())) return;
-    const min = new Date('1911-01-01T00:00');
-    const max = new Date('2080-12-31T23:59');
-    if (d < min || d > max) return;
+    if (d < KALENDER_ANFANG || d > KALENDER_ENDE) return;
     if (this.clockService.isAnimationRunning()) this.clockService.stopAnimation();
     this.clockService.setDate(d);
   }

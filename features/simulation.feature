@@ -70,3 +70,13 @@ Funktionalität: Simulation – Zeitreise und Zeitraffer
     Wenn ich den Menüpunkt Simulation anklicke
     Dann ist das Simulationsfeld zu sehen
     Und zeigt die Uhr wieder das Zifferblatt
+
+  # Die Kalenderscheibe endet 2080 – der Zeitraffer läuft nicht darüber hinaus
+  Szenario: Der Zeitraffer hält am Ende des Kalenders an
+    Wenn ich das Datum "31.12.2080 23:30" einstelle
+    Und ich die Geschwindigkeit auf 5.0 stelle
+    Und ich die Simulation starte
+    Dann hält der Zeitraffer beim Zeitpunkt "31.12.2080 23:59" an
+    Wenn ich den Kalender öffne
+    Dann zeigt der Kalender "31.12.2080"
+    Und meldet der Kalender kein ungültiges Jahr

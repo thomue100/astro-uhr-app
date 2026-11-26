@@ -53,3 +53,15 @@ Then('ist der Zeitraffer gestartet', async ({ uhr }) => {
 Then('steht die Geschwindigkeit auf {string}', async ({ uhr }, anzeige: string) => {
   await expect(uhr.simulation.getByText(/Geschwindigkeit|Speed/)).toContainText(anzeige);
 });
+
+Then('hält der Zeitraffer beim Zeitpunkt {string} an', async ({ uhr }, zeitpunkt: string) => {
+  await expect(uhr.startStopButton, 'Zeitraffer läuft weiter').toContainText('Start', { timeout: 20_000 });
+  expect((await uhr.angezeigterZeitpunkt()).getTime()).toBe(parseDatum(zeitpunkt).getTime());
+  // … und bleibt dort stehen
+  const { nachher } = await uhr.beobachteZeitpunkt(800);
+  expect(nachher.getTime()).toBe(parseDatum(zeitpunkt).getTime());
+});
+
+Then('meldet der Kalender kein ungültiges Jahr', async ({ uhr }) => {
+  await expect(uhr.kalenderPanel).not.toContainText(/Ungültiges Jahr|Invalid year/);
+});

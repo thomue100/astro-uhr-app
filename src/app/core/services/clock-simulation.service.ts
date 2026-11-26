@@ -5,6 +5,13 @@ import { AstroConfig } from '../../shared/utils/config';
 import { TimeUtility, configureTimeUtility } from '../../shared/utils/TimeUtility';
 import { createAstroStateSignal } from '../../shared/models/astro-signal.signal';
 
+/**
+ * Zeitraum der Kalenderscheibe (Ortszeit): Simulation und Zeitraffer bleiben
+ * innerhalb dieser Grenzen.
+ */
+export const KALENDER_ANFANG = new Date(1911, 0, 1, 0, 0);
+export const KALENDER_ENDE = new Date(2080, 11, 31, 23, 59);
+
 @Injectable({ providedIn: 'root' })
 export class ClockSimulationService implements OnDestroy {
 
@@ -88,6 +95,13 @@ export class ClockSimulationService implements OnDestroy {
       const simulatedMsPerFrame =
         (baseSpeed * 24 * 60 * 60 * 1000) / AstroConfig.TWO_PI;
       const newDate = new Date(this._currentDate().getTime() + simulatedMsPerFrame);
+      // Die Kalenderscheibe reicht nur bis 2080: dort anhalten, statt in
+      // Jahre ohne Kalenderdaten weiterzulaufen.
+      if (newDate >= KALENDER_ENDE) {
+        this.setDate(new Date(KALENDER_ENDE));
+        this.stopAnimation();
+        return;
+      }
       this.setDate(newDate);
       this.animationFrameId = requestAnimationFrame(animate);
     };
