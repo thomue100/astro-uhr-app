@@ -15,6 +15,7 @@ import { TranslatePipe } from '../../shared/pipes/translate.pipe';
 import { Model3dStateService } from '../../core/services/model3d-state.service';
 import { AnsichtService, Ansicht } from '../../core/services/ansicht.service';
 import { Model3dStageComponent } from '../model3d/model3d-stage.component';
+import { SymbolComponent } from '../../shared/symbol/symbol.component';
 
 type InteractionMode = 'rotate' | 'pan';
 
@@ -23,7 +24,7 @@ type InteractionMode = 'rotate' | 'pan';
   templateUrl: './canvas.component.html',
   styleUrls: ['./canvas.component.css'],
   standalone: true,
-  imports: [TranslatePipe, Model3dStageComponent],
+  imports: [TranslatePipe, Model3dStageComponent, SymbolComponent],
 })
 export class CanvasComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('canvasElement') canvasRef!: ElementRef<HTMLCanvasElement>;
@@ -76,6 +77,10 @@ export class CanvasComponent implements OnInit, AfterViewInit, OnDestroy {
 
   readonly showCalendarControls = signal(false);
   readonly interactionMode      = signal<InteractionMode>('rotate');
+  /** Hinweis auf die Gesten, bis man die Scheibe zum ersten Mal anfasst */
+  readonly gestenHinweis = signal(true);
+  /** Finger statt Maus → anderer Hinweistext */
+  readonly beruehrung = typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches;
 
   private currentZoom    = 1.5;
   private readonly zoomStep = 0.25;
@@ -195,6 +200,7 @@ export class CanvasComponent implements OnInit, AfterViewInit, OnDestroy {
 
   onCanvasMouseDown(e: MouseEvent): void {
     if (!this.showCalendarControls()) return;
+    this.gestenHinweis.set(false);
     this.isDragging = true;
     if (this.interactionMode() === 'rotate') {
       const c = this._canvasCenter();
@@ -229,12 +235,14 @@ export class CanvasComponent implements OnInit, AfterViewInit, OnDestroy {
 
   onCanvasWheel(e: WheelEvent): void {
     if (!this.showCalendarControls()) return;
+    this.gestenHinweis.set(false);
     e.preventDefault();
     e.deltaY < 0 ? this.zoomIn() : this.zoomOut();
   }
 
   onCanvasTouchStart(e: TouchEvent): void {
     if (!this.showCalendarControls()) return;
+    this.gestenHinweis.set(false);
     e.preventDefault();
     this.isTouchActive = true;
     if (e.touches.length === 1) {

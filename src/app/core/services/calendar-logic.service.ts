@@ -110,7 +110,7 @@ export class CalendarLogicService {
     }
 
     return {
-      title: `${this.t.translate('modal_calendar.weekday_title')} ${dateStr} 🗓️`,
+      title: `${this.t.translate('modal_calendar.weekday_title')} ${dateStr}`,
       dateStr,
       year,
       dayOfWeek,

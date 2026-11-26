@@ -7,12 +7,10 @@
    und dadurch die verfügbare Breite verschiebt. Nur ab Tablet/Desktop aktiv:
    mobile Browser nutzen ohnehin platzsparende Overlay-Scrollbars, dort würde
    die Regel nur unnötig etwas Breite kosten. */
-@media (min-width: 851px) {
-  html {
-    scrollbar-gutter: stable;
-    overflow-y: scroll;
-  }
-}
+/* Kein Scrollbalken am Computer: früher per overflow-y: scroll dauerhaft
+   eingeblendet bzw. per scrollbar-gutter Platz freigehalten. Die Uhr passt
+   sich jetzt der Fensterhöhe an (canvas.component.css), die Seite scrollt
+   am Computer also gar nicht mehr. */
 
 html, body {
   margin: 0;
@@ -108,7 +106,9 @@ body {
     clip-path: inset(-12px -12px 0 -12px);
   }
 
-  .container > app-controls { grid-area: menue; }
+  /* Menü reicht bis zur Unterkante der Uhr: eine durchgehende Spalte statt
+     Leerfläche darunter (UX-Review 16) */
+  .container > app-controls { grid-area: menue; align-self: stretch; display: flex; flex-direction: column; }
   .container > app-canvas   { grid-area: uhr; }
 
   .controls {
@@ -140,7 +140,7 @@ body {
     /* Fix "Scrollbalken am PC": keine max-height / kein overflow-y mehr.
        Die Sidebar darf natürlich wachsen; dank body{align-items:flex-start}
        verursacht das kein Springen mehr. */
-    height: auto;
+    flex: 1;
     overflow: visible;
   }
 }
@@ -771,4 +771,33 @@ input[type="range"]::-moz-range-thumb {
   color: #ff7070;
   font-size: 14px;
   margin: 2px 0;
+}
+
+/* ======================================================== */
+/* === SYMBOLE (SVG statt Emoji, UX-Review 12)           === */
+/* ======================================================== */
+.mit-symbol {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45em;
+}
+
+/* Finsternis-Symbole im Kalender-Panel, per CSS gezeichnet ([innerHTML] lässt
+   kein SVG zu): Sonnenfinsternis = dunkle Scheibe mit goldenem Ring,
+   Mondfinsternis = kupferroter „Blutmond“ */
+.fs-symbol {
+  display: inline-block;
+  width: 0.8em;
+  height: 0.8em;
+  border-radius: 50%;
+  vertical-align: -0.08em;
+  flex-shrink: 0;
+}
+.fs-sonne {
+  background: #0e2030;
+  box-shadow: inset 0 0 0 2px #ffcc33, 0 0 4px rgba(255, 204, 51, 0.8);
+}
+.fs-mond {
+  background: radial-gradient(circle at 35% 35%, #f2c9a0, #b0553a 70%);
 }

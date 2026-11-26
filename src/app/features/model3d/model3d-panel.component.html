@@ -4,7 +4,7 @@
   <div class="row">
     <!-- Beschriftung nennt die Aktion (wie in der Simulation), nicht den Zustand -->
     <button type="button" class="play" (click)="togglePlay()">
-      {{ (s.playing() ? 'simulation.anim_stop' : 'simulation.anim_start') | translate }}
+      <span class="mit-symbol"><app-symbol [name]="s.playing() ? 'pause' : 'start'" />{{ (s.playing() ? 'simulation.anim_stop' : 'simulation.anim_start') | translate }}</span>
     </button>
     <select [attr.aria-label]="'model3d.speed' | translate" (change)="setSpeed($any($event.target).value)">
       @for (v of speeds; track v) {

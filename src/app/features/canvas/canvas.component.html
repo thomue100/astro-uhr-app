@@ -53,13 +53,21 @@
       per Zwei-Finger-Pinch - beides war schon vorher implementiert, macht
       dedizierte Dreh-/Verschiebe-Buttons also überflüssig.
     -->
+    <!-- Gesten waren vorher kaum auffindbar (UX-Review 15): kurzer Hinweis,
+         bis man die Scheibe zum ersten Mal anfasst -->
+    @if (showCalendarControls() && gestenHinweis()) {
+      <div class="scheiben-hinweis">
+        {{ (beruehrung ? 'calendar_disk.hint_touch' : 'calendar_disk.hint_mouse') | translate }}
+      </div>
+    }
+
     <button
       class="cc-reset-corner"
       [class.cc-reset-corner--visible]="showCalendarControls()"
       [inert]="!showCalendarControls()"
       (click)="resetView()"
       [title]="'calendar_disk.reset' | translate"
-    >⟲</button>
+    ><app-symbol name="zuruecksetzen" /></button>
 
     <!--
       Erweiterte Steuerung (Zoom-Buttons, Dreh-/Verschiebe-Modus):
@@ -71,21 +79,21 @@
       [class.calendar-controls-bar--visible]="showCalendarControls()"
       [inert]="!showCalendarControls()"
     >
-      <button class="cc-btn" (click)="zoomOut()" [title]="'calendar_disk.zoom_out' | translate">🔍−</button>
-      <button class="cc-btn" (click)="zoomIn()"  [title]="'calendar_disk.zoom_in'  | translate">🔍+</button>
+      <button class="cc-btn" (click)="zoomOut()" [title]="'calendar_disk.zoom_out' | translate"><app-symbol name="verkleinern" /></button>
+      <button class="cc-btn" (click)="zoomIn()"  [title]="'calendar_disk.zoom_in'  | translate"><app-symbol name="vergroessern" /></button>
       <div class="cc-separator"></div>
       <button
         class="cc-btn cc-mode-btn"
         [class.cc-mode-btn--active]="interactionMode() === 'rotate'"
         [title]="'calendar_disk.mode_rotate' | translate"
         (click)="setMode('rotate')"
-      >⟳</button>
+      ><app-symbol name="drehen" /></button>
       <button
         class="cc-btn cc-mode-btn"
         [class.cc-mode-btn--active]="interactionMode() === 'pan'"
         [title]="'calendar_disk.mode_pan' | translate"
         (click)="setMode('pan')"
-      >✥</button>
+      ><app-symbol name="verschieben" /></button>
     </div>
   </div>
 </div>

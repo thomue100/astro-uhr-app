@@ -4,12 +4,13 @@ import { Subscription } from 'rxjs';
 import { ClockSimulationService } from '../../core/services/clock-simulation.service';
 import { TranslationService } from '../../core/services/translation.service';
 import { TranslatePipe } from '../../shared/pipes/translate.pipe';
+import { SymbolComponent } from '../../shared/symbol/symbol.component';
 import { TimeUtility } from '../../shared/utils/TimeUtility';
 
 @Component({
   selector: 'app-calendar-panel',
   standalone: true,
-  imports: [TranslatePipe],
+  imports: [TranslatePipe, SymbolComponent],
   templateUrl: './calendar-panel.component.html',
 })
 export class CalendarPanelComponent implements OnInit, OnDestroy {
@@ -120,7 +121,8 @@ export class CalendarPanelComponent implements OnInit, OnDestroy {
    * Unterscheidet bewusst nicht zwischen partiell/total (siehe Tooltip dafür).
    */
   private _eclipseIcon(type: string): string {
-    return type.includes('Sonnenfinsternis') ? '☀️' : '🌕';
+    // Per CSS gezeichnet (styles.css, .fs-symbol): [innerHTML] entfernt SVG, Emoji sehen je System anders aus
+    return type.includes('Sonnenfinsternis') ? '<span class="fs-symbol fs-sonne"></span>' : '<span class="fs-symbol fs-mond"></span>';
   }
 
   /**

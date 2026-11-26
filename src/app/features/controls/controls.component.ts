@@ -13,6 +13,7 @@ import { TranslatePipe } from '../../shared/pipes/translate.pipe';
 import { Model3dPanelComponent } from '../model3d/model3d-panel.component';
 import { Model3dStateService } from '../../core/services/model3d-state.service';
 import { AnsichtService } from '../../core/services/ansicht.service';
+import { SymbolComponent } from '../../shared/symbol/symbol.component';
 
 type ModalType = 'info' | 'history' | 'calendar' | null;
 
@@ -29,6 +30,7 @@ type ModalType = 'info' | 'history' | 'calendar' | null;
     SimulationPanelComponent,
     CalendarPanelComponent,
     Model3dPanelComponent,
+    SymbolComponent,
   ],
   templateUrl: './controls.component.html',
   styleUrls: ['./controls.component.css'],

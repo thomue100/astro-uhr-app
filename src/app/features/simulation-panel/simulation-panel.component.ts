@@ -1,6 +1,7 @@
 // src/app/features/simulation-panel/simulation-panel.component.ts
 import { Component, inject, signal, effect, computed } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { SymbolComponent } from '../../shared/symbol/symbol.component';
 import {
   ClockSimulationService, KALENDER_ANFANG, KALENDER_ENDE, simulierteMsProSekunde,
 } from '../../core/services/clock-simulation.service';
@@ -21,7 +22,7 @@ const wochentage = {
 @Component({
   selector: 'app-simulation-panel',
   standalone: true,
-  imports: [FormsModule, TranslatePipe],
+  imports: [FormsModule, TranslatePipe, SymbolComponent],
   templateUrl: './simulation-panel.component.html',
 })
 export class SimulationPanelComponent {

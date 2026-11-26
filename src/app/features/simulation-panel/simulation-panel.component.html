@@ -32,9 +32,9 @@
      dieselben Begriffe wie im 3D-Modell. -->
 <div class="btn-row">
   <button (click)="toggleAnimation()">
-    {{ isAnimationRunning()
+    <span class="mit-symbol"><app-symbol [name]="isAnimationRunning() ? 'pause' : 'start'" />{{ isAnimationRunning()
     ? ('simulation.anim_stop'  | translate)
-    : ('simulation.anim_start' | translate) }}
+    : ('simulation.anim_start' | translate) }}</span>
   </button>
   <button (click)="setToCurrentTime()">
     {{ 'simulation.reset' | translate }}

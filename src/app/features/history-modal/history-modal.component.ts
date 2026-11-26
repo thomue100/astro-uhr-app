@@ -1,13 +1,14 @@
 // src/app/features/history-modal/history-modal.component.ts
 import { Component, inject } from '@angular/core';
 import { TranslatePipe } from '../../shared/pipes/translate.pipe';
+import { SprunglisteComponent } from '../../shared/sprungliste/sprungliste.component';
 import { TranslationService } from '../../core/services/translation.service';
 import { ImageViewerComponent, ImageViewerConfig } from '../../shared/image-viewer/image-viewer.component';
 
 @Component({
   selector: 'app-history-modal-content',
   standalone: true,
-  imports: [TranslatePipe, ImageViewerComponent],
+  imports: [SprunglisteComponent, TranslatePipe, ImageViewerComponent],
   templateUrl: './history-modal.component.html',
   styleUrls: ['./history-modal.component.css'],
 })

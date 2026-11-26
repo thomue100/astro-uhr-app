@@ -4,18 +4,18 @@
   @if (m3d.active()) {
   <!-- 3D-Modell offen: Bedienfeld ersetzt das Menü, Titelzeile bleibt stehen -->
   <button type="button" class="controls-header m3d-back" (click)="close3d()">
-    {{ 'model3d.back' | translate }}
+    <span class="mit-symbol"><app-symbol name="zurueck" />{{ 'model3d.back' | translate }}</span>
   </button>
   <app-model3d-panel />
   } @else {
   <button type="button" class="controls-header" id="infoButtonHeader" aria-haspopup="dialog" (click)="openModal('info')">
-    {{ 'nav.intro' | translate }}
+    <span class="mit-symbol"><app-symbol name="info" />{{ 'nav.intro' | translate }}</span>
   </button>
 
   <!-- Simulation Panel -->
   <div id="simulationPanel">
     <button type="button" class="controls-header" [attr.aria-expanded]="isSimulationOpen" aria-controls="simulationContent" (click)="openSimulation()">
-      <span><span aria-hidden="true">{{ isSimulationOpen ? '🔽' : '▶️' }}</span> {{ 'nav.simulation' | translate }}</span>
+      <span class="mit-symbol"><app-symbol [name]="isSimulationOpen ? 'zu' : 'auf'" />{{ 'nav.simulation' | translate }}</span>
     </button>
     <div class="controls-content" id="simulationContent" [class.controls-content--hidden]="!isSimulationOpen" [inert]="!isSimulationOpen">
       <app-simulation-panel />
@@ -25,7 +25,7 @@
   <!-- Kalender Panel -->
   <div id="calendarPanel">
     <button type="button" class="controls-header" [attr.aria-expanded]="isCalendarOpen" aria-controls="calendarContent" (click)="openCalendar()">
-      <span><span aria-hidden="true">{{ isCalendarOpen ? '🔽' : '▶️' }}</span> {{ 'nav.calendar' | translate }}</span>
+      <span class="mit-symbol"><app-symbol [name]="isCalendarOpen ? 'zu' : 'auf'" />{{ 'nav.calendar' | translate }}</span>
     </button>
     <div class="controls-content" id="calendarContent" [class.controls-content--hidden]="!isCalendarOpen" [inert]="!isCalendarOpen">
       <app-calendar-panel (openCalendarModal)="openModal('calendar')" />
@@ -38,7 +38,7 @@
   <!-- Kunst & Geschichte -->
   <div id="historyPanel">
     <button type="button" class="controls-header" aria-haspopup="dialog" (click)="openModal('history')">
-      {{ 'nav.history' | translate }}
+      <span class="mit-symbol"><app-symbol name="info" />{{ 'nav.history' | translate }}</span>
     </button>
   </div>
   }
@@ -57,7 +57,7 @@
 
 @if (activeModal() === 'calendar') {
   <app-modal
-    [title]="('modal_calendar.weekday_title' | translate) + ' ' + (currentDate() | date:'dd.MM.yyyy') + ' 🗓️'"
+    [title]="('modal_calendar.weekday_title' | translate) + ' ' + (currentDate() | date:'dd.MM.yyyy')"
     (close)="closeModal()"
   >
     <app-calendar-modal [date]="currentDate()" />

@@ -8,6 +8,6 @@
   <div style="width:100%" [innerHTML]="calendarInfoHtml()"></div>
 
   <button class="btn-auto" (click)="openCalendarModal.emit()">
-    {{ 'calendar.explain_btn' | translate }}
+    <span class="mit-symbol"><app-symbol name="info" />{{ 'calendar.explain_btn' | translate }}</span>
   </button>
 </div>

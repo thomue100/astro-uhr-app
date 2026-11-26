@@ -1,6 +1,7 @@
 // src/app/features/model3d/model3d-panel.component.ts
 import { Component, inject } from '@angular/core';
 import { TranslatePipe } from '../../shared/pipes/translate.pipe';
+import { SymbolComponent } from '../../shared/symbol/symbol.component';
 import { Model3dStateService } from '../../core/services/model3d-state.service';
 import { ViewKey } from './clock-math';
 
@@ -8,7 +9,7 @@ import { ViewKey } from './clock-math';
 @Component({
   selector: 'app-model3d-panel',
   standalone: true,
-  imports: [TranslatePipe],
+  imports: [TranslatePipe, SymbolComponent],
   templateUrl: './model3d-panel.component.html',
   styleUrls: ['./model3d-panel.component.css'],
 })

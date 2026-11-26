@@ -10,16 +10,16 @@
     "subtitle": "St. Marien zu Lübeck"
   },
   "nav": {
-    "intro": "ℹ️ Einführung",
+    "intro": "Einführung",
     "simulation": "Simulation",
     "calendar": "Kalender",
-    "history": "ℹ️ Kunst & Geschichte"
+    "history": "Kunst & Geschichte"
   },
   "simulation": {
     "date_label": "Datum und Uhrzeit:",
     "speed_label": "Geschwindigkeit:",
-    "anim_start": "▶️ Start",
-    "anim_stop": "⏸️ Anhalten",
+    "anim_start": "Start",
+    "anim_stop": "Anhalten",
     "reset": "Jetzt",
     "zone": "Lübecker Zeit",
     "rate_min": "{n} Min. pro Sek.",
@@ -38,7 +38,7 @@
     "invalid_year": "Ungültiges Jahr. Bitte Datum zwischen 1911 und 2080 wählen.",
     "no_year_data": "Jahresdaten nicht vorhanden.",
     "no_day_data": "Tagesdaten nicht vorhanden.",
-    "explain_btn": "ℹ️ Erläuterungen",
+    "explain_btn": "Erläuterungen",
     "for_date": "für",
     "eclipse_date_format": "{date} Uhr {time}"
   },
@@ -51,16 +51,17 @@
   "calendar_disk": {
     "zoom_out": "Verkleinern",
     "zoom_in": "Vergrößern",
-    "reset": "⟲ Ansicht zurücksetzen",
-    "mode_rotate": "⟳ Drehen",
-    "mode_pan": "✥ Verschieben",
-    "hint": "Drehen · Rad/Pinch zum Zoomen"
+    "reset": "Ansicht zurücksetzen",
+    "mode_rotate": "Drehen",
+    "mode_pan": "Verschieben",
+    "hint_touch": "Mit einem Finger drehen · mit zwei Fingern zoomen und verschieben",
+    "hint_mouse": "Ziehen zum Drehen · Mausrad zum Zoomen"
   },
   "modal": {
     "close": "Schließen"
   },
   "modal_intro": {
-    "title": "Die Astronomische Uhr 🧭",
+    "title": "Die Astronomische Uhr",
     "headline": "Willkommen an der Astronomischen Uhr von St. Marien",
     "welcome": "Seit über 600 Jahren blickt eine astronomische Uhr auf die Gemeinde von St. Marien zu Lübeck herab. Diese Simulation lädt Sie ein, das technische Meisterwerk aus nächster Nähe zu erkunden – ob Sie nun direkt davor stehen oder sich von zuhause aus einen ersten Eindruck verschaffen möchten.",
     "overview_title": "Fünf Aufgaben in einem Uhrwerk",
@@ -117,16 +118,6 @@
     "ctrl_btn_cal": "Erklärt, wie der Wochentag ermittelt werden kann.",
     "li_btn_hist": "Kunst & Geschichte",
     "ctrl_btn_hist": "Bietet Hintergrundinformationen zur Geschichte und Restaurierung der Uhr.",
-    "symbols_title": "Symbole in der Kalenderübersicht 🔣",
-    "symbols_intro": "Um Platz zu sparen, verwendet die kompakte Kalenderübersicht Symbole statt ausgeschriebener Begriffe (Details erscheinen als Tooltip beim Antippen/Hovern):",
-    "symbols_date": "Datum (Wochentag, Tag.Monat.Jahr)",
-    "symbols_easter": "Osterdatum",
-    "symbols_golden": "Goldene Zahl",
-    "symbols_sunday_letter": "Sonntagsbuchstabe",
-    "symbols_day_letter": "Tagesbuchstabe",
-    "symbols_saint": "Tagesheilige(r)",
-    "symbols_solar_eclipse": "Sonnenfinsternis (partiell oder total)",
-    "symbols_lunar_eclipse": "Mondfinsternis (partiell oder total)",
     "sources_title": "Quellen dieser Einführung",
     "sources_text": "Paul Behrens: „Die Astronomische Uhr in St. Marien“, St.-Marien-Jahrbuch 1967, S. 134–147. · Manfred Schukowski: „Die astronomische Uhr in der Lübecker Marienkirche“, Astronomie + Raumfahrt 37 (2000) 4, S. 34–36."
   },
@@ -136,13 +127,13 @@
     "inner": "Ganz innen stehen die Daten der Ostersonntage. Dazwischen befinden sich die sogenannten Goldenen Zahlen, die die Stellung des Jahres im 19-jährigen Mondzyklus anzeigen.",
     "rule_title": "Die Lübecker Wochentags-Regel",
     "rule_intro": "Ein Sonntagsbuchstabe (SB) bedeutet, dass alle mit diesem Buchstaben bezeichneten Tage Sonntage sind. Montag ist dann der nächste Buchstabe, Dienstag der übernächste usw.",
-    "step1_title": "Schritt 1: Sonntagsbuchstaben (SB) bestimmen 🗓️",
+    "step1_title": "Schritt 1: Sonntagsbuchstaben (SB) bestimmen",
     "step1_year": "Die Jahreszahl",
     "step1_has": "hat die Sonntagsbuchstaben (SB):",
     "step1_letter": "Der Tagesbuchstabe (TB) ist:",
-    "step2_title": "Schritt 2: Vom SB zum TB zählen ⏱️",
+    "step2_title": "Schritt 2: Vom SB zum TB zählen",
     "step2_text": "Man startet die Zählung beim gültigen Sonntagsbuchstaben und zählt weiter, bis der Tagesbuchstabe erreicht ist.",
-    "step3_title": "Schritt 3: Das Ergebnis ablesen 🎉",
+    "step3_title": "Schritt 3: Das Ergebnis ablesen",
     "step3_text": "Der Wochentag ergibt sich aus der Position in der Zählung (Position 0 = Sonntag, Position 6 = Samstag).",
     "result_prefix": "Der",
     "result_is": "ist ein",
@@ -150,8 +141,8 @@
     "golden_number_info": "Nach 19 Jahren wiederholen sich die Mondphasen nahezu an denselben Kalendertagen. Die goldene Zahl spielt eine wichtige Rolle bei der Berechnung des Osterdatums und anderer beweglicher kirchlicher Feiertage. Zusammen mit weiteren Kalenderregeln hilft sie dabei, den ersten Vollmond nach dem Frühlingsanfang zu bestimmen, auf dessen folgenden Sonntag Ostern gefeiert wird."
   },
   "modal_history": {
-    "title": "Kunst & Geschichte der Astronomischen Uhr 📜",
-    "headline": "Die Geschichte der Astronomischen Uhr 📜",
+    "title": "Kunst & Geschichte der Astronomischen Uhr",
+    "headline": "Die Geschichte der Astronomischen Uhr",
     "intro": "Die Uhr in St. Marien steht in einer über 600-jährigen Tradition von Repräsentation und Innovation in der Hansestadt Lübeck – von der ersten Turmuhr 1380 bis zum heutigen Bauwerk aus dem Jahr 1976.",
     "predecessors_title": "Die Vorgängeruhren (1380–1942)",
     "clock0_label": "1380:",
@@ -166,7 +157,7 @@
     "clock4_text": "Am Palmsonntag wird die historische Uhr bei einem Bombenangriff auf Lübeck restlos zerstört. Nur die bereits 1888/90 ins St.-Annen-Museum ausgelagerten Teile – Kalenderscheibe, Tierkreiszeiger von 1405 sowie weitere Zeiger und Uhrwerkteile – überdauern die Zerstörung ihrer „Nachfolger im Amte“.",
     "predecessors_special_title": "Was die Lübecker Uhr besonders machte",
     "predecessors_special_text": "Anders als die meisten Kirchenuhren zeigte die Lübecker Uhr nicht nur Sonne, Mond und Tierkreis, sondern zusätzlich die Bahnen der fünf damals bekannten Planeten – eine Fülle, die unter hansischen Kirchenuhren nur die Domuhr von Münster erreichte. Einzigartig war zudem die seit 1563 belegte Angabe sichtbarer Finsternisse sowie eine rätselhafte „Schwerkraftuhr“ auf dem Mondzeiger, deren genauer Zweck bis heute nicht sicher geklärt ist.",
-    "img_title": "📷 Das erhaltene Uhrwerk im St.-Annen-Museum, Lübeck",
+    "img_title": "Das erhaltene Uhrwerk im St.-Annen-Museum, Lübeck",
     "img_subtitle": "Reste der ersten Astronomischen Uhr von 1405 — Sternenscheibe mit vergoldeten Figuren, Zahnräder und Zeiger. Das untere Rad ist das Antriebsrad des Uhrwerks.",
     "rebuild_title": "Der Neubau (1955–1976)",
     "rebuild1_label": "Der Beginn:",
@@ -203,13 +194,13 @@
     "fig4_text": "Über dem Figurenumgang schlägt ein alter Mann mit einem Stundenglas die historische Stundenglocke von 1721 – ein Geschenk des Rotary Clubs Ystad. Links von ihr mahnt eine Frauenfigur mit gesenkter Fackel und Totenkopf an die Vergänglichkeit, darüber blickt eine Doppelfigur – ein Greis und eine junge Frau – als Januskopf zugleich in Vergangenheit und Zukunft. Alle drei Figuren schnitzte der aus Schlesien geflüchtete, damals 80-jährige Bildschnitzer August Wittich nach einem historischen Foto originalgetreu nach.",
     "fig5_label": "Vier Etagen voller Tugenden:",
     "fig5_text": "Auf der Ebene des Figurenumgangs stehen sich Versöhnung (die Heimkehr des verlorenen Sohnes) und Barmherzigkeit (der barmherzige Samariter) gegenüber. Darüber folgen Demut, Freude, Glaube und Liebe – bis Christus in der Spitze des Giebels schließlich die Hoffnung verkörpert.",
-    "img_giebel_title": "📷 Der Figurenaufsatz und Giebel der Astronomischen Uhr",
+    "img_giebel_title": "Der Figurenaufsatz und Giebel der Astronomischen Uhr",
     "img_giebel_subtitle": "Der bekrönende Giebel mit dem Figurenumgang, wie er sich heute in St. Marien präsentiert.",
-    "img_getriebe_title": "📷 Das Getriebe der Astronomischen Uhr",
+    "img_getriebe_title": "Das Getriebe der Astronomischen Uhr",
     "img_getriebe_subtitle": "Blick auf das Räderwerk, das Zeigerwerk und Figurenumgang synchron antreibt.",
-    "img_uhrwerk_title": "📷 Das moderne Uhrwerk",
+    "img_uhrwerk_title": "Das moderne Uhrwerk",
     "img_uhrwerk_subtitle": "Das seit 1967 laufende, von Paul Behrens aufgearbeitete Turmuhrenwerk.",
-    "img_figurenumlauf_title": "📷 Der Figurenumlauf zur Mittagsstunde",
+    "img_figurenumlauf_title": "Der Figurenumlauf zur Mittagsstunde",
     "img_figurenumlauf_subtitle": "Die Gläubigen der Welt ziehen vor der zentralen Christusfigur vorbei.",
     "sources_title": "Quellen dieses Beitrags",
     "sources_text": "Paul Behrens: „Die Astronomische Uhr in St. Marien“, St.-Marien-Jahrbuch 1967, S. 134–147. · Manfred Schukowski: „Die astronomische Uhr in der Lübecker Marienkirche“, Astronomie + Raumfahrt 37 (2000) 4, S. 34–36."
@@ -217,7 +208,7 @@
   "image_viewer": {
     "zoom_out": "Verkleinern",
     "zoom_in": "Vergrößern",
-    "reset": "⟲ Ansicht zurücksetzen",
+    "reset": "Ansicht zurücksetzen",
     "hint": "Rad/Pinch · Ziehen",
     "error": "Bild konnte nicht geladen werden."
   },
@@ -249,7 +240,7 @@
     "uniform": "Für das Jahr {year} gilt ein einheitlicher Sonntagsbuchstabe: {sb}."
   },
   "model3d": {
-    "back": "◀ Zurück zur Uhr",
+    "back": "Zurück zur Uhr",
     "loading": "3D-Modell wird geladen …",
     "time": "Zeit",
     "speed": "Geschwindigkeit",
@@ -302,5 +293,16 @@
     "uhr": "Uhr",
     "kalender": "Kalenderscheibe",
     "modell3d": "3D-Modell"
+  },
+  "sprungliste": {
+    "label": "Inhalt",
+    "einf-zifferblatt": "Zifferblatt",
+    "einf-kalender": "Kalenderscheibe",
+    "einf-figuren": "Figurenaufsatz",
+    "einf-bedienung": "Bedienung",
+    "gesch-vorgaenger": "Vorgängeruhren",
+    "gesch-neubau": "Neubau",
+    "gesch-kunst": "Astrologie & Astronomie",
+    "gesch-figuren": "Figurenumgang"
   }
 }

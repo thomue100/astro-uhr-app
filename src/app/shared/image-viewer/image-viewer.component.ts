@@ -4,6 +4,7 @@ import {
   AfterViewInit, OnDestroy, ChangeDetectionStrategy, inject,
 } from '@angular/core';
 import { TranslatePipe } from '../pipes/translate.pipe';
+import { SymbolComponent } from '../symbol/symbol.component';
 
 export interface ImageViewerConfig {
   src: string;
@@ -20,7 +21,7 @@ export interface ImageViewerConfig {
 @Component({
   selector: 'app-image-viewer',
   standalone: true,
-  imports: [TranslatePipe],
+  imports: [TranslatePipe, SymbolComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="iv-card">
@@ -59,7 +60,7 @@ export interface ImageViewerConfig {
 
         @if (loadError) {
           <div class="iv-error">
-            ⚠️ {{ 'image_viewer.error' | translate }}<br>
+            <app-symbol name="warnung" /> {{ 'image_viewer.error' | translate }}<br>
             <code>{{ config.src }}</code>
           </div>
         }
@@ -67,12 +68,12 @@ export interface ImageViewerConfig {
 
       <div class="iv-controls">
         <button class="iv-btn" (click)="zoom(-0.3)"
-          [title]="'image_viewer.zoom_out' | translate">🔍−</button>
+          [title]="'image_viewer.zoom_out' | translate"><app-symbol name="verkleinern" /></button>
         <button class="iv-btn" (click)="zoom(+0.3)"
-          [title]="'image_viewer.zoom_in' | translate">🔍+</button>
+          [title]="'image_viewer.zoom_in' | translate"><app-symbol name="vergroessern" /></button>
         <button class="iv-btn" (click)="reset()"
           [title]="'image_viewer.reset' | translate">
-          {{ 'image_viewer.reset' | translate }}
+          <span class="mit-symbol"><app-symbol name="zuruecksetzen" />{{ 'image_viewer.reset' | translate }}</span>
         </button>
         <span class="iv-hint">{{ 'image_viewer.hint' | translate }}</span>
       </div>

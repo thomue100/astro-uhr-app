@@ -1,5 +1,7 @@
 <!-- src/app/features/history-modal/history-modal.component.html -->
 <div class="modal-step">
+  <!-- Sprungliste: lange Texte, Orientierung auf einen Blick (UX-Review 14) -->
+  <app-sprungliste [ziele]="['gesch-vorgaenger', 'gesch-neubau', 'gesch-kunst', 'gesch-figuren']" />
 
   <strong style="color: #ffcc33; font-size: 1.2em;">
     {{ 'modal_history.headline' | translate }}
@@ -9,7 +11,7 @@
   </p>
 
   <!-- ═══ VORGESCHICHTE ═══ -->
-  <h3 style="color: #ffcc33; font-size: 1.1em; margin-top: 15px;">
+  <h3 id="gesch-vorgaenger" tabindex="-1" style="color: #ffcc33; font-size: 1.1em; margin-top: 15px;">
     {{ 'modal_history.predecessors_title' | translate }}
   </h3>
   <ul style="font-size: 0.9em; margin-top: 5px; padding-left: 20px;">
@@ -45,7 +47,7 @@
   <hr style="border-top: 1px solid #1a4261; margin-top: 20px; margin-bottom: 20px;"/>
 
   <!-- ═══ NEUBAU ═══ -->
-  <h3 style="color: #ffcc33; font-size: 1.1em; margin-top: 15px;">
+  <h3 id="gesch-neubau" tabindex="-1" style="color: #ffcc33; font-size: 1.1em; margin-top: 15px;">
     {{ 'modal_history.rebuild_title' | translate }}
   </h3>
   <ul style="font-size: 0.9em; margin-top: 5px; padding-left: 20px;">
@@ -73,7 +75,7 @@
   <hr style="border-top: 1px solid #1a4261; margin-top: 20px; margin-bottom: 20px;"/>
 
   <!-- ═══ KUNST: ASTROLOGIE VS. ASTRONOMIE ═══ -->
-  <h3 style="color: #ffcc33; font-size: 1.1em; margin-top: 15px;">
+  <h3 id="gesch-kunst" tabindex="-1" style="color: #ffcc33; font-size: 1.1em; margin-top: 15px;">
     {{ 'modal_history.art_title' | translate }}
   </h3>
   <p style="font-size: 0.9em; margin-top: 5px;">
@@ -119,7 +121,7 @@
   <hr style="border-top: 1px solid #1a4261; margin-top: 20px; margin-bottom: 20px;"/>
 
   <!-- ═══ FIGURENUMGANG ═══ -->
-  <h4 style="color: #ffcc33; font-size: 1.0em; margin-top: 15px;">
+  <h4 id="gesch-figuren" tabindex="-1" style="color: #ffcc33; font-size: 1.0em; margin-top: 15px;">
     {{ 'modal_history.figures_title' | translate }}
   </h4>
   <ul style="font-size: 0.9em; margin-top: 5px; padding-left: 20px;">

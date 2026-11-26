@@ -1,4 +1,6 @@
 <div class="modal-step">
+  <!-- Sprungliste: lange Texte, Orientierung auf einen Blick (UX-Review 14) -->
+  <app-sprungliste [ziele]="['einf-zifferblatt', 'einf-kalender', 'einf-figuren', 'einf-bedienung']" />
   <strong style="color: #ffcc33; font-size: 1.2em;">
     {{ 'modal_intro.headline' | translate }}
   </strong>
@@ -23,7 +25,7 @@
   </ul>
 
   <div style="margin-top: 15px;">
-    <strong style="color: #ffcc33; font-size: 1.1em;">
+    <strong id="einf-zifferblatt" tabindex="-1" style="color: #ffcc33; font-size: 1.1em;">
       {{ 'modal_intro.dial_title' | translate }}
     </strong>
     <p style="font-size: 0.9em; margin-top: 5px;">
@@ -53,7 +55,7 @@
   </div>
 
   <div style="margin-top: 15px;">
-    <strong style="color: #ffcc33; font-size: 1.1em;">
+    <strong id="einf-kalender" tabindex="-1" style="color: #ffcc33; font-size: 1.1em;">
       {{ 'modal_intro.calendar_title' | translate }}
     </strong>
     <p style="font-size: 0.9em; margin-top: 5px;">
@@ -72,7 +74,7 @@
   </div>
 
   <div style="margin-top: 15px;">
-    <strong style="color: #ffcc33; font-size: 1.1em;">
+    <strong id="einf-figuren" tabindex="-1" style="color: #ffcc33; font-size: 1.1em;">
       {{ 'modal_intro.figure_title' | translate }}
     </strong>
     <p style="font-size: 0.9em; margin-top: 5px;">
@@ -87,7 +89,7 @@
 
   <hr style="border-top: 1px solid #1a4261; margin-top: 20px; margin-bottom: 20px;"/>
 
-  <strong style="color: #ffcc33; font-size: 1.2em;">
+  <strong id="einf-bedienung" tabindex="-1" style="color: #ffcc33; font-size: 1.2em;">
     {{ 'modal_intro.controls_title' | translate }}
   </strong>
   <p style="font-size: 0.9em; margin-top: 5px;">
@@ -128,21 +130,6 @@
       <li>{{ 'modal_intro.ctrl_cal_eclipse' | translate }}</li>
     </ul>
 
-    <div style="margin-top: 10px; padding-left: 5px;">
-      <strong style="color: #ffcc33; font-size: 1.0em;">
-        {{ 'modal_intro.symbols_title' | translate }}
-      </strong>
-      <ul style="font-size: 0.9em; margin-top: 5px; padding-left: 0; color: white; list-style-type: none;">
-        <li>📅 — {{ 'modal_intro.symbols_date' | translate }}</li>
-        <li>📆 — {{ 'modal_intro.symbols_easter' | translate }}</li>
-        <li>🔢 — {{ 'modal_intro.symbols_golden' | translate }}</li>
-        <li>🔠 — {{ 'modal_intro.symbols_sunday_letter' | translate }}</li>
-        <li>🔤 — {{ 'modal_intro.symbols_day_letter' | translate }}</li>
-        <li>🙏 — {{ 'modal_intro.symbols_saint' | translate }}</li>
-        <li>☀️ — {{ 'modal_intro.symbols_solar_eclipse' | translate }}</li>
-        <li>🌕 — {{ 'modal_intro.symbols_lunar_eclipse' | translate }}</li>
-      </ul>
-    </div>
   </div>
 
   <div style="margin-top: 15px;">
