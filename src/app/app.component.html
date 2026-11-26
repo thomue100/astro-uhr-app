@@ -1,5 +1,19 @@
 <main class="container">
-  <app-controls></app-controls>
+  <!-- Titel + Sprach-Umschalter: zuerst im Seitenaufbau, auf dem Smartphone auch zuerst sichtbar -->
+  <header class="app-kopf app-title-row">
+    <h1 class="app-title">
+      {{ 'app.title' | translate }}
+      <div class="app-subtitle">{{ 'app.subtitle' | translate }}</div>
+    </h1>
+    <button
+      type="button"
+      class="lang-btn"
+      (click)="t.toggle()"
+      [title]="t.currentLang() === 'de'
+        ? ('lang.switch_to_en' | translate)
+        : ('lang.switch_to_de' | translate)"
+    >{{ t.currentLang() === 'de' ? ('lang.en' | translate) : ('lang.de' | translate) }}</button>
+  </header>
   <app-canvas></app-canvas>
+  <app-controls></app-controls>
 </main>
-

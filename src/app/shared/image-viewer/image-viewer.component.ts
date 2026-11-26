@@ -94,12 +94,12 @@ export interface ImageViewerConfig {
       flex-direction: column;
       gap: 3px;
     }
-    .iv-caption-title { color: #ffcc33; font-size: 0.85em; font-weight: 700; }
-    .iv-caption-sub   { color: #88aacc; font-size: 0.78em; line-height: 1.4; }
+    .iv-caption-title { color: #ffcc33; font-size: 15px; font-weight: 700; }
+    .iv-caption-sub   { color: #9fb8d4; font-size: 14px; line-height: 1.4; }
     /* Dezenter Bildnachweis: bewusst kleiner/unauffälliger als Titel/Untertitel */
     .iv-caption-credit {
       color: #5a7592;
-      font-size: 0.68em;
+      font-size: 13px;
       font-style: italic;
       margin-top: 2px;
     }
@@ -128,7 +128,7 @@ export interface ImageViewerConfig {
       -webkit-user-drag: none;
     }
     .iv-error {
-      color: #ff9966; font-size: 0.85em;
+      color: #ff9966; font-size: 14px;
       padding: 20px; text-align: center; line-height: 1.8;
     }
     .iv-controls {
@@ -138,12 +138,12 @@ export interface ImageViewerConfig {
     }
     .iv-btn {
       background: #184a6b; color: #ffcc33; border: 1px solid #00aaff;
-      border-radius: 5px; padding: 4px 10px; font-size: 0.78em;
+      border-radius: 5px; padding: 4px 10px; font-size: 14px;
       font-weight: 600; cursor: pointer; transition: background 0.2s;
       width: auto; min-width: 44px; white-space: nowrap;
     }
     .iv-btn:hover { background: #0066aa; }
-    .iv-hint { color: #6688aa; font-size: 0.72em; margin-left: 4px; }
+    .iv-hint { color: #88aacc; font-size: 13px; margin-left: 4px; }
     @media (max-width: 600px) {
       .iv-stage { height: 260px; }
       .iv-hint  { display: none; }

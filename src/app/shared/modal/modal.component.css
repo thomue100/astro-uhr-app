@@ -81,6 +81,8 @@
 
 /* BODY */
 .modal-body {
+    /* Absätze im Inhalt nutzen 0.9em → 14 px Mindestgröße für Fließtext */
+    font-size: 15.6px;
     margin-top: 10px;
     color: #f4f4f4;
     line-height: 1.5;

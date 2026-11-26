@@ -72,25 +72,48 @@ body {
   pointer-events: none;
 }
 
-/* Mobile: Uhr (app-canvas) erscheint zuerst, Controls darunter.
-   order wirkt hier korrekt, weil app-canvas/app-controls die direkten
-   Flex-Kinder von .container sind. */
-.container > app-canvas {
-  order: -1;
+/* Smartphone: Titelzeile, Uhr, Menü – genau in der Reihenfolge des
+   Seitenaufbaus (keine Umsortierung per CSS, damit Tastatur und Screenreader
+   dieselbe Reihenfolge erleben wie das Auge). */
+.app-kopf {
+  width: 100%;
+  box-sizing: border-box;
+  background-color: #0e2030;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
 
+/* Computer: Titelzeile und Menü links übereinander (optisch ein Kasten),
+   die Uhr rechts über beide Zeilen. */
 @media (min-width: 851px) {
   .container {
-    flex-direction: row;
-    align-items: stretch;
-    gap: 30px;
+    display: grid;
+    grid-template-columns: 250px auto;
+    grid-template-rows: auto 1fr;
+    grid-template-areas:
+      "kopf  uhr"
+      "menue uhr";
+    column-gap: 30px;
+    row-gap: 0;
+    align-items: start;
     padding: 20px;
     width: auto;
     margin: 24px auto;
   }
 
-  .container > app-canvas {
-    order: 0;
+  .app-kopf {
+    grid-area: kopf;
+    border-radius: 8px 8px 0 0;
+    /* Schatten nur oben und seitlich – nahtloser Übergang ins Menü */
+    clip-path: inset(-12px -12px 0 -12px);
+  }
+
+  .container > app-controls { grid-area: menue; }
+  .container > app-canvas   { grid-area: uhr; }
+
+  .controls {
+    border-radius: 0 0 8px 8px;
+    clip-path: inset(0 -12px -12px -12px);
   }
 }
 
@@ -156,7 +179,7 @@ body {
      verhindert, dass der längere englische Text ("St. Mary's Church, Lübeck")
      eher umbricht als der deutsche und dadurch die Zeilenzahl (=Höhe) je
      nach Sprache unterschiedlich ausfällt */
-  font-size: 0.72rem;
+  font-size: 13px;
   font-weight: 600;
   line-height: 1.35;
   opacity: 0.9;
@@ -173,7 +196,7 @@ body {
   border: 1px solid #ffcc33;
   border-radius: 4px;
   padding: 6px 12px;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   cursor: pointer;
   white-space: nowrap;
@@ -200,7 +223,7 @@ body {
   text-align: center;
   margin: 0;
   border-radius: 0;
-  font-size: 13px;
+  font-size: 15px;
   min-height: 44px;
   display: flex;
   align-items: center;
@@ -294,7 +317,7 @@ button.controls-header:focus-visible {
 /* === 4. ELEMENTE                                      === */
 /* ======================================================== */
 .controls-content label {
-  font-size: 12px;
+  font-size: 14px;
   display: block;
   width: 100%;
   margin-bottom: 3px;
@@ -304,7 +327,7 @@ button.controls-header:focus-visible {
   background: rgba(255, 255, 255, 0.05);
   padding: 4px 8px;
   border-radius: 6px;
-  font-size: 11.5px;
+  font-size: 14px;
   color: #f4f4f4;
   line-height: 1.3;
   /* Läuft beim Zeitraffer mit (das Datumsfeld steht dann still).
@@ -315,6 +338,7 @@ button.controls-header:focus-visible {
    Höhe bleibt bei jedem Wochentag gleich */
 #liveDateTime .live-zone {
   display: block;
+  font-size: 13px;
   color: #88aacc;
 }
 
@@ -344,7 +368,7 @@ button:hover {
 .controls-content button {
   padding: 9px 12px;
   min-height: 44px;
-  font-size: 13px;
+  font-size: 14px;
 }
 
 /*
@@ -389,13 +413,13 @@ button.btn-auto {
   button {
     padding: 7px 12px;
     min-height: auto;
-    font-size: 13px;
+    font-size: 14px;
   }
 
   .controls-content button {
     padding: 5px 10px;
     min-height: auto;
-    font-size: 12px;
+    font-size: 14px;
   }
 
   button.btn-auto {
@@ -435,7 +459,7 @@ input:focus, select:focus {
 
 @media (min-width: 601px) {
   input, select {
-    font-size: 13px;
+    font-size: 15px;
     padding: 3px 8px;
   }
 
@@ -633,8 +657,10 @@ input[type="range"]::-moz-range-thumb {
 }
 
 /* ======================================================== */
-/* === 9. KALENDER-PANEL: Kompakte Symbol-Ansicht       === */
+/* === 9. KALENDER-PANEL: Liste „Bezeichnung – Wert“    === */
 /* ======================================================== */
+/* Begriffe stehen sichtbar da (Tooltips gibt es auf Touch-Geräten nicht).
+   Beschriftungen gedämpft, Werte hell – so ist klar, was wozu gehört. */
 .cal-panel-wrapper {
   display: flex;
   flex-direction: column;
@@ -646,17 +672,17 @@ input[type="range"]::-moz-range-thumb {
 .cal-compact {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 6px;
   width: 100%;
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid #1a4261;
   border-radius: 6px;
-  padding: 8px 10px;
+  padding: 10px 12px;
   box-sizing: border-box;
 }
 
 .cal-line {
-  font-size: 12px;
+  font-size: 14px;
   line-height: 1.4;
   color: #f4f4f4;
 }
@@ -664,31 +690,34 @@ input[type="range"]::-moz-range-thumb {
 .cal-date {
   font-weight: 700;
   color: #ffcc33;
-  font-size: 12.5px;
+  font-size: 15px;
 }
 
-/* Chips für Osterdatum/Goldene Zahl/Sonntags-/Tagesbuchstabe:
-   umbrechen bei Bedarf, statt die Sidebar zu verbreitern */
-.cal-year-row {
+.cal-werte {
+  margin: 0;
   display: flex;
-  flex-wrap: wrap;
-  gap: 5px;
+  flex-direction: column;
+  gap: 3px;
 }
 
-.cal-chip {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid #1a4261;
-  border-radius: 4px;
-  padding: 2px 6px;
-  font-size: 11px;
-  white-space: nowrap;
-  cursor: default;
+.cal-wert {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
+  font-size: 14px;
+  line-height: 1.4;
 }
 
-.cal-saint {
-  font-size: 11.5px;
-  color: #cddcee;
-  cursor: default;
+.cal-wert dt {
+  color: #9fb8d4;
+}
+
+.cal-wert dd {
+  margin: 0;
+  color: #f4f4f4;
+  font-weight: 600;
+  text-align: right;
 }
 
 .cal-divider {
@@ -699,22 +728,45 @@ input[type="range"]::-moz-range-thumb {
 .cal-eclipse-title {
   font-weight: 700;
   color: #ffcc33;
-  font-size: 11.5px;
 }
 
+.cal-finsternisse {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* Art und Zeitpunkt; bricht in der schmalen Seitenleiste bei Bedarf um */
 .cal-eclipse-compact {
-  font-size: 11.5px;
-  cursor: default;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  column-gap: 10px;
+  font-size: 14px;
+  line-height: 1.4;
+  color: #f4f4f4;
+}
+
+.cal-finsternis-art {
+  color: #9fb8d4;
+}
+
+.cal-finsternis-zeit {
+  font-weight: 600;
+  white-space: nowrap;
+  margin-left: auto;
 }
 
 .cal-muted {
-  color: #6688aa;
+  color: #88aacc;
   font-style: italic;
-  font-size: 11.5px;
 }
 
 .cal-error {
   color: #ff7070;
-  font-size: 11.5px;
+  font-size: 14px;
   margin: 2px 0;
 }

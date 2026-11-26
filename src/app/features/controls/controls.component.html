@@ -1,22 +1,6 @@
 <!-- src/app/features/controls/controls.component.html -->
 <div class="controls" id="controls">
 
-  <!-- Titel + Sprach-Umschalter -->
-  <div class="app-title-row">
-    <h1 class="app-title">
-      {{ 'app.title' | translate }}
-      <div class="app-subtitle">{{ 'app.subtitle' | translate }}</div>
-    </h1>
-    <button
-      type="button"
-      class="lang-btn"
-      (click)="t.toggle()"
-      [title]="t.currentLang() === 'de'
-        ? ('lang.switch_to_en' | translate)
-        : ('lang.switch_to_de' | translate)"
-    >{{ t.currentLang() === 'de' ? ('lang.en' | translate) : ('lang.de' | translate) }}</button>
-  </div>
-
   @if (m3d.active()) {
   <!-- 3D-Modell offen: Bedienfeld ersetzt das Menü, Titelzeile bleibt stehen -->
   <button type="button" class="controls-header m3d-back" (click)="close3d()">

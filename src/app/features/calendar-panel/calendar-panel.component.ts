@@ -24,9 +24,9 @@ export class CalendarPanelComponent implements OnInit, OnDestroy {
   readonly openCalendarModal = output<void>();
 
   /**
-   * Kompakte Kalenderübersicht mit Symbolen statt ausgeschriebener Begriffe.
-   * Alle Begriffe bleiben über title-Tooltips zugänglich; eine Legende
-   * dazu befindet sich im Einführungs-Modal.
+   * Kalenderübersicht als Liste „Bezeichnung – Wert“. Die Begriffe stehen
+   * sichtbar da: Tooltips (title) gibt es auf Touch-Geräten nicht, und gerade
+   * dort – mit dem Handy vor der echten Uhr – wird das Panel genutzt.
    */
   readonly calendarInfoHtml = computed(() => {
     // Abhängigkeit registrieren
@@ -45,45 +45,48 @@ export class CalendarPanelComponent implements OnInit, OnDestroy {
 
     const weekdayDE = TimeUtility.getDayOfWeekString(date);
     const weekdayFull = this.t.translate(`weekdays.${weekdayDE}`);
-    const weekdayShort = this.t.translate(`weekdays_short.${weekdayDE}`);
     const dateCompact = this._formatDateCompact(date);
+
+    /** Eine Zeile „Bezeichnung – Wert“ der Liste. */
+    const wert = (schluessel: string, inhalt: string) =>
+      `<div class="cal-wert"><dt>${this.t.translate(schluessel)}</dt><dd>${inhalt}</dd></div>`;
 
     let html = '<div class="cal-compact">';
 
-    // Datum
-    html += `<div class="cal-line cal-date" title="${weekdayFull}">📅 ${weekdayShort}, ${dateCompact}</div>`;
+    // Datum mit ausgeschriebenem Wochentag
+    html += `<div class="cal-line cal-date">${weekdayFull}, ${dateCompact}</div>`;
 
-    // Jahresdaten als Chips
+    // Jahres- und Tagesangaben
     if (yearInfo) {
-      html += '<div class="cal-line cal-year-row">';
-      html += `<span class="cal-chip" title="${this.t.translate('calendar.easter')}">📆 ${yearInfo['easterDate'] ?? '--'}</span>`;
-      html += `<span class="cal-chip" title="${this.t.translate('calendar.golden_number')}">🔢${yearInfo['goldenNumber'] ?? '--'}</span>`;
-      html += `<span class="cal-chip" title="${this.t.translate('calendar.sunday_letter')}">🔠${yearInfo['dayLetter'] ?? '--'}</span>`;
-
+      html += '<dl class="cal-werte">';
+      html += wert('calendar.easter', yearInfo['easterDate'] ?? '–');
+      html += wert('calendar.golden_number', yearInfo['goldenNumber'] ?? '–');
+      html += wert('calendar.sunday_letter', yearInfo['dayLetter'] ?? '–');
       if (dailyInfo?.['letter'] && dailyInfo['letter'] !== 'N/A') {
-        html += `<span class="cal-chip" title="${this.t.translate('calendar.day_letter')}">🔤${dailyInfo['letter']}</span>`;
+        html += wert('calendar.day_letter', dailyInfo['letter']);
       }
-      html += '</div>';
+      if (dailyInfo?.['letter'] !== 'N/A' && dailyInfo?.['saint']) {
+        html += wert('calendar.saint', dailyInfo['saint']);
+      }
+      html += '</dl>';
     } else {
       html += `<p class="cal-error">${this.t.translate('calendar.no_year_data')} ${year}</p>`;
     }
 
-    // Tagesheilige(r)
-    if (dailyInfo?.['letter'] !== 'N/A' && dailyInfo?.['saint']) {
-      html += `<div class="cal-line cal-saint" title="${this.t.translate('calendar.saint')}">🙏 ${dailyInfo['saint']}</div>`;
-    }
-
-    // Finsternisse
+    // Finsternisse mit sichtbarer Art (Sonne/Mond, partiell/total)
     html += '<div class="cal-divider"></div>';
-    html += `<div class="cal-line cal-eclipse-title">🌑 ${year}</div>`;
+    html += `<div class="cal-line cal-eclipse-title">${this.t.translate('calendar.eclipses')} ${year}</div>`;
 
     if (eclipses.length > 0) {
+      html += '<ul class="cal-finsternisse">';
       eclipses.forEach((e: Record<string, string>) => {
         const icon = this._eclipseIcon(e['type']);
         const fullType = this._translateEclipseType(e['type']);
         const compactDate = this._formatEclipseCompact(e['date']);
-        html += `<div class="cal-line cal-eclipse-compact" title="${fullType}">${icon} ${compactDate}</div>`;
+        html += `<li class="cal-eclipse-compact"><span class="cal-finsternis-art"><span aria-hidden="true">${icon}</span> ${fullType}</span>`
+          + `<span class="cal-finsternis-zeit">${compactDate}</span></li>`;
       });
+      html += '</ul>';
     } else {
       html += `<div class="cal-line cal-muted">${this.t.translate('calendar.no_eclipses')} ${year}</div>`;
     }

@@ -28,9 +28,9 @@ import { ClockModel3D } from './clock-model-3d';
     .stage{position:relative;width:100%;height:100%;overflow:hidden}
     canvas{display:block;width:100%;height:100%;touch-action:none;cursor:grab}
     canvas:active{cursor:grabbing}
-    .stage ::ng-deep .tag{position:absolute;left:0;top:0;font:500 11px/1 Consolas,monospace;color:#f4f4f4;background:rgba(7,21,34,.8);border:1px solid #1a4261;border-radius:4px;padding:3px 5px;white-space:nowrap;pointer-events:none}
+    .stage ::ng-deep .tag{position:absolute;left:0;top:0;font:500 13px/1 Consolas,monospace;color:#f4f4f4;background:rgba(7,21,34,.8);border:1px solid #1a4261;border-radius:4px;padding:3px 5px;white-space:nowrap;pointer-events:none}
     .stage ::ng-deep .tag.t{font-family:inherit;color:#ffcc33}
-    .hint{position:absolute;left:10px;right:10px;bottom:8px;text-align:center;color:#88aacc;font-size:11px;pointer-events:none}
+    .hint{position:absolute;left:10px;right:10px;bottom:8px;text-align:center;color:#88aacc;font-size:13px;pointer-events:none}
     .err{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:24px;text-align:center;color:#88aacc}
     @media (max-width:600px){.hint{display:none}}
   `,
