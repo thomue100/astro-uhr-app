@@ -18,7 +18,7 @@ describe('ClockSimulationService', () => {
     TimeUtility.EclipseData = {};
 
     // Mathematische Konfiguration initialisieren
-    configureTimeUtility(AstroConfig, {});
+    configureTimeUtility(AstroConfig);
 
     TestBed.configureTestingModule({
       providers: [ClockSimulationService],

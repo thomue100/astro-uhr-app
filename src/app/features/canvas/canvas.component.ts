@@ -46,9 +46,6 @@ export class CanvasComponent implements OnInit, AfterViewInit, OnDestroy {
   private readonly minZoom  = 0.5;
   private readonly maxZoom  = 8.0;
 
-  private rotationOffset    = 0;
-  private readonly rotationStep = Math.PI / 24;
-
   private panOffsetX = 0;
   private panOffsetY = 0;
 
@@ -76,7 +73,6 @@ export class CanvasComponent implements OnInit, AfterViewInit, OnDestroy {
       const show  = state.showCalendarDisk;
       this.showCalendarControls.set(show);
       if (!show) {
-        this.rotationOffset = 0;
         this.currentZoom    = 1.5;
         this.panOffsetX     = 0;
         this.panOffsetY     = 0;
@@ -149,11 +145,8 @@ export class CanvasComponent implements OnInit, AfterViewInit, OnDestroy {
     this.currentZoom = Math.max(this.minZoom, this.currentZoom - this.zoomStep);
     this._pushZoom();
   }
-  rotateLeft(): void  { this.rotationOffset -= this.rotationStep; this._applyRotation(); }
-  rotateRight(): void { this.rotationOffset += this.rotationStep; this._applyRotation(); }
 
   resetView(): void {
-    this.rotationOffset = 0;
     this.currentZoom    = 1.5;
     this.panOffsetX     = 0;
     this.panOffsetY     = 0;
@@ -194,7 +187,6 @@ export class CanvasComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onCanvasMouseUp(): void {
-    if (this.isDragging && this.interactionMode() === 'rotate') this._syncRotationOffset();
     this.isDragging = false;
   }
   onCanvasMouseLeave(): void { this.onCanvasMouseUp(); }
@@ -268,7 +260,7 @@ export class CanvasComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onCanvasTouchEnd(e: TouchEvent): void {
-    if (e.touches.length === 0) { this.isTouchActive = false; this._syncRotationOffset(); }
+    if (e.touches.length === 0) { this.isTouchActive = false; }
     if (e.touches.length < 2)   { this.isTwoFingerGesture = false; this.lastPinchDist = 0; }
     if (e.touches.length === 1) {
       this.isTouchActive = true;
@@ -296,17 +288,8 @@ export class CanvasComponent implements OnInit, AfterViewInit, OnDestroy {
   private _touchCenter(t: TouchList): { x: number; y: number } {
     return { x: (t[0].clientX + t[1].clientX) / 2, y: (t[0].clientY + t[1].clientY) / 2 };
   }
-  private _applyRotation(): void {
-    const base = TimeUtility.calculateCalendarDiskAngle(this.clockService.getCurrentDate());
-    this.clockService.setAngleCalendarDisk(base + this.rotationOffset);
-    this.clockService.triggerRedraw();
-  }
   private _pushZoom(): void {
     this.clockService.setCalendarZoom(this.currentZoom);
     this.clockService.triggerRedraw();
-  }
-  private _syncRotationOffset(): void {
-    const base = TimeUtility.calculateCalendarDiskAngle(this.clockService.getCurrentDate());
-    this.rotationOffset = this.clockService.astroState().angleCalendarDisk - base;
   }
 }

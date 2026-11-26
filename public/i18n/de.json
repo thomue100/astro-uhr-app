@@ -48,8 +48,6 @@
   "calendar_disk": {
     "zoom_out": "Verkleinern",
     "zoom_in": "Vergrößern",
-    "rotate_left": "Links drehen",
-    "rotate_right": "Rechts drehen",
     "reset": "⟲ Reset",
     "mode_rotate": "⟳ Drehen",
     "mode_pan": "✥ Verschieben",

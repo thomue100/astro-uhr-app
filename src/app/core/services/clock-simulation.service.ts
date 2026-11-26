@@ -23,7 +23,7 @@ export class ClockSimulationService implements OnDestroy {
   private animationFrameId: number | null = null;
 
   constructor() {
-    configureTimeUtility(AstroConfig, {});
+    configureTimeUtility(AstroConfig);
     this._recalculate(this._currentDate());
   }
 
@@ -62,14 +62,6 @@ export class ClockSimulationService implements OnDestroy {
   // NEU: Offset der Kalenderscheibe setzen
   setCalendarOffset(dx: number, dy: number): void {
     this._astroStore.update({ calendarOffsetX: dx, calendarOffsetY: dy });
-  }
-
-  resetManualCalendarAngle(): void {
-    this._manualCalendarAngle = null;
-  }
-
-  updateAstroStatePatch(patch: Parameters<typeof this._astroStore.update>[0]): void {
-    this._astroStore.update(patch);
   }
 
   toggleAnimation(): void {

@@ -1,31 +1,22 @@
-﻿// Ausgelagerte TimeUtility-Klasse (Daten, Formatierung, DOM‑Helfer)
+﻿// Ausgelagerte TimeUtility-Klasse (Kalenderdaten und Zugriff auf die Rechnung).
 // Numerische Logik ist an AstroCalc ausgelagert.
 
 import {
     configureAstroCalc,
-    normalizeAngle,
     isLeapYear as astroIsLeapYear,
     calculateMoonAgeFromDate,
     calculateMoonRotationDifference,
-    getDayOfYear,
     calculateZodiacOffsetAngle,
     calculateSunAngle,
     calculateMoonAngle,
     calculateCalendarDiskAngle
 } from './AstroCalc';
 
-let CONFIG: any = null;
-let DOM_REF: any = null;
-
 /**
  * Injektions-Funktion — muss nach Import aufgerufen werden.
  * @param {object} config - AstroConfig
- * @param {object} dom - DOM-Referenzen
  */
-export function configureTimeUtility(config: any, dom: any): void {
-    CONFIG = config;
-    DOM_REF = dom;
-    // AstroCalc ebenfalls konfigurieren
+export function configureTimeUtility(config: any): void {
     configureAstroCalc(config);
 }
 
@@ -36,10 +27,6 @@ export class TimeUtility {
     static CalendarData: any = {};
     static EclipseData: any = {};
 
-    static normalizeAngle(angle: number): number {
-        return normalizeAngle(angle);
-    }
-
     /**
      * Prüft, ob ein Jahr ein Schaltjahr ist (Gregorianischer Kalender).
      * @param {number} year
@@ -49,40 +36,12 @@ export class TimeUtility {
         return astroIsLeapYear(year);
     }
 
-    static formatDateTime(date: Date): string {
-        return date.toLocaleString("de-DE", {
-            year: "numeric",
-            month: "2-digit",
-            day: "2-digit",
-            hour: "2-digit",
-            minute: "2-digit",
-            second: "2-digit"
-        });
-    }
-
-    // Formatierung für das Kalender-Datum
-    static formatDateForInput(date: Date): string {
-        const yyyy = date.getFullYear();
-        const mm = String(date.getMonth() + 1).padStart(2, '0');
-        const dd = String(date.getDate()).padStart(2, '0');
-        return `${yyyy}-${mm}-${dd}`;
-    }
-
-    static updateLiveDateTime(state: any): void {
-        if (!DOM_REF || !DOM_REF.liveDateTime) return;
-        DOM_REF.liveDateTime.textContent = TimeUtility.formatDateTime(state.simDate);
-    }
-
     static calculateMoonAgeFromDate(targetDate: Date): any {
         return calculateMoonAgeFromDate(targetDate);
     }
 
     static calculateMoonRotationDifference(targetDate: Date): number {
         return calculateMoonRotationDifference(targetDate);
-    }
-
-    static getDayOfYear(date: Date): number {
-        return getDayOfYear(date);
     }
 
     /**

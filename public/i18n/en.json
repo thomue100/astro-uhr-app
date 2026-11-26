@@ -48,8 +48,6 @@
   "calendar_disk": {
     "zoom_out": "Zoom out",
     "zoom_in": "Zoom in",
-    "rotate_left": "Rotate left",
-    "rotate_right": "Rotate right",
     "reset": "⟲ Reset",
     "mode_rotate": "⟳ Rotate",
     "mode_pan": "✥ Pan",
