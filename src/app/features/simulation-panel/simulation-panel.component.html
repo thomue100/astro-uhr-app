@@ -15,11 +15,12 @@
 
 <label for="speedSlider">
   {{ 'simulation.speed_label' | translate }}
-  {{ animationSpeed() | number: '1.1-1' }}x
+  {{ geschwindigkeit() }}
 </label>
 <input
   type="range"
   id="speedSlider"
+  [attr.aria-valuetext]="geschwindigkeit()"
   min="0.1"
   max="5"
   step="0.1"
@@ -27,8 +28,8 @@
   (ngModelChange)="animationSpeed.set(+$event); onSpeedChange()"
 />
 
-<!-- Fix "Platz unter dem Slider": Start/Stop und Reset (ersetzt die
-     vorherige "Aktuelle Zeit"-Funktion) platzsparend nebeneinander. -->
+<!-- Start/Anhalten und „Jetzt“ (Zeit auf jetzt) platzsparend nebeneinander;
+     dieselben Begriffe wie im 3D-Modell. -->
 <div class="btn-row">
   <button (click)="toggleAnimation()">
     {{ isAnimationRunning()

@@ -20,9 +20,12 @@
     "date_label": "Datum und Uhrzeit:",
     "speed_label": "Geschwindigkeit:",
     "anim_start": "▶️ Start",
-    "anim_stop": "⏸️ Stop",
-    "reset": "Reset",
-    "zone": "Lübecker Zeit"
+    "anim_stop": "⏸️ Anhalten",
+    "reset": "Jetzt",
+    "zone": "Lübecker Zeit",
+    "rate_min": "{n} Min. pro Sek.",
+    "rate_h": "{n} Std. pro Sek.",
+    "rate_d": "{n} Tage pro Sek."
   },
   "calendar": {
     "weekday": "Wochentag",
@@ -49,7 +52,7 @@
   "calendar_disk": {
     "zoom_out": "Verkleinern",
     "zoom_in": "Vergrößern",
-    "reset": "⟲ Reset",
+    "reset": "⟲ Ansicht zurücksetzen",
     "mode_rotate": "⟳ Drehen",
     "mode_pan": "✥ Verschieben",
     "hint": "Drehen · Rad/Pinch zum Zoomen"
@@ -215,7 +218,7 @@
   "image_viewer": {
     "zoom_out": "Verkleinern",
     "zoom_in": "Vergrößern",
-    "reset": "⟲ Reset",
+    "reset": "⟲ Ansicht zurücksetzen",
     "hint": "Rad/Pinch · Ziehen",
     "error": "Bild konnte nicht geladen werden."
   },
@@ -250,8 +253,6 @@
     "back": "◀ Zurück zur Uhr",
     "loading": "3D-Modell wird geladen …",
     "time": "Zeit",
-    "running": "Läuft",
-    "paused": "Angehalten",
     "speed": "Geschwindigkeit",
     "speeds": {
       "s1": "Echtzeit",

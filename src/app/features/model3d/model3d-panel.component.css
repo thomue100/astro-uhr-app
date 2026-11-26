@@ -10,9 +10,13 @@ label{font-size:14px;color:#88aacc;margin-top:2px}
 .m3p button{width:auto;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .m3p .play,.m3p .now{flex:none}
 .m3p button[aria-pressed=true]{background:#ffcc33;color:#071522;border-color:#ffcc33}
+/* Ein/Aus nicht nur über die Farbe zeigen (WCAG 1.4.1): Häkchen bei „an“.
+   Für Screenreader leer ("/ ''"), die bekommen den Zustand über aria-pressed. */
+.m3p button[aria-pressed=true]::before{content:"✓ ";content:"✓ " / ""}
 @media (min-width:601px){
   /* 14 px Schrift in der 250 px schmalen Seitenleiste: knapper seitlicher Abstand,
      damit „Schrägansicht“ und die Uhrzeit im Feld „Uhr stellen“ ganz sichtbar bleiben */
   .m3p button{padding:5px 4px;font-size:14px}
   .row input{font-size:14px;padding:3px 6px}
+  .row select{font-size:14px;padding:3px 2px}
 }

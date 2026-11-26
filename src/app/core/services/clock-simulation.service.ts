@@ -12,6 +12,16 @@ import { createAstroStateSignal } from '../../shared/models/astro-signal.signal'
 export const KALENDER_ANFANG = new Date(1911, 0, 1, 0, 0);
 export const KALENDER_ENDE = new Date(2080, 11, 31, 23, 59);
 
+/**
+ * Simulierte Millisekunden je echter Sekunde für eine Geschwindigkeitsstufe
+ * (Regler 0,1–5). Entspricht dem bisherigen Tempo bei 60 Bildern pro Sekunde:
+ * Stufe 0,5 ≈ 69 Min. pro Sek., Stufe 5 ≈ 11,5 Std. pro Sek.
+ */
+export function simulierteMsProSekunde(stufe: number): number {
+  const proBild = (AstroConfig.SPEED_FACTOR * stufe * 24 * 60 * 60 * 1000) / AstroConfig.TWO_PI;
+  return proBild * 60;
+}
+
 @Injectable({ providedIn: 'root' })
 export class ClockSimulationService implements OnDestroy {
 
@@ -89,12 +99,16 @@ export class ClockSimulationService implements OnDestroy {
 
   private _startAnimation(): void {
     this.isAnimationRunning.set(true);
-    const animate = () => {
+    let zuletzt = performance.now();
+    const animate = (jetzt: number) => {
       if (!this.isAnimationRunning()) return;
-      const baseSpeed = AstroConfig.SPEED_FACTOR * this.animationSpeed();
-      const simulatedMsPerFrame =
-        (baseSpeed * 24 * 60 * 60 * 1000) / AstroConfig.TWO_PI;
-      const newDate = new Date(this._currentDate().getTime() + simulatedMsPerFrame);
+      // Nach echter Zeit statt pro Bild: sonst liefe der Zeitraffer auf einem
+      // 120-Hz-Bildschirm doppelt so schnell. Höchstens 0,1 s je Schritt, damit
+      // nach einem Hintergrund-Tab nichts springt.
+      const sekunden = Math.min(0.1, Math.max(0, (jetzt - zuletzt) / 1000));
+      zuletzt = jetzt;
+      const schritt = simulierteMsProSekunde(this.animationSpeed()) * sekunden;
+      const newDate = new Date(this._currentDate().getTime() + schritt);
       // Die Kalenderscheibe reicht nur bis 2080: dort anhalten, statt in
       // Jahre ohne Kalenderdaten weiterzulaufen.
       if (newDate >= KALENDER_ENDE) {

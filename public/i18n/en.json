@@ -20,9 +20,12 @@
     "date_label": "Date and time:",
     "speed_label": "Speed:",
     "anim_start": "▶️ Start",
-    "anim_stop": "⏸️ Stop",
-    "reset": "Reset",
-    "zone": "Lübeck time"
+    "anim_stop": "⏸️ Pause",
+    "reset": "Now",
+    "zone": "Lübeck time",
+    "rate_min": "{n} min per sec.",
+    "rate_h": "{n} hours per sec.",
+    "rate_d": "{n} days per sec."
   },
   "calendar": {
     "weekday": "Weekday",
@@ -49,7 +52,7 @@
   "calendar_disk": {
     "zoom_out": "Zoom out",
     "zoom_in": "Zoom in",
-    "reset": "⟲ Reset",
+    "reset": "⟲ Reset view",
     "mode_rotate": "⟳ Rotate",
     "mode_pan": "✥ Pan",
     "hint": "Rotate · Scroll/Pinch to zoom"
@@ -215,7 +218,7 @@
   "image_viewer": {
     "zoom_out": "Zoom out",
     "zoom_in": "Zoom in",
-    "reset": "⟲ Reset",
+    "reset": "⟲ Reset view",
     "hint": "Scroll/Pinch · Drag",
     "error": "Image could not be loaded."
   },
@@ -250,8 +253,6 @@
     "back": "◀ Back to the clock",
     "loading": "Loading 3D model …",
     "time": "Time",
-    "running": "Running",
-    "paused": "Paused",
     "speed": "Speed",
     "speeds": {
       "s1": "Real time",

@@ -1,8 +1,9 @@
 // src/app/features/simulation-panel/simulation-panel.component.ts
 import { Component, inject, signal, effect, computed } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { DecimalPipe } from '@angular/common';
-import { ClockSimulationService, KALENDER_ANFANG, KALENDER_ENDE } from '../../core/services/clock-simulation.service';
+import {
+  ClockSimulationService, KALENDER_ANFANG, KALENDER_ENDE, simulierteMsProSekunde,
+} from '../../core/services/clock-simulation.service';
 import { TranslationService } from '../../core/services/translation.service';
 import { TranslatePipe } from '../../shared/pipes/translate.pipe';
 
@@ -20,7 +21,7 @@ const wochentage = {
 @Component({
   selector: 'app-simulation-panel',
   standalone: true,
-  imports: [FormsModule, DecimalPipe, TranslatePipe],
+  imports: [FormsModule, TranslatePipe],
   templateUrl: './simulation-panel.component.html',
 })
 export class SimulationPanelComponent {
@@ -32,6 +33,21 @@ export class SimulationPanelComponent {
    * Zeitraffers still (man soll nicht gegen ein sich änderndes Feld tippen) –
    * hier läuft die simulierte Zeit mit, ergänzt um Wochentag und Zeitzone.
    */
+  /**
+   * Geschwindigkeit als simulierte Zeit pro echter Sekunde – im selben Stil
+   * wie im 3D-Modell („10 Min. pro Sek.“) statt einer Zahl wie „0.5x“.
+   */
+  readonly geschwindigkeit = computed(() => {
+    const ms = simulierteMsProSekunde(this.animationSpeed());
+    const zahl = (n: number, stellen: number) =>
+      n.toLocaleString(this.t.currentLang() === 'de' ? 'de-DE' : 'en-GB', { maximumFractionDigits: stellen });
+    const [schluessel, wert] =
+      ms < 3_600_000 ? ['rate_min', zahl(ms / 60_000, 0)]
+      : ms < 86_400_000 ? ['rate_h', zahl(ms / 3_600_000, 1)]
+      : ['rate_d', zahl(ms / 86_400_000, 1)];
+    return this.t.translate(`simulation.${schluessel}`).replace('{n}', wert);
+  });
+
   readonly anzeige = computed(() => {
     const d = this.clockService.currentDate();
     const p = Object.fromEntries(zahlen.formatToParts(d).map((x) => [x.type, x.value]));
