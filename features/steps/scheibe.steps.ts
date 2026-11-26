@@ -39,7 +39,7 @@ Then('ist die Kalenderscheibe um {int} Grad im Uhrzeigersinn gedreht', async ({ 
 });
 
 When('ich in den Verschiebe-Modus wechsle', async ({ uhr }) => {
-  await uhr.scheibenButton('✥ Verschieben').click();
+  await uhr.scheibenButton('Verschieben').click();
 });
 
 When(
@@ -76,13 +76,13 @@ Then('zeigt die Uhr wieder das Zifferblatt', async ({ uhr }) => {
 });
 
 Then('sind die Zoom- und Modusknöpfe der Kalenderscheibe bedienbar', async ({ uhr }) => {
-  for (const t of ['Vergrößern', 'Verkleinern', '⟳ Drehen', '✥ Verschieben']) {
+  for (const t of ['Vergrößern', 'Verkleinern', 'Drehen', 'Verschieben']) {
     expect(await uhr.istBedienbar(uhr.scheibenButton(t)), t).toBe(true);
   }
 });
 
 Then('sind die Zoom- und Modusknöpfe der Kalenderscheibe nicht bedienbar', async ({ uhr }) => {
-  for (const t of ['Vergrößern', 'Verkleinern', '⟳ Drehen', '✥ Verschieben']) {
+  for (const t of ['Vergrößern', 'Verkleinern', 'Drehen', 'Verschieben']) {
     expect(await uhr.istBedienbar(uhr.scheibenButton(t)), t).toBe(false);
   }
 });

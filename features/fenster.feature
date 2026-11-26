@@ -15,8 +15,8 @@ Funktionalität: Fenster mit Einführung und Kunst & Geschichte
 
     Beispiele:
       | menüpunkt          | titel                                        | inhalt                              |
-      | Einführung         | Die Astronomische Uhr 🧭                     | Quellen dieser Einführung           |
-      | Kunst & Geschichte | Kunst & Geschichte der Astronomischen Uhr 📜 | Die Geschichte der Astronomischen Uhr |
+      | Einführung         | Die Astronomische Uhr                     | Quellen dieser Einführung           |
+      | Kunst & Geschichte | Kunst & Geschichte der Astronomischen Uhr | Die Geschichte der Astronomischen Uhr |
 
   Szenariogrundriss: Fenster schließen
     Wenn ich das Fenster "Einführung" öffne
@@ -52,20 +52,20 @@ Funktionalität: Fenster mit Einführung und Kunst & Geschichte
   Szenario: Ein Klick in das Fenster lässt es offen
     Wenn ich das Fenster "Einführung" öffne
     Und ich in das Fenster klicke
-    Dann ist das Fenster "Die Astronomische Uhr 🧭" geöffnet
+    Dann ist das Fenster "Die Astronomische Uhr" geöffnet
 
   Szenario: Kalender-Erläuterungen als Fenster
     Wenn ich das Datum "22.05.1965 12:00" einstelle
     Und ich den Kalender öffne
     Und ich die Erläuterungen zum Kalender öffne
-    Dann ist das Fenster "Wochentags-Rechengang für den 22.05.1965 🗓️" geöffnet
+    Dann ist das Fenster "Wochentags-Rechengang für den 22.05.1965" geöffnet
     Wenn ich die Escape-Taste drücke
     Dann ist kein Fenster geöffnet
 
   Szenario: Fenster auf Englisch
     Wenn ich die Sprache umschalte
     Und ich das Fenster "Kunst & Geschichte" öffne
-    Dann ist das Fenster "Art & History of the Astronomical Clock 📜" geöffnet
+    Dann ist das Fenster "Art & History of the Astronomical Clock" geöffnet
     Und enthält das Fenster "The Modern Clockwork"
 
   Szenario: Bilder in Kunst & Geschichte

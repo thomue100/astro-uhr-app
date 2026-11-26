@@ -86,6 +86,11 @@ export class AstroUhr {
   }
 
   /** Smartphone im Hochformat mit Touch-Bildschirm; vor setzeHeute/oeffnen aufrufen. */
+  /** Computer mit bestimmter Fenstergröße (CSS-Pixel). */
+  async nutzeBildschirm(breite: number, hoehe: number): Promise<void> {
+    await this.neueSitzung({ viewport: { width: breite, height: hoehe } });
+  }
+
   async nutzeSmartphone(): Promise<void> {
     await this.neueSitzung({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 3, isMobile: true, hasTouch: true });
   }
@@ -259,7 +264,7 @@ export class AstroUhr {
 
   // ── Bedienung der Kalenderscheibe ───────────────────────────────────
   scheibenButton(bezeichnung: string): Locator { return this.page.getByTitle(bezeichnung, { exact: true }); }
-  get scheibenReset(): Locator { return this.scheibenButton('⟲ Ansicht zurücksetzen'); }
+  get scheibenReset(): Locator { return this.scheibenButton('Ansicht zurücksetzen'); }
 
   /**
    * Bedienbar = sichtbar, nicht durchsichtig und klickbar. Die Steuerung wird
@@ -440,7 +445,9 @@ export class AstroUhr {
   async warteAufFenster(): Promise<void> {
     await expect(this.modal).toBeVisible();
     await this.fenster.evaluate((el) =>
-      Promise.all(el.getAnimations({ subtree: true }).map((a) => a.finished)).then(() => undefined));
+      // Abgebrochene Übergänge (z. B. Hover-Farbe eines Knopfes) melden AbortError –
+      // auch die sind vorbei, daher Ablehnungen wie ein Ende behandeln.
+      Promise.all(el.getAnimations({ subtree: true }).map((a) => a.finished.catch(() => undefined))).then(() => undefined));
   }
 
   /** Klick auf den abgedunkelten Hintergrund neben dem Fenster. */

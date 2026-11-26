@@ -119,7 +119,7 @@ When('ich das Bild {string} {int}-mal um {int} Pixel nach rechts ziehe', async (
 });
 
 When('ich die Ansicht des Bildes {string} zurücksetze', async ({ uhr }, titel: string) => {
-  await uhr.bild(titel).getByTitle('⟲ Ansicht zurücksetzen', { exact: true }).click();
+  await uhr.bild(titel).getByTitle('Ansicht zurücksetzen', { exact: true }).click();
 });
 
 Then('wird das Bild {string} {float}-fach vergrößert angezeigt', async ({ uhr }, titel: string, faktor: number) => {

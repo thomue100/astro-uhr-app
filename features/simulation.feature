@@ -97,8 +97,8 @@ Funktionalität: Simulation – Zeitreise und Zeitraffer
 
   # UX-Review: dieselben Begriffe wie im 3D-Modell
   Szenario: Gleiche Begriffe in Simulation und 3D-Modell
-    Dann bietet die Simulation die Knöpfe "▶️ Start" und "Jetzt"
+    Dann bietet die Simulation die Knöpfe "Start" und "Jetzt"
     Wenn ich das 3D-Modell öffne
-    Dann bietet das 3D-Modell die Knöpfe "⏸️ Anhalten" und "Jetzt"
+    Dann bietet das 3D-Modell die Knöpfe "Anhalten" und "Jetzt"
     Wenn ich das 3D-Modell anhalte
-    Dann bietet das 3D-Modell die Knöpfe "▶️ Start" und "Jetzt"
+    Dann bietet das 3D-Modell die Knöpfe "Start" und "Jetzt"

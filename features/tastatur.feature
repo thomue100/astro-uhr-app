@@ -27,7 +27,7 @@ Funktionalität: Bedienung mit der Tab-Taste
 
   Szenario: Bedienelemente der Kalenderscheibe nur bei geöffnetem Kalender
     Dann erreicht die Tab-Taste "Vergrößern" nicht
-    Und erreicht die Tab-Taste "⟲ Ansicht zurücksetzen" nicht
+    Und erreicht die Tab-Taste "Ansicht zurücksetzen" nicht
 
   # ── Menüpunkte ─────────────────────────────────────────────────────────
   Szenario: Alle Menüpunkte sind per Tab erreichbar
@@ -65,8 +65,8 @@ Funktionalität: Bedienung mit der Tab-Taste
 
     Beispiele:
       | menüpunkt          | titel                                        |
-      | Einführung         | Die Astronomische Uhr 🧭                     |
-      | Kunst & Geschichte | Kunst & Geschichte der Astronomischen Uhr 📜 |
+      | Einführung         | Die Astronomische Uhr                     |
+      | Kunst & Geschichte | Kunst & Geschichte der Astronomischen Uhr |
 
   Szenario: Erläuterungen per Tastatur – der Fokus kehrt zurück
     Wenn ich den Menüpunkt "Kalender" per Tastatur betätige
