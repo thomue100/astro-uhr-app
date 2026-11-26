@@ -44,6 +44,7 @@
     <button
       class="cc-reset-corner"
       [class.cc-reset-corner--visible]="showCalendarControls()"
+      [inert]="!showCalendarControls()"
       (click)="resetView()"
       [title]="'calendar_disk.reset' | translate"
     >⟲</button>
@@ -56,6 +57,7 @@
     <div
       class="calendar-controls-bar"
       [class.calendar-controls-bar--visible]="showCalendarControls()"
+      [inert]="!showCalendarControls()"
     >
       <button class="cc-btn" (click)="zoomOut()" [title]="'calendar_disk.zoom_out' | translate">🔍−</button>
       <button class="cc-btn" (click)="zoomIn()"  [title]="'calendar_disk.zoom_in'  | translate">🔍+</button>

@@ -33,7 +33,7 @@
     <div class="controls-header" (click)="openSimulation()">
       {{ isSimulationOpen ? '🔽' : '▶️' }} {{ 'nav.simulation' | translate }}
     </div>
-    <div class="controls-content" [class.controls-content--hidden]="!isSimulationOpen">
+    <div class="controls-content" [class.controls-content--hidden]="!isSimulationOpen" [inert]="!isSimulationOpen">
       <app-simulation-panel />
     </div>
   </div>
@@ -43,7 +43,7 @@
     <div class="controls-header" (click)="openCalendar()">
       {{ isCalendarOpen ? '🔽' : '▶️' }} {{ 'nav.calendar' | translate }}
     </div>
-    <div class="controls-content" [class.controls-content--hidden]="!isCalendarOpen">
+    <div class="controls-content" [class.controls-content--hidden]="!isCalendarOpen" [inert]="!isCalendarOpen">
       <app-calendar-panel (openCalendarModal)="openModal('calendar')" />
     </div>
   </div>

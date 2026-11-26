@@ -255,6 +255,8 @@ body {
  * Fix "Springen": Panels werden über max-height/opacity ein-/ausgeblendet
  * statt über display:none, damit die Transition wirklich greift und der
  * Wechsel weich statt abrupt passiert.
+ * Weil der Inhalt dabei im DOM bleibt, setzt das Template zusätzlich
+ * [inert] – sonst wären die unsichtbaren Felder per Tab erreichbar.
  */
 .controls-content--hidden {
   max-height: 0;
