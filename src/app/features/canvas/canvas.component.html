@@ -7,6 +7,8 @@
     <canvas
       #canvasElement
       id="canvas"
+      role="img"
+      [attr.aria-label]="beschreibung()"
       [style.visibility]="m3d.active() ? 'hidden' : null"
       [class.canvas-rotate]="showCalendarControls() && interactionMode() === 'rotate'"
       [class.canvas-pan]="showCalendarControls() && interactionMode() === 'pan'"

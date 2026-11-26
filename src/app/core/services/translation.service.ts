@@ -1,5 +1,5 @@
 // src/app/core/services/translation.service.ts
-import { Injectable, signal, computed } from '@angular/core';
+import { Injectable, signal, computed, effect } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 
@@ -24,7 +24,14 @@ export class TranslationService {
   // true solange die Sprach-JSONs noch nicht geladen sind
   private loaded = false;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+    // Seitensprache für Screenreader, Silbentrennung und Rechtschreibung
+    // mitführen (WCAG 3.1.1) – sonst würde Englisch deutsch ausgesprochen.
+    effect(() => {
+      const lang = this.currentLang();
+      if (typeof document !== 'undefined') document.documentElement.lang = lang;
+    });
+  }
 
   /**
    * Lädt beide Sprach-Dateien beim App-Start.

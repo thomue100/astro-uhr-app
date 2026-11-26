@@ -285,5 +285,15 @@
       "sun": "Sonne",
       "moon": "Mond"
     }
+  },
+  "clock_a11y": {
+    "clock": "Astronomische Uhr, eingestellt auf {datum}, {uhrzeit} Uhr. Mond: {phase}, Tag {tag} des Mondzyklus.",
+    "calendar": "Kalenderscheibe der Astronomischen Uhr, eingestellt auf {datum}.",
+    "phases": {
+      "new": "Neumond",
+      "waxing": "zunehmend",
+      "full": "Vollmond",
+      "waning": "abnehmend"
+    }
   }
 }

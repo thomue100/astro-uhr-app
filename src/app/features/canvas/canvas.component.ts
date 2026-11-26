@@ -1,11 +1,12 @@
 // src/app/features/canvas/canvas.component.ts
 import {
   Component, ElementRef, OnInit, AfterViewInit, OnDestroy,
-  ViewChild, inject, signal, effect,
+  ViewChild, inject, signal, effect, computed,
 } from '@angular/core';
 import { Subscription } from 'rxjs';
 
 import { ClockSimulationService } from '../../core/services/clock-simulation.service';
+import { TranslationService } from '../../core/services/translation.service';
 import { AstroConfig } from '../../shared/utils/config';
 import { ImageManager } from '../../shared/utils/ImageManager';
 import { ClockRenderer } from '../../shared/utils/ClockRenderer';
@@ -27,7 +28,38 @@ export class CanvasComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('canvasElement') canvasRef!: ElementRef<HTMLCanvasElement>;
 
   private readonly clockService = inject(ClockSimulationService);
+  private readonly t = inject(TranslationService);
   readonly m3d = inject(Model3dStateService);
+
+  /**
+   * Textalternative der gezeichneten Uhr für Screenreader (WCAG 1.1.1):
+   * eingestellter Zeitpunkt in Lübecker Ortszeit und Mondphase bzw. bei
+   * geöffnetem Kalender das Datum der Kalenderscheibe.
+   */
+  readonly beschreibung = computed(() => {
+    const lang = this.t.currentLang();
+    const datum = this.clockService.currentDate();
+    const zustand = this.clockService.astroState();
+    const locale = lang === 'de' ? 'de-DE' : 'en-GB';
+    const tag = datum.toLocaleDateString(locale, {
+      weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Europe/Berlin',
+    });
+    if (zustand.showCalendarDisk) {
+      return this.t.translate('clock_a11y.calendar').replace('{datum}', tag);
+    }
+    const uhrzeit = datum.toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Berlin' });
+    const monat = AstroConfig.MOON_CYCLE_DAYS;
+    const alter = zustand.mondAlterFractional;
+    const phase =
+      alter < 1 || alter > monat - 1 ? 'new'
+      : Math.abs(alter - monat / 2) <= 1 ? 'full'
+      : alter < monat / 2 ? 'waxing' : 'waning';
+    return this.t.translate('clock_a11y.clock')
+      .replace('{datum}', tag)
+      .replace('{uhrzeit}', uhrzeit)
+      .replace('{phase}', this.t.translate(`clock_a11y.phases.${phase}`))
+      .replace('{tag}', String(zustand.mondAlter));
+  });
 
   /** Lage der Uhr-Canvas im Container: das 3D-Bild wird exakt darübergelegt (kein Springen) */
   readonly frame = signal({ l: 0, t: 0, w: 0, h: 0 });

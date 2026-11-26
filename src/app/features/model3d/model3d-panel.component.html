@@ -1,6 +1,6 @@
 <!-- src/app/features/model3d/model3d-panel.component.html -->
 <div class="m3p">
-  <h4>{{ 'model3d.time' | translate }}</h4>
+  <h2>{{ 'model3d.time' | translate }}</h2>
   <div class="row">
     <button type="button" class="play" [attr.aria-pressed]="s.playing()" (click)="togglePlay()">
       {{ (s.playing() ? 'model3d.running' : 'model3d.paused') | translate }}
@@ -19,7 +19,7 @@
     <button type="button" class="now" (click)="s.now()">{{ 'model3d.now' | translate }}</button>
   </div>
 
-  <h4>{{ 'model3d.view' | translate }}</h4>
+  <h2>{{ 'model3d.view' | translate }}</h2>
   <div class="grid">
     @for (v of views; track v) {
       <button type="button" (click)="s.setView(v)">{{ ('model3d.views.' + v) | translate }}</button>

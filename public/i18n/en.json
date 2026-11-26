@@ -285,5 +285,15 @@
       "sun": "Sun",
       "moon": "Moon"
     }
+  },
+  "clock_a11y": {
+    "clock": "Astronomical clock set to {datum}, {uhrzeit}. Moon: {phase}, day {tag} of the lunar cycle.",
+    "calendar": "Calendar disc of the astronomical clock set to {datum}.",
+    "phases": {
+      "new": "new moon",
+      "waxing": "waxing",
+      "full": "full moon",
+      "waning": "waning"
+    }
   }
 }
