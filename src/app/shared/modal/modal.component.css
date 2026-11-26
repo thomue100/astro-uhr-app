@@ -44,9 +44,26 @@
 }
 
 /* CLOSE BUTTON */
+/* Echter Knopf (Tastatur/Screenreader), aussehend wie das bisherige „ד.
+   Klickfläche ≥ 44 px wie alle Bedienelemente (Apple HIG / WCAG 2.5.5);
+   die globalen button-Stile werden hier bewusst zurückgesetzt. */
 .modal-close {
+    flex-shrink: 0;
+    width: 44px;
+    min-width: 44px;
+    height: 44px;
+    min-height: 44px;
+    margin: -8px -8px -8px 8px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    border-radius: 6px;
     font-size: 20px;
     font-weight: bold;
+    line-height: 1;
     cursor: pointer;
     color: #aaa;
     transition: color 0.2s;
@@ -54,6 +71,12 @@
 
 .modal-close:hover {
     color: #fff;
+    background: transparent;
+}
+
+.modal-close:focus-visible {
+    outline: 2px solid #ffcc33;
+    outline-offset: 2px;
 }
 
 /* BODY */

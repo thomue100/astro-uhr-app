@@ -1,9 +1,10 @@
 import { Component, input, output } from '@angular/core';
+import { TranslatePipe } from '../pipes/translate.pipe';
 
 @Component({
   selector: 'app-modal',
   standalone: true,
-  imports: [],
+  imports: [TranslatePipe],
   templateUrl: './modal.component.html',
   styleUrls: ['./modal.component.css'],
   host: { class: 'modal-host' },
