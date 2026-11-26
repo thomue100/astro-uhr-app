@@ -62,8 +62,7 @@ export class ControlsComponent {
     document.body.style.overflow = '';
   }
 
-  /** 3D-Modell im Rahmen der Uhr zeigen; das Bedienfeld ersetzt das Menü */
-  open3d():  void { this.ansicht.oeffne3d(); }
+  /** „Zurück zur Uhr“ aus dem 3D-Modell (geöffnet wird es über den Umschalter) */
   close3d(): void { this.ansicht.schliesse3d(); }
 
   handleEscape(): void {

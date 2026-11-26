@@ -13,8 +13,7 @@
     "intro": "ℹ️ Introduction",
     "simulation": "Simulation",
     "calendar": "Calendar",
-    "history": "ℹ️ Art & History",
-    "model3d": "⚙️ 3D working model"
+    "history": "ℹ️ Art & History"
   },
   "simulation": {
     "date_label": "Date and time:",
