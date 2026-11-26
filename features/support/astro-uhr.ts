@@ -80,14 +80,33 @@ export class AstroUhr {
    * Öffnet dafür eine neue Browser-Sitzung; muss vor setzeHeute/oeffnen laufen.
    */
   async nutzeZeitzone(zeitzone: string): Promise<void> {
+    await this.neueSitzung({ timezoneId: zeitzone });
+  }
+
+  /** Smartphone im Hochformat mit Touch-Bildschirm; vor setzeHeute/oeffnen aufrufen. */
+  async nutzeSmartphone(): Promise<void> {
+    await this.neueSitzung({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 3, isMobile: true, hasTouch: true });
+  }
+
+  /** Ersetzt die Browser-Sitzung; übernimmt bisherige Sonderwünsche (Zeitzone, Gerät). */
+  private sitzungsWunsch: Parameters<Browser['newContext']>[0] = {};
+  private async neueSitzung(wunsch: Parameters<Browser['newContext']>[0]): Promise<void> {
+    this.sitzungsWunsch = { ...this.sitzungsWunsch, ...wunsch };
+    await this.eigenerKontext?.close();
     this.eigenerKontext = await this.browser.newContext({
-      viewport: this.page.viewportSize() ?? undefined,
+      viewport: { width: 1400, height: 1000 },
       deviceScaleFactor: 2,
       locale: 'de-DE',
-      timezoneId: zeitzone,
+      timezoneId: ZONE,
       baseURL: this.baseURL,
+      ...this.sitzungsWunsch,
     });
     this.page = await this.eigenerKontext.newPage();
+  }
+
+  /** Gerät bittet um reduzierte Bewegung (Betriebssystem-Einstellung); vor oeffnen(). */
+  async bevorzugeReduzierteBewegung(): Promise<void> {
+    await this.page.emulateMedia({ reducedMotion: 'reduce' });
   }
 
   async aufraeumen(): Promise<void> {
@@ -130,11 +149,6 @@ export class AstroUhr {
 
   async wechsleSprache(): Promise<void> {
     await this.sprachButton.click();
-  }
-
-  /** Smartphone-Hochformat; vor oeffnen() aufrufen. */
-  async nutzeSmartphone(): Promise<void> {
-    await this.page.setViewportSize({ width: 390, height: 844 });
   }
 
   // ── Kalender-Panel ──────────────────────────────────────────────────
@@ -224,6 +238,96 @@ export class AstroUhr {
     await this.page.mouse.down();
     await this.page.mouse.move(x + dx, y + dy, { steps: 10 });
     await this.page.mouse.up();
+  }
+
+  /**
+   * Finger-Geste auf dem Uhr-Canvas. `bilder` ist eine Folge von Momentaufnahmen,
+   * jede mit der Position aller Finger (Bildschirmkoordinaten). Playwright kann
+   * nur einzelne Taps; Mehrfinger-Gesten werden als TouchEvents nachgestellt
+   * (braucht eine Sitzung mit hasTouch, siehe nutzeSmartphone).
+   */
+  async beruehre(bilder: Array<Array<[number, number]>>): Promise<void> {
+    await this.canvas.evaluate((el, bilder) => {
+      const finger = (pts: Array<[number, number]>) =>
+        pts.map(([x, y], i) => new Touch({ identifier: i, target: el, clientX: x, clientY: y }));
+      const sende = (typ: string, pts: Array<[number, number]>, geaendert: Array<[number, number]>) =>
+        el.dispatchEvent(new TouchEvent(typ, { touches: finger(pts), changedTouches: finger(geaendert), bubbles: true, cancelable: true }));
+      sende('touchstart', bilder[0], bilder[0]);
+      for (const b of bilder.slice(1)) sende('touchmove', b, b);
+      sende('touchend', [], bilder[bilder.length - 1]);
+    }, bilder);
+  }
+
+  /** Mittelpunkt und Radius für Gesten auf dem Canvas. */
+  async gestenMass(): Promise<{ cx: number; cy: number; r: number }> {
+    const bb = await this.warteBisCanvasRuhig();
+    return { cx: bb.x + bb.width / 2, cy: bb.y + bb.height / 2, r: bb.width * 0.3 };
+  }
+
+  /** Lage zweier Bereiche (für Layout-Prüfungen). */
+  async box(element: Locator): Promise<{ x: number; y: number; width: number; height: number }> {
+    const bb = await element.boundingBox();
+    if (!bb) throw new Error('Element nicht sichtbar');
+    return bb;
+  }
+  get menue(): Locator { return this.page.locator('#controls'); }
+
+  /** Ist die Seite breiter als der Bildschirm (seitliches Scrollen)? */
+  async seitlichVerschiebbar(): Promise<boolean> {
+    return this.page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth + 1);
+  }
+
+  /** Alle sichtbaren Knöpfe und Menüpunkte im Menü, die kleiner als `min` px sind (Beschriftung + Höhe). */
+  async zuKleineBedienelemente(min: number): Promise<string[]> {
+    return this.menue.evaluate((root, min) => {
+      const els = Array.from(root.querySelectorAll<HTMLElement>('button, select, input, .controls-header'));
+      return els
+        .filter((e) => e.offsetParent !== null && getComputedStyle(e).visibility !== 'hidden')
+        .filter((e) => !(e instanceof HTMLInputElement && e.type === 'range'))
+        .map((e) => [((e.getAttribute('aria-label') ?? e.textContent) || e.id || e.tagName).trim(), e.getBoundingClientRect().height] as const)
+        .filter(([, h]) => h < min - 0.5)
+        .map(([name, h]) => `${name} (${h.toFixed(0)} px)`);
+    }, min);
+  }
+
+  // ── 3D-Funktionsmodell ──────────────────────────────────────────────
+  get m3dPanel(): Locator { return this.page.locator('app-model3d-panel'); }
+  get m3dBild(): Locator { return this.page.getByLabel(/Dreidimensionales Modell|three-dimensional model/i); }
+  get m3dZurueck(): Locator { return this.page.locator('#controls').getByText(/Zurück zur Uhr|Back to the clock/); }
+  get m3dLaufKnopf(): Locator { return this.m3dPanel.locator('button.play'); }
+  get m3dGeschwindigkeit(): Locator { return this.m3dPanel.getByRole('combobox'); }
+  get m3dUhrStellen(): Locator { return this.m3dPanel.locator('#m3d-when'); }
+  get m3dBeschriftungen(): Locator { return this.page.locator('app-model3d-stage .tag'); }
+  get m3dHinweis(): Locator { return this.page.locator('app-model3d-stage .hint'); }
+  get m3dFehler(): Locator { return this.page.locator('app-model3d-stage .err'); }
+  m3dKnopf(name: string): Locator { return this.m3dPanel.getByRole('button', { name, exact: true }); }
+
+  async oeffne3dModell(): Promise<void> {
+    await this.menuepunkt('model3dPanel').click();
+    await expect(this.m3dBild).toBeVisible({ timeout: 15_000 }); // three.js lädt nach
+  }
+
+  /** Zeitpunkt im Feld „Uhr stellen (MEZ)“ – MEZ = UTC+1 ganzjährig. */
+  async m3dZeitpunkt(): Promise<Date> {
+    const v = await this.m3dUhrStellen.inputValue();
+    const m = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})$/.exec(v);
+    if (!m) throw new Error(`Feld „Uhr stellen“ enthält "${v}"`);
+    return new Date(Date.UTC(+m[1], +m[2] - 1, +m[3], +m[4], +m[5]) - 3600_000);
+  }
+
+  /** Zeitpunkt → Feldwert in MEZ (UTC+1). */
+  static alsMezFeldwert(d: Date): string {
+    const t = new Date(d.getTime() + 3600_000);
+    const p = (n: number) => String(n).padStart(2, '0');
+    return `${t.getUTCFullYear()}-${p(t.getUTCMonth() + 1)}-${p(t.getUTCDate())}T${p(t.getUTCHours())}:${p(t.getUTCMinutes())}`;
+  }
+
+  /** Sichtbare Beschriftungen und ihre Bildschirmpositionen. */
+  async sichtbareBeschriftungen(): Promise<Array<{ text: string; transform: string }>> {
+    return this.m3dBeschriftungen.evaluateAll((els) =>
+      els.filter((e) => (e as HTMLElement).style.display !== 'none')
+        .map((e) => ({ text: e.textContent ?? '', transform: (e as HTMLElement).style.transform })),
+    );
   }
 
   async mausrad(schritte: number): Promise<void> {

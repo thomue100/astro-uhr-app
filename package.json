@@ -10,10 +10,10 @@
     "test:vitest": "vitest",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
-    "test:bdd": "bddgen && playwright test --project=bdd",
-    "test:bdd:update": "bddgen && playwright test --project=bdd --update-snapshots",
+    "test:bdd": "bddgen && playwright test --project=bdd --workers=1",
+    "test:bdd:update": "bddgen && playwright test --project=bdd --workers=1 --update-snapshots",
     "test:bdd:steps": "bddgen export",
-    "test:bdd:coverage": "bddgen && node features/support/mit-abdeckung.mjs"
+    "test:bdd:coverage": "bddgen && node features/support/mit-abdeckung.mjs --workers=1"
   },
   "private": true,
   "packageManager": "npm@11.6.2",

@@ -54,6 +54,8 @@ export default defineConfig({
       // Referenzbilder (features/referenzbilder/) reproduzierbar bleiben.
       name: 'bdd',
       testDir: bddTestDir,
+      // 3D-Modell rendert headless per Software-WebGL – dauert länger als 30 s
+      timeout: 60_000,
       snapshotPathTemplate: 'features/referenzbilder/{arg}{ext}',
       use: {
         ...devices['Desktop Chrome'],
