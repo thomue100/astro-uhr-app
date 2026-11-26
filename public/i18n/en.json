@@ -21,7 +21,8 @@
     "speed_label": "Speed:",
     "anim_start": "▶️ Start",
     "anim_stop": "⏸️ Stop",
-    "reset": "Reset"
+    "reset": "Reset",
+    "zone": "Lübeck time"
   },
   "calendar": {
     "weekday": "Weekday",

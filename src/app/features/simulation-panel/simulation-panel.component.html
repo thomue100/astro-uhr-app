@@ -10,7 +10,7 @@
 />
 
 <div id="liveDateTime">
-  {{ currentDate() | date: 'dd.MM.yyyy HH:mm:ss' }}
+  {{ anzeige().wochentag }}, <span class="live-zeitpunkt">{{ anzeige().zeitpunkt }}</span><span class="live-zone">{{ 'simulation.zone' | translate }}</span>
 </div>
 
 <label for="speedSlider">

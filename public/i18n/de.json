@@ -21,7 +21,8 @@
     "speed_label": "Geschwindigkeit:",
     "anim_start": "▶️ Start",
     "anim_stop": "⏸️ Stop",
-    "reset": "Reset"
+    "reset": "Reset",
+    "zone": "Lübecker Zeit"
   },
   "calendar": {
     "weekday": "Wochentag",

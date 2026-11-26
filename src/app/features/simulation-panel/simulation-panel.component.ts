@@ -1,18 +1,45 @@
 // src/app/features/simulation-panel/simulation-panel.component.ts
-import { Component, inject, signal, effect } from '@angular/core';
+import { Component, inject, signal, effect, computed } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { DatePipe, DecimalPipe } from '@angular/common';
+import { DecimalPipe } from '@angular/common';
 import { ClockSimulationService, KALENDER_ANFANG, KALENDER_ENDE } from '../../core/services/clock-simulation.service';
+import { TranslationService } from '../../core/services/translation.service';
 import { TranslatePipe } from '../../shared/pipes/translate.pipe';
+
+/** Zeitangaben in Lübecker Ortszeit – wie Sonnenzeiger und echte Uhr, unabhängig vom Gerät. */
+const ZONE = 'Europe/Berlin';
+const zahlen = new Intl.DateTimeFormat('de-DE', {
+  timeZone: ZONE, hourCycle: 'h23',
+  day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit',
+});
+const wochentage = {
+  de: new Intl.DateTimeFormat('de-DE', { timeZone: ZONE, weekday: 'long' }),
+  en: new Intl.DateTimeFormat('en-GB', { timeZone: ZONE, weekday: 'long' }),
+};
 
 @Component({
   selector: 'app-simulation-panel',
   standalone: true,
-  imports: [FormsModule, DatePipe, DecimalPipe, TranslatePipe],
+  imports: [FormsModule, DecimalPipe, TranslatePipe],
   templateUrl: './simulation-panel.component.html',
 })
 export class SimulationPanelComponent {
   readonly clockService = inject(ClockSimulationService);
+  private readonly t = inject(TranslationService);
+
+  /**
+   * Laufende Anzeige unter dem Datumsfeld. Das Feld selbst steht während des
+   * Zeitraffers still (man soll nicht gegen ein sich änderndes Feld tippen) –
+   * hier läuft die simulierte Zeit mit, ergänzt um Wochentag und Zeitzone.
+   */
+  readonly anzeige = computed(() => {
+    const d = this.clockService.currentDate();
+    const p = Object.fromEntries(zahlen.formatToParts(d).map((x) => [x.type, x.value]));
+    return {
+      wochentag: wochentage[this.t.currentLang()].format(d),
+      zeitpunkt: `${p['day']}.${p['month']}.${p['year']} ${p['hour']}:${p['minute']}:${p['second']}`,
+    };
+  });
 
   readonly selectedDateTimeString = signal('');
   readonly animationSpeed         = signal(0.5);
