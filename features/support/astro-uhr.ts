@@ -674,6 +674,27 @@ export class AstroUhr {
     return (await this.zustand())['mondAlterFractional'] as number;
   }
 
+  /** Umschalter über dem Rahmen: Uhr | Kalenderscheibe | 3D-Modell */
+  get ansichtUmschalter(): Locator { return this.page.getByRole('group', { name: /Ansicht im Rahmen|View in the frame/ }); }
+  ansichtKnopf(name: string): Locator { return this.ansichtUmschalter.getByRole('button', { name, exact: true }); }
+
+  /** Texte in #controls in Gold (#ffcc33), getrennt nach Beschriftung/Wert und Bedienbarem. */
+  async goldeneTexte(): Promise<{ beschriftungen: string[]; bedienbar: string[] }> {
+    return this.page.locator('#controls').evaluate((wurzel) => {
+      const gold = 'rgb(255, 204, 51)';
+      const beschriftungen: string[] = [], bedienbar: string[] = [];
+      const lauf = document.createTreeWalker(wurzel, NodeFilter.SHOW_TEXT);
+      for (let n = lauf.nextNode(); n; n = lauf.nextNode()) {
+        const text = (n.textContent ?? '').trim(), el = n.parentElement!;
+        if (!text || el.closest('[inert],[aria-hidden="true"]') || !el.getClientRects().length) continue;
+        if (getComputedStyle(el).color !== gold) continue;
+        // Bedienbar oder Überschrift: darf gold sein
+        if (el.closest('button, a, h2, h3, .cal-eclipse-title')) bedienbar.push(text); else beschriftungen.push(text);
+      }
+      return { beschriftungen, bedienbar };
+    });
+  }
+
   /** Ansicht der Kalenderscheibe: Drehung (Grad), Zoomstufe, Verschiebung (px). */
   async scheibenAnsicht(): Promise<{ drehung: number; zoom: number; dx: number; dy: number; sichtbar: boolean }> {
     const z = await this.zustand();

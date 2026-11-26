@@ -15,6 +15,8 @@ Stand: November 2026. Vor dem Verwenden eines Selektors kurz im Template gegenpr
 |---|---|---|
 | Uhr (alles Gezeichnete) | `#canvas` in `app-canvas` | kein DOM-Inhalt, siehe Abschnitt 3 |
 | Seitenleiste | `#controls` (`app-controls`) | |
+| Ansicht-Umschalter | Gruppe „Ansicht im Rahmen“ über dem Rahmen (`uhr.ansichtUmschalter`, `uhr.ansichtKnopf(name)`) | Knöpfe „Uhr“, „Kalenderscheibe“, „3D-Modell“ mit `aria-pressed`; Zustand in `AnsichtService` – Kalenderscheibe = Kalender-Panel offen, Menü und Umschalter zeigen immer dasselbe |
+| Farben | – | Gold (#ffcc33) nur für Bedienbares und Überschriften; Beschriftungen #c9d6e3, Text #e8eef5. Prüfen mit „sind im Menü nur Bedienbares und Überschriften gold“ (`uhr.goldeneTexte`) |
 | Titelzeile | `header.app-kopf` (`uhr.kopf`) | eigener Bereich vor Uhr und Menü (Smartphone: ganz oben; Computer: links über dem Menü) |
 | Sprachumschalter | `.lang-btn` (in der Titelzeile, nicht in `#controls`) | Beschriftung zeigt die *andere* Sprache („EN“ wenn Deutsch aktiv) |
 | Einführung (Modal) | `#infoButtonHeader` | öffnet `app-modal` mit `app-info-modal-content` |
