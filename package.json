@@ -33,6 +33,7 @@
     "@angular/build": "^21.2.15",
     "@angular/cli": "^21.2.15",
     "@angular/compiler-cli": "^21.2.0",
+    "@axe-core/playwright": "4.14.0",
     "@playwright/test": "^1.61.1",
     "@types/node": "^25.9.3",
     "@types/three": "0.186.0",
@@ -42,5 +43,8 @@
     "prettier": "^3.8.1",
     "typescript": "~5.9.2",
     "vitest": "^4.0.8"
+  },
+  "overrides": {
+    "axe-core": "4.14.0"
   }
 }
